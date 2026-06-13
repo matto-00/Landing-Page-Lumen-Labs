@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumen Labs — Automatización con IA</title>
+  <link rel="icon" type="image/png" href="assets/Lumen_isotipo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ── DESIGN TOKENS ────────────────────────────────────────────────────── */
+    :root {
+      /* Base */
+      --color-bg:        #050505;
+      --color-surface:   #0A0A0A;
+      --color-elevation: #121212;
+
+      /* Accent */
+      --color-orange:    #FF8A00;
+      --color-amber:     #FFA726;
+      --color-gold:      #FFC857;
+
+      /* Texto */
+      --color-text:      #FFFFFF;
+      --color-secondary: #B0B0B0;
+      --color-muted:     #777777;
+
+      /* Gradiente */
+      --gradient-brand: linear-gradient(135deg, #FF8A00 0%, #FFA726 45%, #FFC857 100%);
+
+      /* Cards */
+      --card-bg:     rgba(12,12,12,0.85);
+      --card-border: 1px solid rgba(255,138,0,0.15);
+      --card-radius: 20px;
+      --card-shadow: 0 20px 60px rgba(255,138,0,0.12);
+
+      /* Glass */
+      --glass-bg:   rgba(20,20,20,0.65);
+      --glass-blur: blur(20px);
+
+      /* Glow */
+      --glow-10: rgba(255,138,0,0.10);
+      --glow-15: rgba(255,138,0,0.15);
+      --glow-20: rgba(255,138,0,0.20);
+
+      /* Botones */
+      --btn-bg:         linear-gradient(135deg, #FF8A00, #FFA726);
+      --btn-radius:     14px;
+      --btn-sec-border: 1px solid rgba(255,138,0,0.25);
+
+      /* Layout */
+      --container-max: 1440px;
+      --content-max:   1280px;
+
+      /* Tipografía */
+      --font-display: 'Neue Montreal', 'Inter', sans-serif;
+      --font-body:    'Inter', sans-serif;
+
+      /* Estructura */
+      --nav-height: 64px;
+    }
+
+    /* ── RESET ────────────────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--nav-height);
+    }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ── CUSTOM SCROLLBAR ─────────────────────────────────────────────────── */
+    ::-webkit-scrollbar          { width: 6px; }
+    ::-webkit-scrollbar-track    { background: var(--color-bg); }
+    ::-webkit-scrollbar-thumb    { background: #92400E; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-amber); }
+
+    /* ── GLASS CARD UTILITY ───────────────────────────────────────────────── */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+    }
+
+    /* ── CONTAINER UTILITY ────────────────────────────────────────────────── */
+    .container {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── LABEL EYEBROW UTILITY ────────────────────────────────────────────── */
+    .label-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--color-orange);
+    }
+
+    /* ── NAVBAR ───────────────────────────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      z-index: 100;
+      transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #navbar.scrolled {
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-full {
+      display: block;
+      height: 96px;
+      width: auto;
+    }
+
+    .nav-logo-icon {
+      display: none;
+      height: 96px;
+      width: auto;
+    }
+
+    /* Equipo watermark */
+    .equipo-header {
+      position: relative;
+    }
+
+    .equipo-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 480px;
+      max-width: 80%;
+      opacity: 0.04;
+      pointer-events: none;
+      user-select: none;
+      filter: grayscale(100%) brightness(200%);
+    }
+
+    /* Center links — desktop only */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-muted);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-text);
+    }
+
+    /* CTA button */
+    .btn-cta {
+      display: inline-block;
+      background: var(--color-amber);
+      color: #0A0A0A;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 10px 20px;
+      border-radius: var(--btn-radius);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-cta:hover {
+      filter: brightness(115%);
+      box-shadow: 0 0 24px rgba(255, 138, 0, 0.35);
+    }
+
+    /* ── SECTIONS ─────────────────────────────────────────────────────────── */
+    .section {
+      padding: 100px 5%;
+    }
+
+    #hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 100dvh;
+      padding-top: calc(var(--nav-height) + 60px);
+      display: flex;
+      align-items: center;
+    }
+
+    /* Noise texture overlay */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── BUTTON UTILITIES ─────────────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-block;
+      background: var(--btn-bg);
+      color: #000000;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      padding: 14px 28px;
+      border-radius: var(--btn-radius);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(115%);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--color-amber);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.9375rem;
+      padding: 14px 28px;
+      border-radius: var(--btn-radius);
+      border: var(--btn-sec-border);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--glow-10);
+      transform: translateY(-2px);
+    }
+
+    /* ── HERO CONTENT ─────────────────────────────────────────────────────── */
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 5%;
+      width: 100%;
+    }
+
+    .hero-text {
+      flex: 0 0 55%;
+      max-width: 55%;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-orange);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: var(--color-text);
+      margin-bottom: 24px;
+    }
+
+    .text-amber {
+      color: var(--color-amber);
+    }
+
+    .hero-subheadline {
+      font-size: 1.125rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-glow-wrapper {
+      flex: 0 0 45%;
+      max-width: 45%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 360px;
+    }
+
+    .hero-glow {
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,138,0,0.18) 0%, rgba(255,138,0,0.06) 40%, transparent 70%);
+      box-shadow:
+        0 0 120px 40px var(--glow-10),
+        0 0 240px 80px rgba(255,138,0,0.05);
+      position: relative;
+    }
+
+    .hero-glow::after {
+      content: '';
+      position: absolute;
+      inset: 25%;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow-20) 0%, transparent 70%);
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.08); }
+    }
+
+    /* ── TEXT GRADIENT UTILITY ───────────────────────────────────────────── */
+    .text-gradient {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── VSL SECTION ──────────────────────────────────────────────────────── */
+    #vsl {
+      padding: 100px 5%;
+      position: relative;
+    }
+
+    .vsl-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 48px;
+    }
+
+    .vsl-header .label-eyebrow {
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .vsl-title {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--color-text);
+      margin-bottom: 16px;
+    }
+
+    .vsl-subtitle {
+      font-size: 1rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+
+    /* Video container */
+    .vsl-container {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--color-surface);
+      border: var(--card-border);
+      box-shadow:
+        var(--card-shadow),
+        0 0 0 1px rgba(255,138,0,0.08);
+      aspect-ratio: 16 / 9;
+      cursor: pointer;
+    }
+
+    /* Iframe — hidden until play */
+    .vsl-container iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+    }
+
+    .vsl-container.playing iframe { display: block; }
+    .vsl-container.playing .vsl-thumbnail,
+    .vsl-container.playing .vsl-play-btn,
+    .vsl-container.playing .vsl-overlay { display: none; }
+
+    /* Thumbnail placeholder */
+    .vsl-thumbnail {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(255,138,0,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(255,167,38,0.05) 0%, transparent 50%),
+        linear-gradient(135deg, #0A0A0A 0%, #111111 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Subtle grid lines on thumbnail */
+    .vsl-thumbnail::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,138,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,138,0,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* Dark overlay on hover */
+    .vsl-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      transition: background 0.3s ease;
+    }
+
+    .vsl-container:hover .vsl-overlay {
+      background: rgba(0,0,0,0.15);
+    }
+
+    /* Play button */
+    .vsl-play-btn {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .vsl-play-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--btn-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 0 0 0 rgba(255,138,0,0.4),
+        0 8px 32px rgba(255,138,0,0.35);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      animation: playPulse 2.5s ease-in-out infinite;
+    }
+
+    .vsl-container:hover .vsl-play-circle {
+      transform: scale(1.1);
+      box-shadow:
+        0 0 0 12px rgba(255,138,0,0.12),
+        0 8px 40px rgba(255,138,0,0.45);
+      animation: none;
+    }
+
+    @keyframes playPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,138,0,0.4), 0 8px 32px rgba(255,138,0,0.35); }
+      50%       { box-shadow: 0 0 0 16px rgba(255,138,0,0.0), 0 8px 32px rgba(255,138,0,0.35); }
+    }
+
+    /* Triangle icon */
+    .vsl-play-icon {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 11px 0 11px 20px;
+      border-color: transparent transparent transparent #000000;
+      margin-left: 4px;
+    }
+
+    /* Duration badge */
+    .vsl-duration {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 2;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--color-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── CTA-1 SECTION ───────────────────────────────────────────────────── */
+    #cta-1 {
+      padding: 96px 5%;
+    }
+
+    .section-container {
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+
+    .cta-block {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 64px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      box-shadow: var(--card-shadow),
+                  0 0 120px rgba(255,138,0,0.08) inset;
+    }
+
+    .cta-headline {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      color: var(--color-text);
+      max-width: 580px;
+    }
+
+    .cta-sub {
+      font-size: 17px;
+      color: var(--color-secondary);
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    a.cta-btn {
+      display: inline-block;
+      text-decoration: none;
+      font-size: 17px;
+      padding: 16px 36px;
+    }
+
+    .cta-trust {
+      font-size: 13px;
+      color: var(--color-muted);
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cta-trust span {
+      color: var(--color-orange);
+      font-weight: 600;
+    }
+
+    /* ── PROBLEMA SECTION ────────────────────────────────────────────────── */
+    #problema {
+      padding: 128px 5%;
+    }
+
+    .problema-header {
+      max-width: 680px;
+      margin: 0 auto 72px;
+      text-align: center;
+    }
+
+    .problema-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin: 16px 0 24px;
+    }
+
+    .problema-sub {
+      font-size: 17px;
+      color: var(--color-secondary);
+      line-height: 1.75;
+    }
+
+    .problema-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+
+    .pain-card {
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .pain-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--card-shadow),
+                  0 0 40px var(--glow-10);
+    }
+
+    .pain-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .pain-card h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .pain-card p {
+      font-size: 15px;
+      color: var(--color-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── PARA-QUIEN SECTION ──────────────────────────────────────────────── */
+    #para-quien {
+      padding: 128px 5%;
+    }
+
+    .paraquien-header {
+      max-width: 680px;
+      margin: 0 auto 64px;
+      text-align: center;
+    }
+
+    .paraquien-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin: 16px 0 0;
+    }
+
+    .paraquien-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .paraquien-col {
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .paraquien-si {
+      border-color: rgba(255,138,0,0.20);
+    }
+
+    .paraquien-no {
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .paraquien-col-header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .col-badge {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .col-badge--si {
+      background: rgba(255,138,0,0.12);
+      color: var(--color-amber);
+      border: 1px solid rgba(255,138,0,0.25);
+    }
+
+    .col-badge--no {
+      background: rgba(255,255,255,0.04);
+      color: var(--color-muted);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .paraquien-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .paraquien-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--color-secondary);
+    }
+
+    .list-icon {
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .list-icon--si { color: var(--color-orange); }
+    .list-icon--no { color: var(--color-muted); }
+
+    /* ── CTA-2 SECTION ───────────────────────────────────────────────────── */
+    #cta-2 {
+      padding: 64px 5%;
+    }
+
+    .cta-simple {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    .cta-simple-text {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    /* ── CASOS SECTION ───────────────────────────────────────────────────── */
+    #casos {
+      padding: 128px 5%;
+    }
+
+    .casos-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      max-width: var(--content-max);
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .casos-header {
+      position: sticky;
+      top: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .casos-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin: 8px 0 0;
+    }
+
+    .casos-sub {
+      font-size: 16px;
+      color: var(--color-secondary);
+      line-height: 1.75;
+      max-width: 320px;
+    }
+
+    .casos-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .caso-card {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .caso-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-shadow), 0 0 40px var(--glow-10);
+    }
+
+    .caso-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .caso-resultado {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 500;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .caso-titulo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .caso-desc {
+      font-size: 15px;
+      color: var(--color-secondary);
+      line-height: 1.7;
+    }
+
+    .caso-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-orange);
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      transition: color 0.2s ease;
+    }
+
+    .caso-link:hover {
+      color: var(--color-amber);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    /* ── EQUIPO SECTION ──────────────────────────────────────────────────── */
+    #equipo {
+      padding: 128px 5%;
+    }
+
+    .equipo-header {
+      max-width: 640px;
+      margin: 0 auto 72px;
+      text-align: center;
+    }
+
+    .equipo-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin: 16px 0 24px;
+    }
+
+    .equipo-sub {
+      font-size: 17px;
+      color: var(--color-secondary);
+      line-height: 1.75;
+    }
+
+    .equipo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .miembro-card {
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .miembro-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--card-shadow), 0 0 40px var(--glow-10);
+    }
+
+    .miembro-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(255,138,0,0.10);
+      border: 1px solid rgba(255,138,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-amber);
+      flex-shrink: 0;
+    }
+
+    .miembro-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .miembro-nombre {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .miembro-rol {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .miembro-frase {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* ── FAQ SECTION ─────────────────────────────────────────────────────── */
+    #faq {
+      padding: 128px 5%;
+    }
+
+    .faq-header {
+      max-width: 620px;
+      margin: 0 auto 64px;
+      text-align: center;
+    }
+
+    .faq-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin: 16px 0 0;
+    }
+
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--color-elevation);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--color-elevation);
+    }
+
+    .faq-trigger {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--color-text);
+      transition: color 0.2s ease;
+    }
+
+    .faq-trigger:hover {
+      color: var(--color-amber);
+    }
+
+    .faq-trigger[aria-expanded="true"] {
+      color: var(--color-orange);
+    }
+
+    .faq-icon {
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--color-orange);
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      line-height: 1;
+    }
+
+    .faq-trigger[aria-expanded="true"] .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+
+    .faq-body.is-open {
+      max-height: 300px;
+      padding-bottom: 24px;
+    }
+
+    .faq-body p {
+      font-size: 15px;
+      color: var(--color-secondary);
+      line-height: 1.75;
+    }
+
+    /* ── CTA-4 SECTION ───────────────────────────────────────────────────── */
+    #cta-4 {
+      padding: 128px 5%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-final {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      padding: 80px 64px;
+      background: rgba(12,12,12,0.85);
+      border: 1px solid rgba(255,138,0,0.20);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+    }
+
+    .cta-final-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center,
+        rgba(255,138,0,0.18) 0%,
+        rgba(255,138,0,0.06) 45%,
+        transparent 70%
+      );
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cta-final > *:not(.cta-final-glow) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-final-headline {
+      font-family: var(--font-display);
+      font-size: 52px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2.5px;
+      color: var(--color-text);
+    }
+
+    .cta-final-sub {
+      font-size: 17px;
+      color: var(--color-secondary);
+      line-height: 1.75;
+      max-width: 460px;
+    }
+
+    .cta-final-btn {
+      font-size: 17px;
+      padding: 18px 40px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .cta-final-trust {
+      font-size: 13px;
+      color: var(--color-muted);
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cta-final-trust span {
+      color: var(--color-orange);
+      font-weight: 600;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────────────────────── */
+    #footer {
+      padding: 96px 5% 48px;
+      border-top: 1px solid var(--color-elevation);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1.4fr;
+      gap: 64px;
+      max-width: var(--content-max);
+      margin: 0 auto 64px;
+      align-items: start;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-size: 20px;
+    }
+
+    .footer-desc {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.7;
+      max-width: 260px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .social-link {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--color-elevation);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-muted);
+      text-decoration: none;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .social-link:hover {
+      border-color: rgba(255,138,0,0.30);
+      color: var(--color-amber);
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-col-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-text);
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: var(--color-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-amber);
+    }
+
+    .footer-cta-text {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.65;
+    }
+
+    .footer-cta-btn {
+      display: inline-block;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 10px 20px;
+      margin-top: 4px;
+    }
+
+    .footer-bottom {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-elevation);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-legal {
+      font-size: 13px;
+      color: var(--color-muted);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 13px;
+      color: var(--color-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--color-amber);
+    }
+
+    /* ── MOBILE (max 767px) ───────────────────────────────────────────────── */
+    @media (max-width: 767px) {
+      .nav-links {
+        display: none;
+      }
+
+      .nav-logo-full { display: none; }
+      .nav-logo-icon { display: block; }
+
+      .section {
+        padding: 60px 5%;
+      }
+
+      #hero {
+        padding-top: calc(var(--nav-height) + 40px);
+        align-items: flex-start;
+      }
+
+      .hero-content {
+        flex-direction: column;
+        gap: 48px;
+      }
+
+      .hero-text {
+        flex: none;
+        max-width: 100%;
+      }
+
+      .hero-glow-wrapper {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+        min-height: 220px;
+      }
+
+      .hero-glow {
+        width: 220px;
+        height: 220px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        text-align: center;
+      }
+
+      #vsl {
+        padding: 60px 5%;
+      }
+
+      #cta-1 {
+        padding: 60px 5%;
+      }
+
+      .cta-block {
+        padding: 40px 24px;
+      }
+
+      .cta-headline {
+        font-size: 28px;
+        letter-spacing: -1px;
+      }
+
+      a.cta-btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .cta-trust {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      #problema {
+        padding: 64px 5%;
+      }
+
+      .problema-headline {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .problema-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .pain-card {
+        padding: 32px 24px;
+      }
+
+      #para-quien {
+        padding: 64px 5%;
+      }
+
+      .paraquien-headline {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .paraquien-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .paraquien-col {
+        padding: 32px 24px;
+      }
+
+      #cta-2 {
+        padding: 48px 5%;
+      }
+
+      .cta-simple {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .cta-simple a {
+        width: 100%;
+        text-align: center;
+      }
+
+      #casos {
+        padding: 64px 5%;
+      }
+
+      .casos-layout {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .casos-header {
+        position: static;
+      }
+
+      .casos-headline {
+        font-size: 36px;
+        letter-spacing: -1px;
+      }
+
+      .caso-card {
+        padding: 28px 24px;
+      }
+
+      .caso-resultado {
+        font-size: 36px;
+      }
+
+      #equipo {
+        padding: 64px 5%;
+      }
+
+      .equipo-headline {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .equipo-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+      }
+
+      .miembro-card {
+        padding: 28px 24px;
+      }
+
+      #faq {
+        padding: 64px 5%;
+      }
+
+      .faq-headline {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .faq-trigger {
+        font-size: 15px;
+        padding: 20px 0;
+      }
+
+      #cta-4 {
+        padding: 64px 5%;
+      }
+
+      .cta-final {
+        padding: 48px 24px;
+        gap: 20px;
+      }
+
+      .cta-final-headline {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .cta-final-btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .cta-final-trust {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .cta-final-glow {
+        width: 300px;
+        height: 200px;
+      }
+
+      #footer {
+        padding: 64px 5% 40px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .footer-bottom-links {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .vsl-play-circle {
+        width: 64px;
+        height: 64px;
+      }
+
+      .vsl-play-icon {
+        border-width: 9px 0 9px 16px;
+        margin-left: 3px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ──────────────────────────────────────────────────────────── -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">
+      <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" class="nav-logo-full" height="32">
+      <img src="assets/Lumen_isotipo.png" alt="Lumen Labs" class="nav-logo-icon" height="32">
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#problema">Servicios</a></li>
+      <li><a href="#casos">Casos</a></li>
+      <li><a href="#equipo">Nosotros</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <a href="#cta-1" class="btn-cta">Agendar llamada →</a>
+  </nav>
+
+  <!-- 01 · HERO ──────────────────────────────────────────────────────────── -->
+  <section id="hero" class="section">
+    <div class="hero-content">
+
+      <div class="hero-text">
+        <span class="hero-eyebrow">Automatización con IA</span>
+        <h1 class="hero-headline">
+          Tecnología que impulsa<br>
+          <span class="text-amber">resultados.</span>
+        </h1>
+        <p class="hero-subheadline">
+          Somos el departamento de tecnología externo que tu negocio
+          necesitaba. Expertos que entienden tanto el negocio como la ingeniería.
+        </p>
+        <div class="hero-buttons">
+          <a href="#vsl" class="btn-primary">Ver cómo funciona →</a>
+          <a href="#casos" class="btn-secondary">Ver casos de éxito →</a>
+        </div>
+      </div>
+
+      <div class="hero-glow-wrapper">
+        <div class="hero-glow"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 02 · VSL ───────────────────────────────────────────────────────────── -->
+  <section id="vsl">
+    <div class="vsl-header">
+      <span class="label-eyebrow">Cómo funciona</span>
+      <h2 class="vsl-title">Mira cómo transformamos<br>negocios con tecnología</h2>
+      <p class="vsl-subtitle">Un vistazo rápido a nuestro proceso y los resultados que entregamos.</p>
+    </div>
+
+    <div class="vsl-container" id="vslPlayer">
+      <div class="vsl-thumbnail"></div>
+      <div class="vsl-overlay"></div>
+
+      <div class="vsl-play-btn">
+        <div class="vsl-play-circle">
+          <div class="vsl-play-icon"></div>
+        </div>
+      </div>
+
+      <span class="vsl-duration">2:47</span>
+
+      <!-- Reemplaza VIDEO_ID con el ID real de YouTube antes del deploy -->
+      <iframe
+        id="vslIframe"
+        src=""
+        data-src="https://www.youtube.com/embed/VIDEO_ID?autoplay=1&rel=0&modestbranding=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+
+  <!-- 03 · CTA-1 — CONVERSIÓN PRINCIPAL ─────────────────────────────────── -->
+  <section id="cta-1">
+    <div class="section-container">
+      <div class="cta-block glass-card">
+        <span class="label-eyebrow">El siguiente paso</span>
+        <h2 class="cta-headline">
+          ¿Listo para dejar de perder tiempo<br>
+          en procesos que se pueden automatizar?
+        </h2>
+        <p class="cta-sub">
+          Cuéntanos tu caso en 2 minutos. Nuestro equipo
+          revisa cada solicitud y te responde en menos de 24 horas.
+        </p>
+        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+           class="btn-primary cta-btn">
+          Quiero automatizar mi negocio →
+        </a>
+        <p class="cta-trust">
+          <span>✓</span> Sin costo &nbsp;·&nbsp;
+          <span>✓</span> Sin compromisos &nbsp;·&nbsp;
+          <span>✓</span> Respuesta en 24h
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · PROBLEMA ──────────────────────────────────────────────────────── -->
+  <section id="problema">
+    <div class="section-container">
+
+      <div class="problema-header">
+        <span class="label-eyebrow">El problema</span>
+        <h2 class="problema-headline">
+          Tu negocio crece. Tus procesos,<br>
+          <span class="text-gradient">todavía no.</span>
+        </h2>
+        <p class="problema-sub">
+          La mayoría de las empresas en crecimiento pierden entre 20 y 40 horas
+          semanales en tareas repetitivas que ya deberían estar automatizadas.
+          El costo no es solo tiempo — es velocidad de decisión, errores humanos
+          y talento desperdiciado en trabajo que una máquina puede hacer mejor.
+        </p>
+      </div>
+
+      <div class="problema-grid">
+
+        <div class="pain-card glass-card">
+          <div class="pain-icon">⚙️</div>
+          <h3>Procesos manuales que no escalan</h3>
+          <p>Reportes, seguimientos, actualizaciones de datos. Tareas que consumen
+          horas de tu equipo cada semana y se vuelven un cuello de botella
+          cuando el volumen aumenta.</p>
+        </div>
+
+        <div class="pain-card glass-card">
+          <div class="pain-icon">🔗</div>
+          <h3>Herramientas que no se hablan entre sí</h3>
+          <p>CRM, ERP, hojas de cálculo, plataformas de email. Cada una vive
+          en su silo. Tu equipo copia y pega datos entre sistemas
+          todos los días.</p>
+        </div>
+
+        <div class="pain-card glass-card">
+          <div class="pain-icon">📉</div>
+          <h3>Decisiones lentas por falta de datos en tiempo real</h3>
+          <p>No sabes qué está pasando en tu operación hasta que alguien
+          arma un reporte. Para entonces, la oportunidad
+          ya pasó o el problema ya escaló.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 · PARA QUIÉN ────────────────────────────────────────────────────── -->
+  <section id="para-quien">
+    <div class="section-container">
+
+      <div class="paraquien-header">
+        <span class="label-eyebrow">Para quién es esto</span>
+        <h2 class="paraquien-headline">
+          Trabajamos con empresas que están<br>
+          <span class="text-gradient">listas para crecer diferente.</span>
+        </h2>
+      </div>
+
+      <div class="paraquien-grid">
+
+        <!-- Columna SÍ -->
+        <div class="paraquien-col paraquien-si glass-card">
+          <div class="paraquien-col-header">
+            <span class="col-badge col-badge--si">✓ Esto es para ti</span>
+          </div>
+          <ul class="paraquien-list">
+            <li>
+              <span class="list-icon list-icon--si">→</span>
+              <span>Empresa con operaciones repetitivas que consumen tiempo de tu equipo</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--si">→</span>
+              <span>Tienes herramientas digitales pero no se integran entre sí</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--si">→</span>
+              <span>Quieres escalar sin contratar más personal operativo</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--si">→</span>
+              <span>Tu equipo pierde horas en reportes, seguimientos o actualizaciones manuales</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--si">→</span>
+              <span>Buscas resultados medibles, no experimentos tecnológicos</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna NO -->
+        <div class="paraquien-col paraquien-no glass-card">
+          <div class="paraquien-col-header">
+            <span class="col-badge col-badge--no">✕ Esto no es para ti</span>
+          </div>
+          <ul class="paraquien-list">
+            <li>
+              <span class="list-icon list-icon--no">×</span>
+              <span>Negocios que recién empiezan sin procesos definidos</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--no">×</span>
+              <span>Empresas que buscan la solución más barata del mercado</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--no">×</span>
+              <span>Proyectos sin presupuesto ni compromiso de implementación</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--no">×</span>
+              <span>Quienes esperan resultados sin ningún involucramiento del equipo interno</span>
+            </li>
+            <li>
+              <span class="list-icon list-icon--no">×</span>
+              <span>Negocios que no tienen claridad sobre qué problema quieren resolver</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 · CTA-2 ─────────────────────────────────────────────────────────── -->
+  <section id="cta-2">
+    <div class="section-container">
+      <div class="cta-simple">
+        <p class="cta-simple-text">¿Te identificaste? Hablemos.</p>
+        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+           class="btn-primary">
+          Agendar diagnóstico gratuito →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 · CASOS ─────────────────────────────────────────────────────────── -->
+  <section id="casos">
+    <div class="section-container">
+      <div class="casos-layout">
+
+        <!-- Columna izquierda — header sticky -->
+        <div class="casos-header">
+          <span class="label-eyebrow">Casos de éxito</span>
+          <h2 class="casos-headline">
+            Resultados reales<br>en negocios<br>
+            <span class="text-gradient">reales.</span>
+          </h2>
+          <p class="casos-sub">
+            No vendemos promesas. Cada proyecto
+            tiene un resultado medible y un cliente
+            que puede respaldarlo.
+          </p>
+          <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+             class="btn-secondary">
+            Quiero resultados así →
+          </a>
+        </div>
+
+        <!-- Columna derecha — stack de casos -->
+        <div class="casos-stack">
+
+          <div class="caso-card glass-card">
+            <div class="caso-top">
+              <span class="label-eyebrow">Fintech</span>
+              <span class="caso-resultado">−70%</span>
+            </div>
+            <h3 class="caso-titulo">Automatización de procesos financieros con IA</h3>
+            <p class="caso-desc">
+              Redujimos el tiempo de conciliación bancaria en un 70% e
+              implementamos alertas automáticas que eliminaron errores
+              humanos en reportes críticos de cumplimiento regulatorio.
+            </p>
+            <a href="#" class="caso-link">Ver caso →</a>
+          </div>
+
+          <div class="caso-card glass-card">
+            <div class="caso-top">
+              <span class="label-eyebrow">E-commerce</span>
+              <span class="caso-resultado">+35%</span>
+            </div>
+            <h3 class="caso-titulo">Agente de IA para atención y conversión</h3>
+            <p class="caso-desc">
+              Implementamos un agente conversacional que atiende,
+              califica y convierte leads 24/7. En 90 días, la tasa
+              de conversión aumentó un 35% sin incrementar el equipo.
+            </p>
+            <a href="#" class="caso-link">Ver caso →</a>
+          </div>
+
+          <div class="caso-card glass-card">
+            <div class="caso-top">
+              <span class="label-eyebrow">Logística</span>
+              <span class="caso-resultado">−40h</span>
+            </div>
+            <h3 class="caso-titulo">Integración de sistemas y reportes automáticos</h3>
+            <p class="caso-desc">
+              Conectamos ERP, CRM y plataforma logística en un solo
+              flujo. El equipo recuperó 40 horas semanales que se
+              destinaban a copiar datos entre sistemas.
+            </p>
+            <a href="#" class="caso-link">Ver caso →</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 · EQUIPO ────────────────────────────────────────────────────────── -->
+  <section id="equipo">
+    <div class="section-container">
+
+      <div class="equipo-header">
+        <img src="assets/Lumen_Horizontal_logo.png" alt="" class="equipo-watermark" aria-hidden="true">
+        <span class="label-eyebrow">Quiénes somos</span>
+        <h2 class="equipo-headline">
+          Ingenieros y estrategas.<br>
+          <span class="text-gradient">No consultores.</span>
+        </h2>
+        <p class="equipo-sub">
+          Lumen Labs es un equipo pequeño y deliberadamente así.
+          Cada proyecto lo lleva la misma gente que lo diseña.
+          Sin intermediarios, sin juniors ejecutando lo que un senior vendió.
+        </p>
+      </div>
+
+      <div class="equipo-grid">
+
+        <div class="miembro-card glass-card">
+          <div class="miembro-avatar">NL</div>
+          <div class="miembro-info">
+            <h3 class="miembro-nombre">Nombre Apellido</h3>
+            <span class="miembro-rol label-eyebrow">CEO & Estrategia</span>
+            <p class="miembro-frase">
+              "Entiendo el negocio antes de escribir una línea de código."
+            </p>
+          </div>
+        </div>
+
+        <div class="miembro-card glass-card">
+          <div class="miembro-avatar">NL</div>
+          <div class="miembro-info">
+            <h3 class="miembro-nombre">Nombre Apellido</h3>
+            <span class="miembro-rol label-eyebrow">Lead Engineer</span>
+            <p class="miembro-frase">
+              "La automatización bien hecha es invisible. Solo ves los resultados."
+            </p>
+          </div>
+        </div>
+
+        <div class="miembro-card glass-card">
+          <div class="miembro-avatar">NL</div>
+          <div class="miembro-info">
+            <h3 class="miembro-nombre">Nombre Apellido</h3>
+            <span class="miembro-rol label-eyebrow">IA & Integraciones</span>
+            <p class="miembro-frase">
+              "Cada integración es un puente. Mi trabajo es que nunca se caiga."
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 · CTA-3 ─────────────────────────────────────────────────────────── -->
+  <section id="cta-3">
+    <div class="section-container">
+      <div class="cta-simple">
+        <p class="cta-simple-text">El equipo está listo. ¿Y tú?</p>
+        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+           class="btn-primary">
+          Hablar con el equipo →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · FAQ ───────────────────────────────────────────────────────────── -->
+  <section id="faq">
+    <div class="section-container">
+
+      <div class="faq-header">
+        <span class="label-eyebrow">Preguntas frecuentes</span>
+        <h2 class="faq-headline">
+          Todo lo que necesitas saber<br>
+          <span class="text-gradient">antes de dar el paso.</span>
+        </h2>
+      </div>
+
+      <div class="faq-list" id="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>¿Cuánto tiempo toma implementar una automatización?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-body">
+            <p>Depende de la complejidad. Un flujo de automatización simple
+            puede estar operando en 2 semanas. Proyectos de integración
+            multi-sistema toman entre 4 y 8 semanas. En la primera llamada
+            te damos un estimado real basado en tu caso específico.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>¿Necesito tener conocimientos técnicos?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-body">
+            <p>No. Nuestro trabajo es traducir tus procesos de negocio
+            a soluciones técnicas. Tú nos explicas qué hace tu equipo
+            hoy — nosotros diseñamos cómo automatizarlo. Solo necesitamos
+            tu conocimiento del negocio, no del código.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>¿Qué pasa si algo falla después de la implementación?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-body">
+            <p>Todos los proyectos incluyen un período de soporte post-lanzamiento.
+            Monitoreamos los flujos activamente las primeras semanas y
+            respondemos cualquier incidencia en menos de 24 horas.
+            No desaparecemos después de entregar.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>¿Trabajan con cualquier industria?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-body">
+            <p>Tenemos experiencia en fintech, e-commerce, logística,
+            servicios profesionales y salud. Lo que importa no es la industria
+            — es que tengas procesos repetitivos con volumen suficiente
+            para que la automatización tenga impacto real.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>¿Cuál es la inversión mínima para un proyecto?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-body">
+            <p>No publicamos precios fijos porque cada proyecto es distinto.
+            Lo que sí podemos decir: trabajamos con empresas que ven la
+            tecnología como inversión, no como gasto. En la llamada inicial
+            entendemos tu caso y te presentamos una propuesta concreta.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>¿Qué herramientas y tecnologías usan?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-body">
+            <p>Usamos las herramientas correctas para cada caso: Make, n8n
+            y Zapier para automatización de flujos; OpenAI y Claude para
+            agentes de IA; APIs nativas para integraciones directas.
+            No tenemos preferencia de tecnología — tenemos preferencia
+            por resultados.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>¿Cómo es el proceso para empezar?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-body">
+            <p>Primero llenas el formulario de contacto. Revisamos tu caso
+            y si hay fit, te enviamos un link para agendar una llamada de
+            diagnóstico de 30 minutos sin costo. En esa llamada entendemos
+            tu situación y te decimos con honestidad si podemos ayudarte
+            y cómo.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · CTA-4 ─────────────────────────────────────────────────────────── -->
+  <section id="cta-4">
+    <div class="section-container">
+      <div class="cta-final">
+
+        <div class="cta-final-glow" aria-hidden="true"></div>
+
+        <span class="label-eyebrow">Última parada</span>
+        <h2 class="cta-final-headline">
+          ¿Listo para desbloquear<br>
+          el potencial de tu negocio?
+        </h2>
+        <p class="cta-final-sub">
+          Hablemos. Sin presión, sin promesas vacías.<br>
+          Solo claridad sobre si podemos ayudarte y cómo.
+        </p>
+        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+           class="btn-primary cta-final-btn">
+          Agendar diagnóstico gratuito →
+        </a>
+        <p class="cta-final-trust">
+          <span>✓</span> Sin costo ·
+          <span>✓</span> 30 minutos ·
+          <span>✓</span> Respuesta en 24h
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · FOOTER ────────────────────────────────────────────────────────── -->
+  <footer id="footer">
+    <div class="section-container">
+
+      <div class="footer-grid">
+
+        <!-- Columna 1 — Logo + descripción -->
+        <div class="footer-brand">
+          <a href="#hero" class="footer-logo">
+            <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" height="88" width="auto">
+          </a>
+          <p class="footer-desc">
+            Tecnología estratégica para empresas que buscan
+            ventaja competitiva real.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="LinkedIn" class="social-link">in</a>
+            <a href="#" aria-label="Twitter/X" class="social-link">𝕏</a>
+            <a href="#" aria-label="Instagram" class="social-link">ig</a>
+          </div>
+        </div>
+
+        <!-- Columna 2 — Servicios -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Servicios</h4>
+          <ul class="footer-links">
+            <li><a href="#">Automatización Inteligente</a></li>
+            <li><a href="#">Agentes de IA</a></li>
+            <li><a href="#">Integraciones</a></li>
+            <li><a href="#">Infraestructura</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3 — Empresa -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Empresa</h4>
+          <ul class="footer-links">
+            <li><a href="#casos">Casos de éxito</a></li>
+            <li><a href="#equipo">Nosotros</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="TYPEFORM_URL_AQUI" target="_blank">Contacto</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 4 — CTA -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">¿Hablamos?</h4>
+          <p class="footer-cta-text">
+            Si llegaste hasta aquí, probablemente tenemos algo
+            importante que discutir.
+          </p>
+          <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+             class="btn-secondary footer-cta-btn">
+            Agendar llamada →
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Barra inferior -->
+      <div class="footer-bottom">
+        <p class="footer-legal">© 2025 Lumen Labs. Todos los derechos reservados.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Política de privacidad</a>
+          <a href="#">Términos de servicio</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll behavior
+    window.addEventListener('scroll', function () {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Hero entrance — staggered fade-up (above the fold, fires on load)
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.from('.hero-eyebrow', {
+      opacity: 0, y: 24, duration: 0.8, ease: 'power2.out', delay: 0.10
+    });
+    gsap.from('.hero-headline', {
+      opacity: 0, y: 24, duration: 0.8, ease: 'power2.out', delay: 0.25
+    });
+    gsap.from('.hero-subheadline', {
+      opacity: 0, y: 24, duration: 0.8, ease: 'power2.out', delay: 0.40
+    });
+    gsap.from('.hero-buttons', {
+      opacity: 0, y: 24, duration: 0.8, ease: 'power2.out', delay: 0.55
+    });
+    gsap.from('.hero-glow-wrapper', {
+      opacity: 0, scale: 0.82, duration: 1.4, ease: 'power2.out', delay: 0.20
+    });
+
+    // VSL — ScrollTrigger entrance
+    gsap.from('.vsl-header', {
+      opacity: 0, y: 32, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: '#vsl', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+    gsap.from('.vsl-container', {
+      opacity: 0, y: 40, scale: 0.97, duration: 0.9, ease: 'power2.out',
+      scrollTrigger: { trigger: '#vsl', start: 'top 75%', toggleActions: 'play reverse play reverse' },
+      delay: 0.1
+    });
+
+    // Footer ScrollTrigger
+    gsap.from('.footer-grid > *', {
+      opacity: 0, y: 30, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: '#footer', start: 'top 85%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // CTA-4 ScrollTrigger
+    gsap.from('.cta-final', {
+      opacity: 0, y: 60, scale: 0.97, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: '#cta-4', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // FAQ ScrollTrigger
+    gsap.from('.faq-header', {
+      opacity: 0, y: 40, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: '#faq', start: 'top 75%', toggleActions: 'play reverse play reverse' }
+    });
+    gsap.from('.faq-item', {
+      opacity: 0, y: 20, duration: 0.5, stagger: 0.08, ease: 'power2.out',
+      scrollTrigger: { trigger: '.faq-list', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // Equipo ScrollTrigger
+    gsap.from('.equipo-header', {
+      opacity: 0, y: 40, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: '#equipo', start: 'top 75%', toggleActions: 'play reverse play reverse' }
+    });
+    gsap.from('.miembro-card', {
+      opacity: 0, y: 50, duration: 0.7, stagger: 0.15, ease: 'power2.out',
+      scrollTrigger: { trigger: '.equipo-grid', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // Casos ScrollTrigger
+    gsap.from('.casos-header', {
+      opacity: 0, x: -40, duration: 0.9, ease: 'power2.out',
+      scrollTrigger: { trigger: '#casos', start: 'top 75%', toggleActions: 'play reverse play reverse' }
+    });
+    gsap.from('.caso-card', {
+      opacity: 0, y: 60, duration: 0.8, stagger: 0.18, ease: 'power2.out',
+      scrollTrigger: { trigger: '.casos-stack', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // CTA-2 / CTA-3 ScrollTrigger
+    ['#cta-2', '#cta-3'].forEach(function(id) {
+      gsap.from(id + ' .cta-simple', {
+        opacity: 0, y: 24, duration: 0.7, ease: 'power2.out',
+        scrollTrigger: { trigger: id, start: 'top 85%', toggleActions: 'play reverse play reverse' }
+      });
+    });
+
+    // Para-quien ScrollTrigger
+    gsap.from('.paraquien-header', {
+      opacity: 0, y: 40, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: '#para-quien', start: 'top 75%', toggleActions: 'play reverse play reverse' }
+    });
+    gsap.from('.paraquien-col', {
+      opacity: 0, y: 50, duration: 0.8, stagger: 0.2, ease: 'power2.out',
+      scrollTrigger: { trigger: '.paraquien-grid', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // Problema ScrollTrigger
+    gsap.from('.problema-header', {
+      opacity: 0, y: 40, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: '#problema', start: 'top 75%', toggleActions: 'play reverse play reverse' }
+    });
+    gsap.from('.pain-card', {
+      opacity: 0, y: 50, duration: 0.7, stagger: 0.15, ease: 'power2.out',
+      scrollTrigger: { trigger: '.problema-grid', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // CTA-1 ScrollTrigger
+    gsap.from('#cta-1 .cta-block', {
+      opacity: 0, y: 50, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: '#cta-1', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // FAQ accordion
+    var faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(function(item) {
+      var trigger = item.querySelector('.faq-trigger');
+      var body = item.querySelector('.faq-body');
+      trigger.addEventListener('click', function() {
+        var isOpen = trigger.getAttribute('aria-expanded') === 'true';
+        faqItems.forEach(function(i) {
+          i.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+          i.querySelector('.faq-body').classList.remove('is-open');
+        });
+        if (!isOpen) {
+          trigger.setAttribute('aria-expanded', 'true');
+          body.classList.add('is-open');
+        }
+      });
+    });
+
+    // VSL play button logic
+    var player = document.getElementById('vslPlayer');
+    var iframe = document.getElementById('vslIframe');
+
+    player.addEventListener('click', function () {
+      iframe.src = iframe.dataset.src;
+      player.classList.add('playing');
+    });
+  </script>
+
+</body>
+</html>
