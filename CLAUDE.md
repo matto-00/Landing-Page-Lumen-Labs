@@ -6,14 +6,14 @@
 ## Stack
 
 - **Arquitectura:** Single-file HTML (`index.html`) — sin build tools, sin frameworks
-- **3D / Partículas:** Three.js r163 vía CDN (solo si hay escena 3D activa)
-- **Animaciones:** GSAP + ScrollTrigger vía CDN
+- **3D / Partículas:** CSS animations + Canvas `requestAnimationFrame` (sin Three.js)
+- **Animaciones:** GSAP + ScrollTrigger vía CDN — todos con `toggleActions: 'play reverse play reverse'`
 - **Estilos:** CSS custom properties en `<style>` del mismo archivo
-- **JS lógica:** Scripts normales `<script>` (nunca `type="module"` salvo Three.js)
-- **Formulario:** HTML form → POST a Netlify Forms (atributo `netlify`)
+- **JS lógica:** Scripts normales `<script>` (nunca `type="module"`)
+- **Formulario / CTA:** Botón Typeform `target="_blank"` — placeholder `TYPEFORM_URL_AQUI`
 - **Redirección post-form:** `action="/gracias"` → página `gracias.html` con Calendly embed
-- **Deploy:** Netlify (drag & drop o repo GitHub)
-- **Fuentes:** Google Fonts (Inter + una display face a definir)
+- **Deploy:** Netlify · repo GitHub: https://github.com/matto-00/Landing-Page-Lumen-Labs.git
+- **Fuentes:** Neue Montreal vía Fontshare CDN (400, 500, 700) + Inter vía Google Fonts (fallback)
 
 ---
 
@@ -187,7 +187,7 @@ Claude debe tachar cada tarea al completarla actualizando este archivo.
 - [x] `#cta-4` — mini formulario o botón final
 - [x] `#footer` — links, redes, legal, logo
 - [ ] Animaciones GSAP ScrollTrigger en todas las secciones
-- [ ] Three.js hero (llama / partículas) — solo si está en scope
+- [x] ~~Three.js hero~~ → Hero 3D con CSS + Canvas: plataforma PNG, antorcha flotante, circuitos pulsantes, chispas (sin Three.js)
 - [ ] Revisión mobile completa (768px breakpoint)
 - [ ] Test formulario Netlify en producción
 - [ ] Deploy Netlify + dominio
@@ -202,5 +202,5 @@ _(ninguno al inicio del proyecto — actualizar aquí si aparecen)_
 
 ## Sesión actual — próxima tarea
 
-**Completado:** `#footer` — grid 4 col, social links, barra legal, ScrollTrigger. FASE 3+4 completas.
+**Completado:** Hero 3D animado (CSS + Canvas) — plataforma isométrica, antorcha flotante con glow pulsante, 4 overlays de circuitos con mix-blend screen, chispas en canvas con requestAnimationFrame, entrada GSAP
 **Próxima:** Revisión mobile completa (768px) + deploy Netlify

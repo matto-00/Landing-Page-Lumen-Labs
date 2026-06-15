@@ -354,29 +354,184 @@
       min-height: 360px;
     }
 
-    .hero-glow {
-      width: 360px;
-      height: 360px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,138,0,0.18) 0%, rgba(255,138,0,0.06) 40%, transparent 70%);
-      box-shadow:
-        0 0 120px 40px var(--glow-10),
-        0 0 240px 80px rgba(255,138,0,0.05);
+    /* ── HERO 3D SCENE ────────────────────────────────────────────────────── */
+    .hero-scene {
       position: relative;
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 1 / 1;
+      flex-shrink: 0;
     }
 
-    .hero-glow::after {
-      content: '';
+    .platform-img {
       position: absolute;
-      inset: 25%;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--glow-20) 0%, transparent 70%);
-      animation: glowPulse 4s ease-in-out infinite;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
     }
 
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.6; transform: scale(1); }
-      50%       { opacity: 1;   transform: scale(1.08); }
+    /* Antorcha flotando sobre el núcleo de la plataforma */
+    .torch-img {
+      position: absolute;
+      bottom: 49%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38%;
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+      z-index: 3;
+      filter: drop-shadow(0 0 18px rgba(255,138,0,0.75))
+              drop-shadow(0 0 40px rgba(255,138,0,0.35));
+      animation: torchFloat 3.5s ease-in-out infinite,
+                 torchGlow  2.5s ease-in-out infinite;
+    }
+
+    @keyframes torchFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0px); }
+      50%       { transform: translateX(-50%) translateY(-14px); }
+    }
+
+    @keyframes torchGlow {
+      0%, 100% {
+        filter: drop-shadow(0 0 18px rgba(255,138,0,0.75))
+                drop-shadow(0 0 40px rgba(255,138,0,0.35));
+      }
+      50% {
+        filter: drop-shadow(0 0 28px rgba(255,167,38,0.95))
+                drop-shadow(0 0 60px rgba(255,138,0,0.55));
+      }
+    }
+
+    /* Luz proyectada por la antorcha sobre la plataforma */
+    .torch-light {
+      position: absolute;
+      bottom: 46%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 80px;
+      background: radial-gradient(ellipse,
+        rgba(255,138,0,0.25) 0%,
+        transparent 70%
+      );
+      filter: blur(12px);
+      z-index: 2;
+      animation: torchLightPulse 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes torchLightPulse {
+      0%, 100% { opacity: 0.6; transform: translateX(-50%) scaleX(1); }
+      50%       { opacity: 1.0; transform: translateX(-50%) scaleX(1.15); }
+    }
+
+    /* Glow redondo debajo de la antorcha */
+    .torch-glow {
+      position: absolute;
+      bottom: 49%;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,138,0,0.30) 0%,
+        transparent 65%
+      );
+      filter: blur(20px);
+      z-index: 2;
+      animation: torchLightPulse 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Overlays de circuitos — posiciones del análisis PASO 0 */
+    .circuit-glow {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: screen;
+      animation: circuitPulse 2s ease-in-out infinite;
+    }
+
+    .circuit-glow--edge-left  { animation-delay: 0.3s; }
+    .circuit-glow--edge-right { animation-delay: 0.7s; }
+    .circuit-glow--base       { animation-delay: 1.1s; }
+
+    @keyframes circuitPulse {
+      0%, 100% { opacity: 0.45; }
+      50%       { opacity: 1.0; }
+    }
+
+    .circuit-glow--center {
+      bottom: 47%;
+      left: 33%;
+      width: 34%;
+      height: 14px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255,138,0,0.60),
+        transparent
+      );
+      border-radius: 50%;
+      filter: blur(4px);
+    }
+
+    .circuit-glow--edge-left {
+      bottom: 57%;
+      left: 14%;
+      width: 28%;
+      height: 8px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255,138,0,0.40),
+        transparent
+      );
+      filter: blur(3px);
+    }
+
+    .circuit-glow--edge-right {
+      bottom: 38%;
+      right: 14%;
+      width: 28%;
+      height: 8px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255,138,0,0.40),
+        transparent
+      );
+      filter: blur(3px);
+    }
+
+    .circuit-glow--base {
+      bottom: 30%;
+      left: 20%;
+      width: 60%;
+      height: 8px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255,138,0,0.25),
+        rgba(255,138,0,0.45),
+        rgba(255,138,0,0.25),
+        transparent
+      );
+      filter: blur(5px);
+    }
+
+    /* Canvas de chispas */
+    .particles-canvas {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 220px;
+      z-index: 4;
+      pointer-events: none;
     }
 
     /* ── TEXT GRADIENT UTILITY ───────────────────────────────────────────── */
@@ -1341,9 +1496,9 @@
         min-height: 220px;
       }
 
-      .hero-glow {
-        width: 220px;
-        height: 220px;
+      .hero-scene {
+        max-width: 300px;
+        margin: 0 auto;
       }
 
       .hero-buttons {
@@ -1592,7 +1747,30 @@
       </div>
 
       <div class="hero-glow-wrapper">
-        <div class="hero-glow"></div>
+        <div class="hero-scene" aria-hidden="true">
+
+          <!-- Base: plataforma isométrica -->
+          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="platform-img" draggable="false">
+
+          <!-- Overlays de circuitos (posiciones del análisis PASO 0) -->
+          <div class="circuit-glow circuit-glow--center"></div>
+          <div class="circuit-glow circuit-glow--edge-left"></div>
+          <div class="circuit-glow circuit-glow--edge-right"></div>
+          <div class="circuit-glow circuit-glow--base"></div>
+
+          <!-- Luz proyectada por la antorcha sobre la plataforma -->
+          <div class="torch-light"></div>
+
+          <!-- Antorcha flotante -->
+          <img src="assets/assets_3D_Hero/torch.png" alt="" class="torch-img" draggable="false">
+
+          <!-- Glow debajo de la antorcha -->
+          <div class="torch-glow"></div>
+
+          <!-- Canvas de chispas -->
+          <canvas class="particles-canvas" id="heroParticles"></canvas>
+
+        </div>
       </div>
 
     </div>
@@ -2168,8 +2346,15 @@
     gsap.from('.hero-buttons', {
       opacity: 0, y: 24, duration: 0.8, ease: 'power2.out', delay: 0.55
     });
-    gsap.from('.hero-glow-wrapper', {
-      opacity: 0, scale: 0.82, duration: 1.4, ease: 'power2.out', delay: 0.20
+    // Hero 3D scene — entrance
+    gsap.from('.platform-img', {
+      opacity: 0, scale: 0.85, duration: 1.2, ease: 'power3.out'
+    });
+    gsap.from('.torch-img', {
+      opacity: 0, y: -50, duration: 1.0, delay: 0.6, ease: 'power2.out'
+    });
+    gsap.from(['.torch-glow', '.torch-light', '.circuit-glow'], {
+      opacity: 0, duration: 0.8, delay: 0.9, stagger: 0.1, ease: 'power2.out'
     });
 
     // VSL — ScrollTrigger entrance
@@ -2285,6 +2470,60 @@
       iframe.src = iframe.dataset.src;
       player.classList.add('playing');
     });
+
+    // Hero particles — chispas subiendo desde la base de la llama
+    var canvas = document.getElementById('heroParticles');
+    if (canvas) {
+      var ctx = canvas.getContext('2d');
+      canvas.width = 120;
+      canvas.height = 220;
+
+      var particles = [];
+
+      function createParticle() {
+        return {
+          x: canvas.width / 2 + (Math.random() - 0.5) * 20,
+          y: canvas.height - 10,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: -(Math.random() * 1.8 + 0.8),
+          size: Math.random() * 2.5 + 0.5,
+          opacity: Math.random() * 0.7 + 0.3,
+          life: 1.0,
+          decay: Math.random() * 0.015 + 0.008
+        };
+      }
+
+      function updateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (Math.random() < 0.6) particles.push(createParticle());
+        if (particles.length > 35) particles.splice(0, 1);
+
+        for (var i = particles.length - 1; i >= 0; i--) {
+          var p = particles[i];
+          p.x  += p.vx;
+          p.y  += p.vy;
+          p.vy *= 0.99;
+          p.life -= p.decay;
+
+          if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+          var progress = 1 - p.life;
+          var r = 255;
+          var g = Math.floor(138 + (255 - 138) * progress);
+          var b = Math.floor(progress * 180);
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + (p.life * p.opacity) + ')';
+          ctx.fill();
+        }
+
+        requestAnimationFrame(updateParticles);
+      }
+
+      setTimeout(function () { updateParticles(); }, 1200);
+    }
   </script>
 
 </body>
