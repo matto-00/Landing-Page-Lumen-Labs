@@ -12,68 +12,35 @@
   <link href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap" rel="stylesheet">
 
   <style>
-    /* ── DESIGN TOKENS ────────────────────────────────────────────────────── */
+    /* ── DESIGN TOKENS ── */
     :root {
-      /* Base */
       --color-bg:        #050505;
       --color-surface:   #0A0A0A;
       --color-elevation: #121212;
-
-      /* Accent */
       --color-orange:    #FF8A00;
       --color-amber:     #FFA726;
       --color-gold:      #FFC857;
-
-      /* Texto */
       --color-text:      #FFFFFF;
       --color-secondary: #B0B0B0;
       --color-muted:     #777777;
-
-      /* Gradiente */
-      --gradient-brand: linear-gradient(135deg, #FF8A00 0%, #FFA726 45%, #FFC857 100%);
-
-      /* Cards */
-      --card-bg:     rgba(12,12,12,0.85);
-      --card-border: 1px solid rgba(255,138,0,0.15);
-      --card-radius: 20px;
-      --card-shadow: 0 20px 60px rgba(255,138,0,0.12);
-
-      /* Glass */
-      --glass-bg:   rgba(20,20,20,0.65);
-      --glass-blur: blur(20px);
-
-      /* Glow */
-      --glow-10: rgba(255,138,0,0.10);
-      --glow-15: rgba(255,138,0,0.15);
-      --glow-20: rgba(255,138,0,0.20);
-
-      /* Botones */
-      --btn-bg:         linear-gradient(135deg, #FF8A00, #FFA726);
-      --btn-radius:     14px;
-      --btn-sec-border: 1px solid rgba(255,138,0,0.25);
-
-      /* Layout */
-      --container-max: 1440px;
-      --content-max:   1280px;
-
-      /* Tipografía */
-      --font-display: 'Neue Montreal', 'Inter', sans-serif;
-      --font-body:    'Inter', sans-serif;
-
-      /* Estructura */
-      --nav-height: 64px;
+      --gradient-brand:  linear-gradient(135deg, #FF8A00 0%, #FFA726 45%, #FFC857 100%);
+      --card-bg:         rgba(12,12,12,0.85);
+      --card-border:     1px solid rgba(255,138,0,0.15);
+      --card-radius:     20px;
+      --card-shadow:     0 20px 60px rgba(255,138,0,0.10);
+      --glass-bg:        rgba(20,20,20,0.65);
+      --glass-blur:      blur(20px);
+      --glow-10:         rgba(255,138,0,0.10);
+      --glow-15:         rgba(255,138,0,0.15);
+      --glow-20:         rgba(255,138,0,0.20);
+      --font-display:    'Neue Montreal', 'Inter', sans-serif;
+      --font-body:       'Neue Montreal', 'Inter', sans-serif;
+      --nav-height:      64px;
     }
 
-    /* ── RESET ────────────────────────────────────────────────────────────── */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--color-bg);
@@ -82,180 +49,327 @@
       font-size: 18px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       min-height: 100dvh;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
 
-    /* ── CUSTOM SCROLLBAR ─────────────────────────────────────────────────── */
     ::-webkit-scrollbar          { width: 6px; }
     ::-webkit-scrollbar-track    { background: var(--color-bg); }
     ::-webkit-scrollbar-thumb    { background: #92400E; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--color-amber); }
 
-    /* ── NAVBAR (simplificado — siempre visible) ──────────────────────────── */
+    /* ── NAVBAR ── */
     #navbar {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: var(--nav-height);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 5%;
       z-index: 100;
-      background: rgba(10, 10, 10, 0.92);
+      background: rgba(10,10,10,0.92);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-    }
-
-    .nav-logo-full {
-      display: block;
-      height: 96px;
-      width: auto;
-    }
-
-    .nav-logo-icon {
-      display: none;
-      height: 96px;
-      width: auto;
-    }
+    .nav-logo { display: flex; align-items: center; }
+    .nav-logo-full { display: block; height: 32px; width: auto; }
+    .nav-logo-icon { display: none; height: 32px; width: auto; }
 
     @media (max-width: 767px) {
       .nav-logo-full { display: none; }
       .nav-logo-icon { display: block; }
     }
 
-    .btn-back {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--color-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: color 0.2s ease;
-    }
 
-    .btn-back:hover {
-      color: var(--color-text);
-    }
-
-    /* ── MAIN LAYOUT ──────────────────────────────────────────────────────── */
+    /* ── LAYOUT ── */
     main {
-      padding-top: var(--nav-height);
-      min-height: 100dvh;
+      padding-top: calc(var(--nav-height) + 48px);
+      padding-bottom: 80px;
+      padding-left: 5%;
+      padding-right: 5%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-left: 5%;
-      padding-right: 5%;
     }
 
-    /* ── CONFIRMATION HEADER ──────────────────────────────────────────────── */
-    .confirmation-header {
-      text-align: center;
-      padding: 60px 0 40px;
-      max-width: 560px;
+    .content {
+      width: 100%;
+      max-width: 680px;
     }
 
-    .confirmation-badge {
+    /* ── ANIMACIÓN DE ENTRADA ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .anim {
+      opacity: 0;
+      animation: fadeUp 0.55s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+
+    /* ── GLOW DE FONDO ── */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(ellipse 700px 500px at 50% -60px, rgba(255,138,0,0.06), transparent 70%);
+    }
+
+    /* ── BADGE ── */
+    .badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       background: var(--glow-10);
       border: 1px solid var(--glow-15);
       color: var(--color-amber);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       padding: 6px 14px;
       border-radius: 100px;
-      margin-bottom: 24px;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      margin-bottom: 24px;
     }
 
-    .confirmation-header h1 {
+    /* ── ENCABEZADO ── */
+    .header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .header h1 {
       font-family: var(--font-display);
-      font-weight: 800;
-      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-size: clamp(1.9rem, 4.5vw, 2.75rem);
+      font-weight: 700;
       letter-spacing: -0.03em;
+      line-height: 1.15;
       color: var(--color-text);
       margin-bottom: 16px;
-      line-height: 1.15;
     }
 
-    .confirmation-header p {
-      color: var(--color-muted);
+    .header h1 span {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
       font-size: 1rem;
+      color: var(--color-secondary);
       line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto;
     }
 
-    /* ── CALENDLY WRAPPER ─────────────────────────────────────────────────── */
-    .calendly-wrapper {
-      width: 100%;
-      max-width: 800px;
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
+    /* ── SECCIÓN DE RECOMENDACIONES ── */
+    .recs-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .recs-title span {
+      color: var(--color-orange);
+    }
+
+    /* ── CARDS ── */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .card {
+      display: flex;
+      gap: 24px;
+      background: var(--card-bg);
       border: var(--card-border);
       border-radius: var(--card-radius);
+      padding: 28px 32px;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       box-shadow: var(--card-shadow);
-      overflow: hidden;
-      margin-bottom: 60px;
+      transition: border-color 0.25s;
     }
 
-    /* ── MOBILE ───────────────────────────────────────────────────────────── */
-    @media (max-width: 767px) {
-      .confirmation-header {
-        padding: 40px 0 32px;
-      }
+    .card:hover {
+      border-color: rgba(255,138,0,0.28);
+    }
 
-      .confirmation-header h1 {
-        font-size: 1.75rem;
-      }
+    /* Card #2 — acento de advertencia sutil */
+    .card.warning {
+      border-color: rgba(255,167,38,0.25);
+      background: rgba(15,10,5,0.88);
+      box-shadow: 0 20px 60px rgba(255,138,0,0.08), 0 0 0 1px rgba(255,167,38,0.12) inset;
+    }
+
+    .card.warning:hover {
+      border-color: rgba(255,167,38,0.45);
+    }
+
+    /* Número */
+    .card-num {
+      flex-shrink: 0;
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 2px;
+      min-width: 36px;
+    }
+
+    .card-body {}
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .card.warning .card-title {
+      color: var(--color-amber);
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--color-secondary);
+      line-height: 1.65;
+    }
+
+    /* ── CIERRE ── */
+    .closing {
+      background: var(--glass-bg);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 28px 32px;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      text-align: center;
+    }
+
+    .closing p {
+      font-size: 0.95rem;
+      color: var(--color-secondary);
+      line-height: 1.75;
+    }
+
+    .closing strong {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .closing .highlight {
+      color: var(--color-amber);
+      font-weight: 500;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 767px) {
+      main { padding-top: calc(var(--nav-height) + 32px); padding-bottom: 60px; }
+
+      .header { margin-bottom: 40px; }
+      .header h1 { font-size: 1.75rem; }
+
+      .card { padding: 22px 20px; gap: 16px; }
+      .card-num { font-size: 2rem; }
+      .card-title { font-size: 0.95rem; }
+
+      .closing { padding: 22px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── NAVBAR ──────────────────────────────────────────────────────────── -->
+  <div class="bg-glow"></div>
+
+  <!-- ── NAVBAR ── -->
   <nav id="navbar">
     <a href="index.html" class="nav-logo">
       <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" class="nav-logo-full" height="32">
       <img src="assets/Lumen_isotipo.png" alt="Lumen Labs" class="nav-logo-icon" height="32">
     </a>
-    <a href="index.html" class="btn-back">← Volver al inicio</a>
   </nav>
 
-  <!-- ── MAIN ────────────────────────────────────────────────────────────── -->
+  <!-- ── MAIN ── -->
   <main>
-    <div class="confirmation-header">
-      <div class="confirmation-badge">✓ Solicitud recibida</div>
-      <h1>¡Tu solicitud fue recibida!</h1>
-      <p>Estamos revisando tus datos. Elige el horario que mejor te venga para tu llamada de diagnóstico gratuita con el equipo de Lumen Labs.</p>
-    </div>
+    <div class="content">
 
-    <div class="calendly-wrapper">
-      <!-- Reemplaza data-url con tu enlace real de Calendly antes del deploy -->
-      <div class="calendly-inline-widget"
-           data-url="https://calendly.com/TU-USUARIO"
-           style="min-width:320px;height:630px;"></div>
+      <!-- Encabezado -->
+      <div class="header">
+        <div class="badge anim" style="animation-delay: 0ms">
+          ✓ Formulario recibido
+        </div>
+        <h1 class="anim" style="animation-delay: 80ms">
+          ¡Gracias por el formulario.<br><span>El primer paso ya está dado.</span>
+        </h1>
+        <p class="anim" style="animation-delay: 160ms">
+          Vamos a revisar tus respuestas con cuidado. Si encajás con el perfil que buscamos, vas a recibir noticias nuestras muy pronto.
+        </p>
+      </div>
+
+      <!-- Recomendaciones -->
+      <p class="recs-title anim" style="animation-delay: 260ms">
+        Antes de que te confirmemos, hay <span>3 cosas que necesitás saber:</span>
+      </p>
+
+      <div class="cards">
+
+        <div class="card anim" style="animation-delay: 360ms">
+          <div class="card-num">1</div>
+          <div class="card-body">
+            <p class="card-title">Llegá a tiempo. Y traé a quien toma las decisiones.</p>
+            <p class="card-desc">Si para avanzar necesitás el aval de otra persona, esa persona tiene que estar en la reunión. Sin excepciones.</p>
+          </div>
+        </div>
+
+        <div class="card warning anim" style="animation-delay: 460ms">
+          <div class="card-num">2</div>
+          <div class="card-body">
+            <p class="card-title">No faltes a la reunión.</p>
+            <p class="card-desc">No damos segundas chances. Somos muy selectivos con las personas que acompañamos y les pedimos el mismo nivel de compromiso que nosotros ponemos sobre la mesa. Si faltás sin justificación, quedás fuera. Para siempre.</p>
+          </div>
+        </div>
+
+        <div class="card anim" style="animation-delay: 560ms">
+          <div class="card-num">3</div>
+          <div class="card-body">
+            <p class="card-title">Revisá los recursos que te enviemos antes de la reunión.</p>
+            <p class="card-desc">Te los mandamos al número que dejaste. Quien llega preparado aprovecha la reunión diez veces más — y eso se nota.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Cierre -->
+      <div class="closing anim" style="animation-delay: 680ms">
+        <p>
+          <strong>Si confirmamos la reunión, te lo hacemos saber por tu número o por correo.</strong><br>
+          Gracias por haber llegado hasta acá — la gente que completa este formulario es exactamente con quien nos gusta trabajar.<br>
+          <span class="highlight">Quedate atento. Puede que tengas noticias nuestras muy pronto.</span>
+        </p>
+      </div>
+
     </div>
   </main>
-
-  <script src="https://assets.calendly.com/assets/external/widget.js"></script>
 
 </body>
 </html>

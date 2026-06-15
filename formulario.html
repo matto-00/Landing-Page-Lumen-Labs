@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Reunión · Lumen Labs</title>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #050505;
+      --orange:    #FF8A00;
+      --amber:     #FFA726;
+      --gold:      #FFC857;
+      --text:      #FFFFFF;
+      --secondary: #B0B0B0;
+      --muted:     #777777;
+      --gradient:  linear-gradient(135deg, #FF8A00 0%, #FFA726 45%, #FFC857 100%);
+      --card-bg:   rgba(12, 12, 12, 0.88);
+      --card-bd:   rgba(255, 138, 0, 0.15);
+      --font:      'Neue Montreal', 'Inter', sans-serif;
+      --ease:      cubic-bezier(0.4, 0, 0.2, 1);
+      --radius:    20px;
+      --btn-r:     14px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      overflow: hidden;
+    }
+
+    /* ── Glow ambiental ── */
+    .glow-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(ellipse 700px 480px at 50% -80px, rgba(255,138,0,0.06), transparent 70%);
+    }
+
+    /* ── Progreso ── */
+    #prog-track {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: rgba(255,138,0,0.10);
+      z-index: 300;
+    }
+
+    #prog-fill {
+      height: 100%;
+      background: var(--gradient);
+      box-shadow: 0 0 12px rgba(255,138,0,0.45);
+      transition: width 0.5s var(--ease);
+    }
+
+    #prog-label {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      z-index: 300;
+      user-select: none;
+    }
+
+    #prog-label em { font-style: normal; color: var(--orange); }
+
+    /* ── Pantallas ── */
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 72px 20px 92px;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Centra verticalmente si el contenido cabe */
+    @media (min-height: 580px) {
+      .screen { align-items: center; }
+    }
+
+    .screen.is-active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Card ── */
+    .card {
+      width: 100%;
+      max-width: 620px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-bd);
+      border-radius: var(--radius);
+      padding: 44px 40px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 24px 64px rgba(255,138,0,0.07), 0 1px 0 rgba(255,255,255,0.04) inset;
+      margin-block: 16px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-opt {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 5px;
+      padding: 2px 7px;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    /* ── Input de texto ── */
+    .field-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,138,0,0.18);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field-input:focus {
+      border-color: rgba(255,138,0,0.5);
+      box-shadow: 0 0 0 3px rgba(255,138,0,0.08);
+    }
+
+    .field-input::placeholder { color: var(--muted); }
+
+    .field-input.has-error {
+      border-color: rgba(255,80,80,0.55);
+      box-shadow: 0 0 0 3px rgba(255,80,80,0.08);
+    }
+
+    /* ── Selector de código de país (P1) ── */
+    .phone-wrap {
+      display: flex;
+      gap: 8px;
+    }
+
+    .phone-code {
+      flex-shrink: 0;
+      padding: 14px 28px 14px 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,138,0,0.18);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23777'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .phone-code:focus {
+      border-color: rgba(255,138,0,0.5);
+      box-shadow: 0 0 0 3px rgba(255,138,0,0.08);
+    }
+
+    .phone-code option {
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    .phone-wrap .field-input { flex: 1; min-width: 0; }
+
+    /* ── Opciones ── */
+    .field-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .field-error {
+      font-size: 12px;
+      color: rgba(255,100,100,0.9);
+      margin-top: 12px;
+      min-height: 16px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--secondary);
+      text-align: left;
+      line-height: 1.4;
+      transition: border-color 0.18s, background 0.18s, color 0.18s, transform 0.12s;
+    }
+
+    .opt:hover {
+      border-color: rgba(255,138,0,0.28);
+      background: rgba(255,138,0,0.04);
+      color: var(--text);
+    }
+
+    .opt:active { transform: scale(0.99); }
+
+    .opt.is-selected {
+      border-color: rgba(255,138,0,0.55);
+      background: rgba(255,138,0,0.09);
+      color: var(--text);
+    }
+
+    /* Indicador (radio / checkbox) */
+    .opt-mark {
+      flex-shrink: 0;
+      margin-top: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,138,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.18s, background 0.18s;
+    }
+
+    .opt.is-selected .opt-mark {
+      border-color: var(--orange);
+      background: var(--orange);
+    }
+
+    .opt-mark::after {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #000;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .opt.is-selected .opt-mark::after { opacity: 1; }
+
+    /* Checkbox para multi-select */
+    .multi .opt-mark { border-radius: 4px; }
+
+    .multi .opt.is-selected .opt-mark::after {
+      width: 8px;
+      height: 5px;
+      border-radius: 0;
+      background: transparent;
+      border-left: 2px solid #000;
+      border-bottom: 2px solid #000;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+    .opt-sub {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.3;
+      transition: color 0.18s;
+    }
+
+    .opt:hover .opt-sub,
+    .opt.is-selected .opt-sub { color: rgba(255,255,255,0.45); }
+
+    /* Input "Otro" (P3) */
+    #rubro-otro-wrap { margin-top: 12px; }
+
+    /* Feedback de límite en P7 */
+    @keyframes pulseDeny {
+      0%   { transform: scale(1); }
+      30%  { transform: scale(1.015); border-color: rgba(255,138,0,0.45); }
+      70%  { transform: scale(0.995); }
+      100% { transform: scale(1); }
+    }
+
+    .opt.deny-flash { animation: pulseDeny 0.35s ease; }
+
+    /* ── Navegación ── */
+    #nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 20px;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
+      background: linear-gradient(to top, rgba(5,5,5,1) 60%, transparent);
+      z-index: 300;
+    }
+
+    .btn {
+      height: 46px;
+      border-radius: var(--btn-r);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    #btn-back {
+      padding: 0 20px;
+      background: transparent;
+      border: 1px solid rgba(255,138,0,0.2);
+      color: var(--secondary);
+    }
+
+    #btn-back:not(:disabled):hover {
+      border-color: rgba(255,138,0,0.4);
+      color: var(--text);
+    }
+
+    #btn-back:disabled { opacity: 0.2; cursor: default; }
+
+    #btn-next {
+      padding: 0 30px;
+      min-width: 148px;
+      background: var(--gradient);
+      color: #000;
+      font-weight: 600;
+    }
+
+    #btn-next:not(:disabled):hover {
+      filter: brightness(110%);
+      box-shadow: 0 4px 24px rgba(255,138,0,0.3);
+    }
+
+    #btn-next:disabled { opacity: 0.6; cursor: default; }
+
+    /* Error de submit */
+    #submit-error {
+      position: fixed;
+      bottom: 82px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: rgba(255,110,110,0.95);
+      background: rgba(20,5,5,0.92);
+      border: 1px solid rgba(255,80,80,0.2);
+      border-radius: 8px;
+      padding: 7px 16px;
+      white-space: nowrap;
+      z-index: 400;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes slideInContent {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-7px); }
+      45%     { transform: translateX(7px); }
+      65%     { transform: translateX(-4px); }
+      85%     { transform: translateX(4px); }
+    }
+
+    .card.shake { animation: shake 0.38s ease; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-spinner {
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: rgba(0,0,0,0.75);
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      vertical-align: middle;
+      margin-right: 7px;
+      margin-top: -2px;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 767px) {
+      .screen  { padding: 64px 12px calc(82px + env(safe-area-inset-bottom)); }
+
+      .card {
+        padding: 26px 20px;
+        border-radius: 16px;
+      }
+
+      .headline { font-size: 20px; }
+
+      .opt { font-size: 13px; padding: 11px 13px; }
+
+      #btn-back {
+        width: 44px;
+        padding: 0;
+        flex-shrink: 0;
+      }
+
+      #btn-back .back-label { display: none; }
+
+      #btn-next { flex: 1; min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-bg"></div>
+
+  <div id="prog-track"><div id="prog-fill"></div></div>
+  <p id="prog-label">Pregunta <em id="q-num">1</em> de 9</p>
+
+  <!-- ══ P1 · WhatsApp ══ -->
+  <div class="screen is-active"
+       data-index="0" data-field="whatsapp" data-type="input" data-required="true">
+    <div class="card">
+      <p class="eyebrow">Tu contacto</p>
+      <h2 class="headline">¿Cuál es tu número de WhatsApp?</h2>
+      <div class="phone-wrap">
+        <select class="phone-code" id="country-code">
+          <option value="+54">🇦🇷 +54</option>
+          <option value="+52">🇲🇽 +52</option>
+          <option value="+57">🇨🇴 +57</option>
+          <option value="+56">🇨🇱 +56</option>
+          <option value="+51">🇵🇪 +51</option>
+          <option value="+598">🇺🇾 +598</option>
+          <option value="+591">🇧🇴 +591</option>
+          <option value="+595">🇵🇾 +595</option>
+          <option value="+58">🇻🇪 +58</option>
+          <option value="+593">🇪🇨 +593</option>
+          <option value="+507">🇵🇦 +507</option>
+          <option value="+55">🇧🇷 +55</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+34">🇪🇸 +34</option>
+        </select>
+        <input class="field-input" id="whatsapp-input" type="tel"
+               placeholder="9 11 1234-5678" autocomplete="tel" inputmode="tel">
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P2 · Tipo de negocio ══ -->
+  <div class="screen"
+       data-index="1" data-field="tipo_negocio" data-type="single"
+       data-required="true" data-autoadvance="true">
+    <div class="card">
+      <p class="eyebrow">Tu perfil</p>
+      <h2 class="headline">¿Cómo describes tu negocio o actividad profesional?</h2>
+      <div class="options">
+        <button class="opt" data-value="Tengo una empresa o negocio establecido (con clientes activos)">
+          <span class="opt-mark"></span>
+          <span>Tengo una empresa o negocio establecido
+            <span class="opt-sub">Con clientes activos</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Soy emprendedor/a lanzando o validando mi negocio">
+          <span class="opt-mark"></span>
+          <span>Soy emprendedor/a
+            <span class="opt-sub">Lanzando o validando mi negocio</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Soy freelancer o presto servicios profesionales">
+          <span class="opt-mark"></span>
+          Soy freelancer o presto servicios profesionales
+        </button>
+        <button class="opt" data-value="Trabajo en relación de dependencia y quiero una fuente adicional">
+          <span class="opt-mark"></span>
+          <span>Trabajo en relación de dependencia
+            <span class="opt-sub">Quiero una fuente adicional de ingresos</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Estoy en etapa de exploración, aún no genero ingresos">
+          <span class="opt-mark"></span>
+          <span>Estoy en etapa de exploración
+            <span class="opt-sub">Aún no genero ingresos</span>
+          </span>
+        </button>
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P3 · Rubro ══ -->
+  <div class="screen"
+       data-index="2" data-field="rubro" data-type="single"
+       data-required="true" data-autoadvance="true">
+    <div class="card">
+      <p class="eyebrow">Tu sector</p>
+      <h2 class="headline">¿En qué rubro opera tu negocio?</h2>
+      <div class="options">
+        <button class="opt" data-value="Comercio / Retail">
+          <span class="opt-mark"></span>
+          <span>Comercio / Retail
+            <span class="opt-sub">Tienda física u online</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Servicios profesionales">
+          <span class="opt-mark"></span>
+          <span>Servicios profesionales
+            <span class="opt-sub">Consultoría, legal, contabilidad</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Salud y bienestar">
+          <span class="opt-mark"></span>
+          <span>Salud y bienestar
+            <span class="opt-sub">Clínica, consultorio, spa</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Educación / Academia / Formación">
+          <span class="opt-mark"></span>
+          Educación / Academia / Formación
+        </button>
+        <button class="opt" data-value="Inmobiliaria / Construcción">
+          <span class="opt-mark"></span>
+          Inmobiliaria / Construcción
+        </button>
+        <button class="opt" data-value="Hostelería / Restauración">
+          <span class="opt-mark"></span>
+          Hostelería / Restauración
+        </button>
+        <button class="opt" data-value="Otro">
+          <span class="opt-mark"></span>
+          Otro
+        </button>
+      </div>
+      <div id="rubro-otro-wrap" hidden>
+        <input class="field-input" id="rubro-otro-input" type="text"
+               placeholder="¿En qué rubro?" autocomplete="off">
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P4 · Tamaño del equipo ══ -->
+  <div class="screen"
+       data-index="3" data-field="tamano_equipo" data-type="single"
+       data-required="true" data-autoadvance="true">
+    <div class="card">
+      <p class="eyebrow">Tu equipo</p>
+      <h2 class="headline">¿Cuántas personas trabajan contigo actualmente?</h2>
+      <div class="options">
+        <button class="opt" data-value="Solo yo"><span class="opt-mark"></span>Solo yo</button>
+        <button class="opt" data-value="2 a 5 personas"><span class="opt-mark"></span>2 a 5 personas</button>
+        <button class="opt" data-value="6 a 20 personas"><span class="opt-mark"></span>6 a 20 personas</button>
+        <button class="opt" data-value="Más de 20 personas"><span class="opt-mark"></span>Más de 20 personas</button>
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P5 · Etapa de crecimiento ══ -->
+  <div class="screen"
+       data-index="4" data-field="etapa_crecimiento" data-type="single"
+       data-required="true" data-autoadvance="true">
+    <div class="card">
+      <p class="eyebrow">Tu momento</p>
+      <h2 class="headline">¿En qué etapa de crecimiento está tu negocio ahora mismo?</h2>
+      <div class="options">
+        <button class="opt" data-value="Aún estabilizando">
+          <span class="opt-mark"></span>
+          <span>Aún estabilizando
+            <span class="opt-sub">El negocio cubre sus gastos, pero con lo justo</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Estable pero estancado">
+          <span class="opt-mark"></span>
+          <span>Estable pero estancado
+            <span class="opt-sub">Ingresos consistentes, sin crecimiento claro</span>
+          </span>
+        </button>
+        <button class="opt" data-value="En crecimiento">
+          <span class="opt-mark"></span>
+          <span>En crecimiento
+            <span class="opt-sub">Hay demanda, pero falta estructura para sostenerla</span>
+          </span>
+        </button>
+        <button class="opt" data-value="Escalando activamente">
+          <span class="opt-mark"></span>
+          <span>Escalando activamente
+            <span class="opt-sub">Ya sistematicé, quiero multiplicar</span>
+          </span>
+        </button>
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P6 · Ingresos (opcional) ══ -->
+  <div class="screen"
+       data-index="5" data-field="ingresos_mensuales" data-type="single"
+       data-required="false" data-autoadvance="true">
+    <div class="card">
+      <p class="eyebrow">Tus ingresos <span class="badge-opt">Opcional</span></p>
+      <h2 class="headline">¿Cuánto genera aproximadamente tu negocio al mes?</h2>
+      <p class="field-hint">Esta información es confidencial y solo nos ayuda a preparar mejor la reunión</p>
+      <div class="options">
+        <button class="opt" data-value="Menos de $500 USD / mes">
+          <span class="opt-mark"></span>Menos de $500 USD / mes
+        </button>
+        <button class="opt" data-value="$500 a $2,000 USD / mes">
+          <span class="opt-mark"></span>$500 a $2,000 USD / mes
+        </button>
+        <button class="opt" data-value="$2,000 a $5,000 USD / mes">
+          <span class="opt-mark"></span>$2,000 a $5,000 USD / mes
+        </button>
+        <button class="opt" data-value="Más de $5,000 USD / mes">
+          <span class="opt-mark"></span>Más de $5,000 USD / mes
+        </button>
+        <button class="opt" data-value="Prefiero no decirlo">
+          <span class="opt-mark"></span>Prefiero no decirlo
+        </button>
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P7 · Caos operativo (multi, máx. 2) ══ -->
+  <div class="screen"
+       data-index="6" data-field="caos_operativo" data-type="multi" data-required="true">
+    <div class="card">
+      <p class="eyebrow">Tu operación</p>
+      <h2 class="headline">¿Cuál es el mayor caos operativo que tiene tu negocio hoy?</h2>
+      <p class="field-hint">Elegí hasta 2 opciones</p>
+      <div class="options multi">
+        <button class="opt" data-value="Pierdo clientes porque no respondo rápido por WhatsApp">
+          <span class="opt-mark"></span>
+          Pierdo clientes porque no respondo rápido por WhatsApp
+        </button>
+        <button class="opt" data-value="Mi equipo pierde tiempo en tareas repetitivas">
+          <span class="opt-mark"></span>
+          <span>Mi equipo pierde tiempo en tareas repetitivas
+            <span class="opt-sub">Seguimiento, agendamiento, reportes</span>
+          </span>
+        </button>
+        <button class="opt" data-value="No sé qué pasa en mi negocio porque no tengo datos claros">
+          <span class="opt-mark"></span>
+          No sé qué pasa en mi negocio porque no tengo datos claros
+        </button>
+        <button class="opt" data-value="Todo depende de mí para funcionar, no puedo escalar">
+          <span class="opt-mark"></span>
+          Todo depende de mí para funcionar, no puedo escalar
+        </button>
+        <button class="opt" data-value="Mis procesos de venta o atención son inconsistentes">
+          <span class="opt-mark"></span>
+          <span>Mis procesos de venta o atención son inconsistentes
+            <span class="opt-sub">Y poco profesionales</span>
+          </span>
+        </button>
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P8 · Intento previo ══ -->
+  <div class="screen"
+       data-index="7" data-field="intento_previo" data-type="single"
+       data-required="true" data-autoadvance="true">
+    <div class="card">
+      <p class="eyebrow">Tu historial</p>
+      <h2 class="headline">¿Has intentado resolver esto antes? ¿Qué pasó?</h2>
+      <div class="options">
+        <button class="opt" data-value="No, nunca busqué una solución formal">
+          <span class="opt-mark"></span>No, nunca busqué una solución formal
+        </button>
+        <button class="opt" data-value="Sí, contraté o probé alguna herramienta pero no funcionó">
+          <span class="opt-mark"></span>Sí, contraté o probé alguna herramienta pero no funcionó
+        </button>
+        <button class="opt" data-value="Sí, intenté automatizar algo yo mismo/a pero no llegué lejos">
+          <span class="opt-mark"></span>Sí, intenté automatizar algo yo mismo/a pero no llegué lejos
+        </button>
+        <button class="opt" data-value="Sí, contraté a alguien pero fue caro y no dio resultados">
+          <span class="opt-mark"></span>Sí, contraté a alguien pero fue caro y no dio resultados
+        </button>
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- ══ P9 · Puede decidir ══ -->
+  <div class="screen"
+       data-index="8" data-field="puede_decidir" data-type="single" data-required="true">
+    <div class="card">
+      <p class="eyebrow">Tu decisión</p>
+      <h2 class="headline">Si en la reunión encontramos que la automatización es la solución correcta, ¿estás en posición de tomar una decisión?</h2>
+      <div class="options">
+        <button class="opt" data-value="Sí, puedo decidir solo/a">
+          <span class="opt-mark"></span>Sí, puedo decidir solo/a
+        </button>
+        <button class="opt" data-value="Necesito consultar con un socio o cónyuge antes de avanzar">
+          <span class="opt-mark"></span>Necesito consultar con un socio o cónyuge antes de avanzar
+        </button>
+        <button class="opt" data-value="Depende del precio y del plan propuesto">
+          <span class="opt-mark"></span>Depende del precio y del plan propuesto
+        </button>
+        <button class="opt" data-value="Estoy solo investigando por ahora">
+          <span class="opt-mark"></span>Estoy solo investigando por ahora
+        </button>
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- Navegación -->
+  <nav id="nav">
+    <button class="btn" id="btn-back" disabled>
+      ← <span class="back-label">Atrás</span>
+    </button>
+    <button class="btn" id="btn-next">Siguiente →</button>
+  </nav>
+
+  <p id="submit-error" hidden></p>
+
+  <script>
+    // Cambiá esta URL al endpoint de Railway en producción
+    const API_URL = 'http://localhost:3000/api/leads';
+
+    // ── Estado del formulario ──
+    const state = {
+      whatsapp:           '',
+      tipo_negocio:       '',
+      rubro:              '',
+      rubro_otro:         null,
+      tamano_equipo:      '',
+      etapa_crecimiento:  '',
+      ingresos_mensuales: null,
+      caos_operativo:     [],
+      intento_previo:     '',
+      puede_decidir:      '',
+    };
+
+    // Mapa índice → config de validación
+    const CONF = [
+      { field: 'whatsapp',           required: true,  type: 'input'  },
+      { field: 'tipo_negocio',       required: true,  type: 'single' },
+      { field: 'rubro',              required: true,  type: 'single' },
+      { field: 'tamano_equipo',      required: true,  type: 'single' },
+      { field: 'etapa_crecimiento',  required: true,  type: 'single' },
+      { field: 'ingresos_mensuales', required: false, type: 'single' },
+      { field: 'caos_operativo',     required: true,  type: 'multi'  },
+      { field: 'intento_previo',     required: true,  type: 'single' },
+      { field: 'puede_decidir',      required: true,  type: 'single' },
+    ];
+
+    const screens   = Array.from(document.querySelectorAll('.screen'));
+    const progFill  = document.getElementById('prog-fill');
+    const qNum      = document.getElementById('q-num');
+    const btnBack   = document.getElementById('btn-back');
+    const btnNext   = document.getElementById('btn-next');
+    const submitErr = document.getElementById('submit-error');
+    let current = 0;
+    let busy    = false;
+
+    // ── Progreso y nav ──
+    function setProgress(i) {
+      progFill.style.width = ((i + 1) / 9 * 100) + '%';
+      qNum.textContent = i + 1;
+    }
+
+    function syncNav(i) {
+      btnBack.disabled    = i === 0;
+      btnNext.textContent = i === 8 ? 'Enviar y agendar mi reunión →' : 'Siguiente →';
+      btnNext.disabled    = false;
+    }
+
+    // ── Animación de entrada escalonada ──
+    function animateContentIn(el) {
+      const STAGGER = [
+        { sel: '.eyebrow',    delay: '0ms'   },
+        { sel: '.headline',   delay: '70ms'  },
+        { sel: '.field-hint', delay: '130ms' },
+        { sel: '.options, .phone-wrap', delay: '140ms' },
+      ];
+      const KF = 'slideInContent 0.44s cubic-bezier(0.4,0,0.2,1)';
+
+      STAGGER.forEach(({ sel }) =>
+        el.querySelectorAll(sel).forEach(n => { n.style.animation = 'none'; })
+      );
+      el.getBoundingClientRect(); // fuerza reflow
+
+      STAGGER.forEach(({ sel, delay }) =>
+        el.querySelectorAll(sel).forEach(n => {
+          n.style.animation = `${KF} ${delay} both`;
+        })
+      );
+    }
+
+    // ── Restaura el estado visual al volver a una pantalla ──
+    function restoreScreen(screenEl, i) {
+      const { field, type } = CONF[i];
+
+      if (type === 'input') {
+        const full   = state.whatsapp || '';
+        const parts  = full.match(/^(\+\d+)\s(.+)$/);
+        const codeEl = document.getElementById('country-code');
+        const numEl  = document.getElementById('whatsapp-input');
+        if (parts) { codeEl.value = parts[1]; numEl.value = parts[2]; }
+        else        { numEl.value = full; }
+        return;
+      }
+
+      if (type === 'single') {
+        const val = state[field];
+        screenEl.querySelectorAll('.opt').forEach(o =>
+          o.classList.toggle('is-selected', o.dataset.value === val)
+        );
+        if (field === 'rubro') {
+          const wrap  = document.getElementById('rubro-otro-wrap');
+          const input = document.getElementById('rubro-otro-input');
+          wrap.hidden  = val !== 'Otro';
+          input.value  = state.rubro_otro || '';
+        }
+        return;
+      }
+
+      if (type === 'multi') {
+        const vals = state[field] || [];
+        screenEl.querySelectorAll('.opt').forEach(o =>
+          o.classList.toggle('is-selected', vals.includes(o.dataset.value))
+        );
+      }
+    }
+
+    // ── Transición de pantalla (eje Y, estilo Typeform) ──
+    function goTo(next, dir) {
+      if (busy || next === current) return;
+      busy = true;
+
+      const from = screens[current];
+      const to   = screens[next];
+      const dy   = dir === 'fwd' ? 48 : -48;
+      const T    = '0.42s cubic-bezier(0.4,0,0.2,1)';
+
+      to.scrollTop = 0;
+      restoreScreen(to, next);
+
+      to.style.cssText   = `opacity:0;transform:translateY(${dy}px);pointer-events:none;transition:none;`;
+      to.getBoundingClientRect();
+
+      from.style.cssText = `opacity:0;transform:translateY(${-dy}px);pointer-events:none;transition:opacity ${T},transform ${T};`;
+      to.style.cssText   = `opacity:1;transform:translateY(0);pointer-events:all;transition:opacity ${T},transform ${T};`;
+
+      setProgress(next);
+      syncNav(next);
+      submitErr.hidden = true;
+
+      setTimeout(() => animateContentIn(to), 80);
+
+      setTimeout(() => {
+        from.classList.remove('is-active');
+        from.style.cssText = '';
+        to.classList.add('is-active');
+        to.style.cssText = '';
+        current = next;
+        busy    = false;
+      }, 450);
+    }
+
+    // ── Validación ──
+    function validate(i) {
+      const { field, required, type } = CONF[i];
+      if (!required) return true;
+
+      if (type === 'input') {
+        return (state[field] || '').replace(/\D/g, '').length >= 7;
+      }
+      if (type === 'single') {
+        if (!state[field]) return false;
+        if (field === 'rubro' && state.rubro === 'Otro') {
+          return !!(state.rubro_otro && state.rubro_otro.trim());
+        }
+        return true;
+      }
+      if (type === 'multi') {
+        return Array.isArray(state[field]) && state[field].length >= 1;
+      }
+      return true;
+    }
+
+    function errorMsg(i) {
+      const { field, type } = CONF[i];
+      if (field === 'whatsapp')                        return 'Ingresá un número válido (mínimo 7 dígitos)';
+      if (field === 'rubro' && state.rubro === 'Otro') return 'Especificá tu rubro en el campo de texto';
+      if (type  === 'multi')                           return 'Elegí al menos una opción para continuar';
+      return 'Elegí una opción para continuar';
+    }
+
+    // ── Feedback visual de error ──
+    function shakeCard() {
+      const card = screens[current].querySelector('.card');
+      card.classList.remove('shake');
+      card.getBoundingClientRect();
+      card.classList.add('shake');
+      setTimeout(() => card.classList.remove('shake'), 420);
+    }
+
+    function showErr(screenEl, msg) {
+      const el = screenEl.querySelector('.field-error');
+      if (!el) return;
+      el.textContent = msg;
+      el.hidden = false;
+    }
+
+    function clearErr(screenEl) {
+      const el = screenEl.querySelector('.field-error');
+      if (el) el.hidden = true;
+    }
+
+    // ── Guarda la respuesta de la pantalla actual ──
+    function saveAnswer() {
+      const screenEl = screens[current];
+      const { field, type } = CONF[current];
+
+      if (type === 'input') {
+        const num = document.getElementById('whatsapp-input').value.trim();
+        const cod = document.getElementById('country-code').value;
+        state[field] = num ? (cod + ' ' + num) : '';
+        return;
+      }
+      if (type === 'single') {
+        const sel = screenEl.querySelector('.opt.is-selected');
+        const val = sel ? sel.dataset.value : '';
+        if (field === 'ingresos_mensuales') {
+          state[field] = val === 'Prefiero no decirlo' ? null : (val || null);
+        } else {
+          state[field] = val;
+        }
+        if (field === 'rubro') {
+          state.rubro_otro = val === 'Otro'
+            ? (document.getElementById('rubro-otro-input').value.trim() || '')
+            : null;
+        }
+        return;
+      }
+      if (type === 'multi') {
+        state[field] = Array.from(screenEl.querySelectorAll('.opt.is-selected'))
+          .map(o => o.dataset.value);
+      }
+    }
+
+    // ── Intenta avanzar (validando) ──
+    function attemptNext() {
+      if (busy) return;
+      saveAnswer();
+      clearErr(screens[current]);
+
+      if (!validate(current)) {
+        showErr(screens[current], errorMsg(current));
+        shakeCard();
+        if (CONF[current].type === 'input') {
+          screens[current].querySelector('.field-input').classList.add('has-error');
+        }
+        if (current === 2 && state.rubro === 'Otro') {
+          document.getElementById('rubro-otro-input').classList.add('has-error');
+        }
+        return;
+      }
+
+      if (current === 8) {
+        submitForm();
+      } else {
+        goTo(current + 1, 'fwd');
+      }
+    }
+
+    // ── Botones de navegación ──
+    btnNext.addEventListener('click', attemptNext);
+
+    btnBack.addEventListener('click', () => {
+      if (busy || current === 0) return;
+      saveAnswer();
+      goTo(current - 1, 'bck');
+    });
+
+    // Atajos de teclado
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter'      && e.target.tagName !== 'BUTTON') attemptNext();
+      if (e.key === 'Escape')                                       btnBack.click();
+      if (e.key === 'ArrowRight' && e.target.tagName !== 'INPUT')  attemptNext();
+      if (e.key === 'ArrowLeft'  && e.target.tagName !== 'INPUT')  btnBack.click();
+    });
+
+    // ── P1: teléfono + código de país ──
+    const telInput   = document.getElementById('whatsapp-input');
+    const codeSelect = document.getElementById('country-code');
+
+    function buildWA() {
+      const num = telInput.value.trim();
+      return num ? (codeSelect.value + ' ' + num) : '';
+    }
+
+    telInput.addEventListener('input', () => {
+      state.whatsapp = buildWA();
+      telInput.classList.remove('has-error');
+      clearErr(screens[0]);
+    });
+    codeSelect.addEventListener('change', () => { state.whatsapp = buildWA(); });
+    telInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') attemptNext();
+    });
+
+    // ── Single-select con auto-avance (P2, P3, P4, P5, P6, P8) ──
+    screens.forEach(screen => {
+      if (screen.dataset.type !== 'single') return;
+      const autoAdv = screen.dataset.autoadvance === 'true';
+      const field   = screen.dataset.field;
+
+      screen.querySelector('.options').addEventListener('click', e => {
+        const btn = e.target.closest('.opt');
+        if (!btn) return;
+
+        screen.querySelectorAll('.opt').forEach(o => o.classList.remove('is-selected'));
+        btn.classList.add('is-selected');
+
+        const val = btn.dataset.value;
+        let advance = autoAdv;
+
+        // P3: manejo especial de "Otro"
+        if (field === 'rubro') {
+          const wrap  = document.getElementById('rubro-otro-wrap');
+          const input = document.getElementById('rubro-otro-input');
+          if (val === 'Otro') {
+            wrap.hidden = false;
+            // Anima la aparición del input
+            wrap.style.animation = 'none';
+            wrap.getBoundingClientRect();
+            wrap.style.animation = 'slideInContent 0.32s cubic-bezier(0.4,0,0.2,1) both';
+            input.focus();
+            state.rubro     = 'Otro';
+            state.rubro_otro = '';
+            advance = false; // espera que llenen el campo
+          } else {
+            wrap.hidden  = true;
+            state.rubro      = val;
+            state.rubro_otro = null;
+          }
+        } else if (field === 'ingresos_mensuales') {
+          state[field] = val === 'Prefiero no decirlo' ? null : val;
+        } else {
+          state[field] = val;
+        }
+
+        clearErr(screen);
+
+        if (advance) {
+          setTimeout(() => { if (!busy) goTo(current + 1, 'fwd'); }, 350);
+        }
+      });
+    });
+
+    // ── P7: multi-select (máx. 2) ──
+    screens[6].querySelector('.options').addEventListener('click', e => {
+      const btn = e.target.closest('.opt');
+      if (!btn) return;
+
+      const selected = screens[6].querySelectorAll('.opt.is-selected');
+
+      if (btn.classList.contains('is-selected')) {
+        btn.classList.remove('is-selected');
+      } else if (selected.length < 2) {
+        btn.classList.add('is-selected');
+      } else {
+        // Límite alcanzado: feedback visual en el botón que intentaron clickear
+        btn.classList.add('deny-flash');
+        setTimeout(() => btn.classList.remove('deny-flash'), 380);
+        return;
+      }
+
+      state.caos_operativo = Array.from(screens[6].querySelectorAll('.opt.is-selected'))
+        .map(o => o.dataset.value);
+      clearErr(screens[6]);
+    });
+
+    // ── P3: input "Otro" ──
+    const otroInput = document.getElementById('rubro-otro-input');
+    otroInput.addEventListener('input', () => {
+      state.rubro_otro = otroInput.value.trim();
+      otroInput.classList.remove('has-error');
+      clearErr(screens[2]);
+    });
+    otroInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') attemptNext();
+    });
+
+    // ── Submit ──
+    async function submitForm() {
+      // Estado de carga
+      btnNext.disabled  = true;
+      btnNext.innerHTML = '<span class="btn-spinner"></span>Enviando...';
+      submitErr.hidden  = true;
+
+      const payload = {
+        whatsapp:           state.whatsapp,
+        tipo_negocio:       state.tipo_negocio,
+        rubro:              state.rubro,
+        rubro_otro:         state.rubro_otro         || null,
+        tamano_equipo:      state.tamano_equipo,
+        etapa_crecimiento:  state.etapa_crecimiento,
+        ingresos_mensuales: state.ingresos_mensuales || null,
+        caos_operativo:     state.caos_operativo,
+        intento_previo:     state.intento_previo,
+        puede_decidir:      state.puede_decidir,
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.href = 'https://calendly.com/elgranh/reuniones-1-a-1';
+        } else {
+          throw new Error(data.error || 'El servidor rechazó el envío');
+        }
+      } catch (err) {
+        // Restaura el botón — el estado del formulario se conserva intacto
+        btnNext.disabled    = false;
+        btnNext.textContent = 'Enviar y agendar mi reunión →';
+
+        submitErr.textContent = err.message.includes('fetch')
+          ? 'Sin conexión. Revisá tu internet e intentá de nuevo.'
+          : `Error: ${err.message}. Podés intentarlo de nuevo.`;
+        submitErr.hidden = false;
+      }
+    }
+
+    // ── Init ──
+    setProgress(0);
+    syncNav(0);
+    animateContentIn(screens[0]);
+  </script>
+</body>
+</html>

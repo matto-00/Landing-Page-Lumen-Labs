@@ -133,20 +133,61 @@
       top: 0;
       left: 0;
       right: 0;
-      height: var(--nav-height);
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 5%;
-      z-index: 100;
-      transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+      padding: 20px 5%;
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      border-bottom: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      transition: padding 0.3s ease;
     }
 
     #navbar.scrolled {
-      background: rgba(10, 10, 10, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.08);
+      background: transparent !important;
+      backdrop-filter: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 16px 5%;
+    }
+
+    /* La pill: solo los links, centrada */
+    .nav-pill {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      /* Glass Kit tokens: blur-lg + reflection-inner + shadow-glass */
+      background: rgba(12,12,12,0.60);
+      backdrop-filter: blur(24px) saturate(2.0) brightness(1.1);
+      -webkit-backdrop-filter: blur(24px) saturate(2.0) brightness(1.1);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      box-shadow:
+        0 2px 0 rgba(255,255,255,0.08) inset,
+        0 -1px 0 rgba(0,0,0,0.30) inset,
+        0 8px 32px rgba(0,0,0,0.50),
+        0 0 0 1px rgba(215,105,18,0.10);
+      padding: 10px 10px;
+    }
+
+    .nav-indicator {
+      position: absolute;
+      height: calc(100% - 12px);
+      top: 6px;
+      border-radius: 999px;
+      background: rgba(215,105,18,0.10);
+      border: 1px solid rgba(215,105,18,0.20);
+      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
     }
 
     /* Logo */
@@ -159,13 +200,13 @@
 
     .nav-logo-full {
       display: block;
-      height: 96px;
+      height: 84px;
       width: auto;
     }
 
     .nav-logo-icon {
       display: none;
-      height: 96px;
+      height: 28px;
       width: auto;
     }
 
@@ -187,23 +228,37 @@
       filter: grayscale(100%) brightness(200%);
     }
 
-    /* Center links — desktop only */
+    /* Links dentro de la pill */
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 36px;
-      list-style: none;
+      gap: 2px;
     }
 
     .nav-links a {
-      font-size: 0.875rem;
+      position: relative;
+      z-index: 1;
+      font-size: 14px;
       font-weight: 500;
-      color: var(--color-muted);
-      transition: color 0.2s ease;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: color 0.25s ease;
     }
 
     .nav-links a:hover {
-      color: var(--color-text);
+      color: rgba(255,255,255,0.85);
+      background: transparent;
+    }
+
+    .nav-links a.nav-active {
+      color: var(--color-orange);
+      background: transparent;
+      text-shadow:
+        0 0 12px rgba(215,105,18,0.70),
+        0 0 24px rgba(215,105,18,0.35);
     }
 
     /* CTA button */
@@ -225,8 +280,8 @@
       font-family: var(--font-body);
       font-weight: 600;
       font-size: 0.875rem;
-      padding: 10px 20px;
-      border-radius: var(--btn-radius);
+      padding: 8px 18px;
+      border-radius: 999px;
       border: none;
       cursor: pointer;
       white-space: nowrap;
@@ -275,6 +330,117 @@
       left: 125%;
     }
 
+    /* CTA dentro del navbar — sobreescribe btn-primary para la pill */
+    .nav-cta {
+      font-size: 14px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      text-decoration: none;
+      display: inline-block;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    /* ── HAMBURGER ───────────────────────────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 8px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+      padding: 8px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .hamburger:hover {
+      background: rgba(215,105,18,0.12);
+      border-color: rgba(215,105,18,0.30);
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 1.5px;
+      background: var(--color-text);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+
+    .hamburger.is-open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    .hamburger.is-open span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    .hamburger.is-open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* ── MOBILE MENU ─────────────────────────────────────────────────────── */
+    .mobile-menu {
+      position: fixed;
+      top: 72px;
+      left: 12px;
+      right: 12px;
+      z-index: 99;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-radius: 16px;
+      opacity: 0;
+      transform: translateY(-12px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .mobile-menu.is-open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    .mobile-link {
+      display: block;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .mobile-link:hover {
+      background: rgba(215,105,18,0.10);
+      color: var(--color-amber);
+    }
+
+    .mobile-cta {
+      margin-top: 8px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+
+    @media (min-width: 769px) {
+      .mobile-menu { display: none !important; }
+    }
+
+    /* Compensar pill flotante en scroll anclas */
+    section[id] {
+      scroll-margin-top: 96px;
+    }
+
     /* ── SECTIONS ─────────────────────────────────────────────────────────── */
     .section {
       padding: 100px 5%;
@@ -308,11 +474,10 @@
       background: radial-gradient(
         ellipse at 50% 50%,
         #E8780A 0%,
-        #C45E08 25%,
-        #6B2A03 45%,
-        #1A0800 72%,
-        #000000 88%,
-        #000000 100%
+        #C45E08 30%,
+        #8B3A05 55%,
+        #3D1A02 75%,
+        #1A0800 100%
       );
       background-size: 200% 200%;
       color: #000000;
@@ -357,7 +522,7 @@
 
     @keyframes btnGlare {
       0%        { left: -75%; }
-      40%, 100% { left: 125%; }
+      60%, 100% { left: 125%; }
     }
 
     .btn-primary:hover {
@@ -648,6 +813,7 @@
 
     /* ── VSL SECTION ──────────────────────────────────────────────────────── */
     #vsl {
+      display: none;
       padding: 100px 5%;
       position: relative;
     }
@@ -1249,6 +1415,27 @@
       font-style: italic;
     }
 
+    /* Foto real de miembro */
+    .miembro-avatar-img {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(215,105,18,0.30);
+      box-shadow: 0 0 20px rgba(215,105,18,0.15);
+      flex-shrink: 0;
+    }
+
+    .miembro-avatar-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .miembro-avatar { display: none; }
+
     /* ── FAQ SECTION ─────────────────────────────────────────────────────── */
     #faq {
       padding: 128px 5%;
@@ -1571,48 +1758,73 @@
         display: none;
       }
 
-      .nav-logo-full { display: none; }
-      .nav-logo-icon { display: block; }
+      #navbar {
+        padding: 14px 5%;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      #navbar.scrolled {
+        background: rgba(5,5,5,0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .nav-pill  { display: none; }
+      .nav-cta   { display: none; }
+      .nav-logo-full { display: block; height: 52px; width: auto; }
+      .nav-logo-icon { display: none; }
+      .hamburger { display: flex; }
 
       .section {
         padding: 60px 5%;
       }
 
+      .hero-glow-wrapper { display: none; }
+
       #hero {
-        padding-top: calc(var(--nav-height) + 40px);
+        min-height: 100svh;
+        padding: 80px 6% 60px;
         align-items: flex-start;
       }
 
       .hero-content {
         flex-direction: column;
-        gap: 48px;
+        gap: 32px;
       }
 
       .hero-text {
-        flex: none;
         max-width: 100%;
       }
 
-      .hero-glow-wrapper {
-        flex: none;
-        max-width: 100%;
-        width: 100%;
-        min-height: 220px;
+      h1.hero-headline {
+        font-size: 42px;
+        letter-spacing: -1.5px;
       }
 
-      .hero-scene {
-        width: 468px;
-        height: 468px;
-        margin: 0 auto;
+      .hero-sub {
+        font-size: 16px;
+        max-width: 100%;
       }
 
       .hero-buttons {
         flex-direction: column;
+        gap: 12px;
+        width: 100%;
       }
 
-      .btn-primary,
-      .btn-secondary {
+      .hero-buttons .btn-primary,
+      .hero-buttons .btn-secondary {
+        width: 100%;
         text-align: center;
+        justify-content: center;
       }
 
       #vsl {
@@ -1817,19 +2029,43 @@
   <!-- ── NAVBAR ──────────────────────────────────────────────────────────── -->
   <nav id="navbar">
     <a href="#hero" class="nav-logo">
-      <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" class="nav-logo-full" height="32">
-      <img src="assets/Lumen_isotipo.png" alt="Lumen Labs" class="nav-logo-icon" height="32">
+      <img src="assets/Lumen_Horizontal_logo2.png"
+           alt="Lumen Labs" class="nav-logo-full" height="28">
+      <img src="assets/Lumen_isotipo.png"
+           alt="Lumen Labs" class="nav-logo-icon" height="28">
     </a>
 
-    <ul class="nav-links">
-      <li><a href="#problema">Servicios</a></li>
-      <li><a href="#casos">Casos</a></li>
-      <li><a href="#equipo">Nosotros</a></li>
-      <li><a href="#faq">FAQ</a></li>
-    </ul>
+    <div class="nav-pill">
+      <div class="nav-indicator" id="navIndicator"></div>
+      <div class="nav-links">
+        <a href="#hero">Inicio</a>
+        <a href="#cta-1">Contacto</a>
+        <a href="#problema">Servicios</a>
+        <a href="#casos">Casos</a>
+        <a href="#equipo">Nosotros</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
 
-    <a href="#cta-1" class="btn-cta">Agendar llamada →</a>
+    <a href="formulario.html"
+       class="btn-primary nav-cta">
+      Agendar llamada →
+    </a>
+
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </nav>
+
+  <div class="mobile-menu glass-card" id="mobileMenu">
+    <a href="#hero"     class="mobile-link" onclick="closeMobileMenu()">Inicio</a>
+    <a href="#problema" class="mobile-link" onclick="closeMobileMenu()">Servicios</a>
+    <a href="#casos"    class="mobile-link" onclick="closeMobileMenu()">Casos</a>
+    <a href="#equipo"   class="mobile-link" onclick="closeMobileMenu()">Nosotros</a>
+    <a href="#faq"      class="mobile-link" onclick="closeMobileMenu()">FAQ</a>
+  </div>
 
   <!-- 01 · HERO ──────────────────────────────────────────────────────────── -->
   <section id="hero" class="section">
@@ -1846,7 +2082,7 @@
           necesitaba. Expertos que entienden tanto el negocio como la ingeniería.
         </p>
         <div class="hero-buttons">
-          <a href="#vsl" class="btn-primary">Agendar estrategia →</a>
+          <a href="formulario.html" class="btn-primary">Agendar estrategia →</a>
           <a href="#casos" class="btn-secondary">Ver cómo funciona →</a>
         </div>
       </div>
@@ -1922,7 +2158,7 @@
           Cuéntanos tu caso en 2 minutos. Nuestro equipo
           revisa cada solicitud y te responde en menos de 24 horas.
         </p>
-        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+        <a href="formulario.html"
            class="btn-primary cta-btn">
           Quiero automatizar mi negocio →
         </a>
@@ -2064,7 +2300,7 @@
     <div class="section-container">
       <div class="cta-simple">
         <p class="cta-simple-text">¿Te identificaste? Hablemos.</p>
-        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+        <a href="formulario.html"
            class="btn-primary">
           Agendar diagnóstico gratuito →
         </a>
@@ -2089,7 +2325,7 @@
             tiene un resultado medible y un cliente
             que puede respaldarlo.
           </p>
-          <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+          <a href="formulario.html"
              class="btn-secondary">
             Quiero resultados así →
           </a>
@@ -2166,32 +2402,45 @@
       <div class="equipo-grid">
 
         <div class="miembro-card glass-card">
-          <div class="miembro-avatar">NL</div>
+          <div class="miembro-avatar-img">
+            <img src="assets/nico.jpg"
+                 alt="Nicolas Carrasco Simons"
+                 draggable="false">
+          </div>
           <div class="miembro-info">
-            <h3 class="miembro-nombre">Nombre Apellido</h3>
-            <span class="miembro-rol label-eyebrow">CEO & Estrategia</span>
+            <h3 class="miembro-nombre">Nicolas Carrasco Simons</h3>
+            <span class="miembro-rol label-eyebrow">CEO & Director de Marketing</span>
             <p class="miembro-frase">
-              "Entiendo el negocio antes de escribir una línea de código."
+              "Entiendo el negocio antes de proponer cualquier solución tecnológica."
             </p>
           </div>
         </div>
 
         <div class="miembro-card glass-card">
-          <div class="miembro-avatar">NL</div>
+          <div class="miembro-avatar-img">
+            <img src="assets/matias.png"
+                 alt="Matias Agramont Quiroga"
+                 draggable="false"
+                 style="object-position: center 5%;">
+          </div>
           <div class="miembro-info">
-            <h3 class="miembro-nombre">Nombre Apellido</h3>
-            <span class="miembro-rol label-eyebrow">Lead Engineer</span>
+            <h3 class="miembro-nombre">Matias Agramont Quiroga</h3>
+            <span class="miembro-rol label-eyebrow">COO · Project Manager & Tech Tools</span>
             <p class="miembro-frase">
-              "La automatización bien hecha es invisible. Solo ves los resultados."
+              "La automatización bien ejecutada es invisible. Solo ves los resultados."
             </p>
           </div>
         </div>
 
         <div class="miembro-card glass-card">
-          <div class="miembro-avatar">NL</div>
+          <div class="miembro-avatar-img">
+            <img src="assets/leo.jpeg"
+                 alt="Leonardo Rojas Rojas"
+                 draggable="false">
+          </div>
           <div class="miembro-info">
-            <h3 class="miembro-nombre">Nombre Apellido</h3>
-            <span class="miembro-rol label-eyebrow">IA & Integraciones</span>
+            <h3 class="miembro-nombre">Leonardo Rojas Rojas</h3>
+            <span class="miembro-rol label-eyebrow">CTO</span>
             <p class="miembro-frase">
               "Cada integración es un puente. Mi trabajo es que nunca se caiga."
             </p>
@@ -2207,7 +2456,7 @@
     <div class="section-container">
       <div class="cta-simple">
         <p class="cta-simple-text">El equipo está listo. ¿Y tú?</p>
-        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+        <a href="formulario.html"
            class="btn-primary">
           Hablar con el equipo →
         </a>
@@ -2342,7 +2591,7 @@
           Hablemos. Sin presión, sin promesas vacías.<br>
           Solo claridad sobre si podemos ayudarte y cómo.
         </p>
-        <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+        <a href="formulario.html"
            class="btn-primary cta-final-btn">
           Agendar diagnóstico gratuito →
         </a>
@@ -2396,7 +2645,7 @@
             <li><a href="#casos">Casos de éxito</a></li>
             <li><a href="#equipo">Nosotros</a></li>
             <li><a href="#faq">FAQ</a></li>
-            <li><a href="TYPEFORM_URL_AQUI" target="_blank">Contacto</a></li>
+            <li><a href="formulario.html">Contacto</a></li>
           </ul>
         </div>
 
@@ -2407,7 +2656,7 @@
             Si llegaste hasta aquí, probablemente tenemos algo
             importante que discutir.
           </p>
-          <a href="TYPEFORM_URL_AQUI" target="_blank" rel="noopener noreferrer"
+          <a href="formulario.html"
              class="btn-secondary footer-cta-btn">
             Agendar llamada →
           </a>
@@ -2571,6 +2820,90 @@
     player.addEventListener('click', function () {
       iframe.src = iframe.dataset.src;
       player.classList.add('playing');
+    });
+
+    // ── HAMBURGER MENU ──────────────────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('is-open');
+      mobileMenu.classList.toggle('is-open');
+    });
+
+    function closeMobileMenu() {
+      hamburger.classList.remove('is-open');
+      mobileMenu.classList.remove('is-open');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!hamburger.contains(e.target) &&
+          !mobileMenu.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    // ── NAV ACTIVE INDICATOR ────────────────────────────────────────────────
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const indicator = document.getElementById('navIndicator');
+
+    function moveIndicator(activeLink) {
+      if (!activeLink || !indicator) return;
+      const pill = document.querySelector('.nav-pill');
+      const pillRect = pill.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+      indicator.style.opacity = '1';
+      indicator.style.left = (linkRect.left - pillRect.left) + 'px';
+      indicator.style.width = linkRect.width + 'px';
+    }
+
+    function setActiveLink(href) {
+      navLinks.forEach(link => {
+        link.classList.toggle('nav-active', link.getAttribute('href') === href);
+      });
+      const activeLink = document.querySelector('.nav-links a.nav-active');
+      moveIndicator(activeLink);
+    }
+
+    const sections = document.querySelectorAll(
+      '#hero, #problema, #para-quien, #casos, #equipo, #faq, #cta-1'
+    );
+
+    const sectionToLink = {
+      'hero':       '#hero',
+      'problema':   '#problema',
+      'para-quien': '#problema',
+      'casos':      '#casos',
+      'equipo':     '#equipo',
+      'faq':        '#faq',
+      'cta-1':      '#cta-1'
+    };
+
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const href = sectionToLink[entry.target.id];
+          if (href) setActiveLink(href);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    sections.forEach(s => navObserver.observe(s));
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        setActiveLink(link.getAttribute('href'));
+      });
+    });
+
+    window.addEventListener('load', () => {
+      const first = document.querySelector('.nav-links a');
+      if (first) moveIndicator(first);
+    });
+
+    window.addEventListener('resize', () => {
+      const activeLink = document.querySelector('.nav-links a.nav-active');
+      if (activeLink) moveIndicator(activeLink);
     });
 
   </script>
