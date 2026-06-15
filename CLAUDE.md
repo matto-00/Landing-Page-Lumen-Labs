@@ -27,9 +27,10 @@
 --color-elevation:   #121212   /* Soft Graphite — bordes y elevaciones */
 
 /* Accent */
---color-orange:      #FF8A00   /* Lumen Orange — color principal de marca */
---color-amber:       #FFA726   /* Bright Amber — hover y destacados */
---color-gold:        #FFC857   /* Golden Glow — gradientes premium */
+--color-orange:      #D76912   /* Lumen Orange — color principal de marca */
+--color-amber:       #E88420   /* Bright Amber — hover y destacados */
+--color-gold:        #B55A0F   /* Deep Gold — gradientes premium */
+--color-ember:       #4B230B   /* Ember — fondos y sombras oscuras */
 
 /* Texto */
 --color-text:        #FFFFFF   /* Primary */
@@ -37,7 +38,7 @@
 --color-muted:       #777777   /* Tertiary */
 
 /* Gradiente principal */
---gradient-brand: linear-gradient(135deg, #FF8A00 0%, #FFA726 45%, #FFC857 100%);
+--gradient-brand: linear-gradient(135deg, #B55A0F 0%, #D76912 45%, #E88420 100%);
 ```
 
 ### Cards

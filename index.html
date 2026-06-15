@@ -18,14 +18,15 @@
     /* ── DESIGN TOKENS ────────────────────────────────────────────────────── */
     :root {
       /* Base */
-      --color-bg:        #050505;
+      --color-bg:        #000000;
       --color-surface:   #0A0A0A;
       --color-elevation: #121212;
 
       /* Accent */
-      --color-orange:    #FF8A00;
-      --color-amber:     #FFA726;
-      --color-gold:      #FFC857;
+      --color-orange:    #D76912;
+      --color-amber:     #E88420;
+      --color-gold:      #B55A0F;
+      --color-ember:     #4B230B;
 
       /* Texto */
       --color-text:      #FFFFFF;
@@ -33,27 +34,27 @@
       --color-muted:     #777777;
 
       /* Gradiente */
-      --gradient-brand: linear-gradient(135deg, #FF8A00 0%, #FFA726 45%, #FFC857 100%);
+      --gradient-brand: linear-gradient(135deg, #B55A0F 0%, #D76912 45%, #E88420 100%);
 
       /* Cards */
       --card-bg:     rgba(12,12,12,0.85);
-      --card-border: 1px solid rgba(255,138,0,0.15);
+      --card-border: 1px solid rgba(215,105,18,0.15);
       --card-radius: 20px;
-      --card-shadow: 0 20px 60px rgba(255,138,0,0.12);
+      --card-shadow: 0 20px 60px rgba(215,105,18,0.12);
 
       /* Glass */
       --glass-bg:   rgba(20,20,20,0.65);
       --glass-blur: blur(20px);
 
       /* Glow */
-      --glow-10: rgba(255,138,0,0.10);
-      --glow-15: rgba(255,138,0,0.15);
-      --glow-20: rgba(255,138,0,0.20);
+      --glow-10: rgba(215,105,18,0.10);
+      --glow-15: rgba(215,105,18,0.15);
+      --glow-20: rgba(215,105,18,0.20);
 
       /* Botones */
-      --btn-bg:         linear-gradient(135deg, #FF8A00, #FFA726);
+      --btn-bg:         linear-gradient(135deg, #B55A0F, #D76912);
       --btn-radius:     14px;
-      --btn-sec-border: 1px solid rgba(255,138,0,0.25);
+      --btn-sec-border: 1px solid rgba(215,105,18,0.25);
 
       /* Layout */
       --container-max: 1440px;
@@ -207,9 +208,20 @@
 
     /* CTA button */
     .btn-cta {
+      position: relative;
+      overflow: hidden;
       display: inline-block;
-      background: var(--color-amber);
-      color: #0A0A0A;
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        #E8780A 0%,
+        #C45E08 25%,
+        #6B2A03 45%,
+        #1A0800 72%,
+        #000000 88%,
+        #000000 100%
+      );
+      background-size: 200% 200%;
+      color: #000000;
       font-family: var(--font-body);
       font-weight: 600;
       font-size: 0.875rem;
@@ -218,12 +230,49 @@
       border: none;
       cursor: pointer;
       white-space: nowrap;
-      transition: filter 0.2s ease, box-shadow 0.2s ease;
+      animation: btnShimmer 14s ease-in-out infinite;
+      transition: background-position 0.4s ease,
+                  filter 0.3s ease,
+                  transform 0.2s ease,
+                  box-shadow 0.3s ease;
+    }
+
+    .btn-cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.18),
+        transparent
+      );
+      animation: btnGlare 14s ease-in-out infinite;
+      pointer-events: none;
     }
 
     .btn-cta:hover {
-      filter: brightness(115%);
-      box-shadow: 0 0 24px rgba(255, 138, 0, 0.35);
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        #FF9520 0%,
+        #E07010 30%,
+        #A04508 60%,
+        #4A2003 85%,
+        #1A0A01 100%
+      );
+      filter: brightness(1.25) saturate(1.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(215,105,18,0.55),
+                  0 0 60px rgba(215,105,18,0.25);
+      animation-play-state: paused;
+    }
+
+    .btn-cta:hover::before {
+      animation-play-state: paused;
+      left: 125%;
     }
 
     /* ── SECTIONS ─────────────────────────────────────────────────────────── */
@@ -233,11 +282,12 @@
 
     #hero {
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       min-height: 100dvh;
       padding-top: calc(var(--nav-height) + 60px);
       display: flex;
       align-items: center;
+      background: var(--color-bg);
     }
 
     /* Noise texture overlay */
@@ -253,23 +303,82 @@
 
     /* ── BUTTON UTILITIES ─────────────────────────────────────────────────── */
     .btn-primary {
-      display: inline-block;
-      background: var(--btn-bg);
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        #E8780A 0%,
+        #C45E08 25%,
+        #6B2A03 45%,
+        #1A0800 72%,
+        #000000 88%,
+        #000000 100%
+      );
+      background-size: 200% 200%;
       color: #000000;
+      font-weight: 700;
       font-family: var(--font-body);
-      font-weight: 600;
-      font-size: 0.9375rem;
-      padding: 14px 28px;
-      border-radius: var(--btn-radius);
       border: none;
+      border-radius: var(--btn-radius);
+      padding: 16px 36px;
+      font-size: 16px;
       cursor: pointer;
-      white-space: nowrap;
-      transition: filter 0.2s ease, transform 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      animation: btnShimmer 6s ease-in-out infinite;
+      transition: background-position 0.4s ease,
+                  filter 0.3s ease,
+                  transform 0.2s ease,
+                  box-shadow 0.3s ease;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.18),
+        transparent
+      );
+      animation: btnGlare 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes btnShimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes btnGlare {
+      0%        { left: -75%; }
+      40%, 100% { left: 125%; }
     }
 
     .btn-primary:hover {
-      filter: brightness(115%);
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        #FF9520 0%,
+        #E07010 30%,
+        #A04508 60%,
+        #4A2003 85%,
+        #1A0A01 100%
+      );
+      filter: brightness(1.25) saturate(1.3);
       transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(215,105,18,0.55),
+                  0 0 60px rgba(215,105,18,0.25);
+      animation-play-state: paused;
+    }
+
+    .btn-primary:hover::before {
+      animation-play-state: paused;
+      left: 125%;
     }
 
     .btn-secondary {
@@ -278,8 +387,8 @@
       color: var(--color-amber);
       font-family: var(--font-body);
       font-weight: 500;
-      font-size: 0.9375rem;
-      padding: 14px 28px;
+      font-size: 16px;
+      padding: 16px 36px;
       border-radius: var(--btn-radius);
       border: var(--btn-sec-border);
       cursor: pointer;
@@ -349,38 +458,111 @@
       flex: 0 0 45%;
       max-width: 45%;
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
+      overflow: visible;
       min-height: 360px;
+      margin-left: 0;
+      margin-right: 0;
     }
 
     /* ── HERO 3D SCENE ────────────────────────────────────────────────────── */
     .hero-scene {
       position: relative;
-      width: 100%;
-      max-width: 520px;
-      aspect-ratio: 1 / 1;
+      width: 981px;
+      height: auto;
+      min-height: 948px;
       flex-shrink: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      overflow: visible;
+      margin-left: 0;
+      margin-right: 0;
+      transform: translateX(-15px);
     }
 
     .platform-img {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      position: relative;
+      display: block;
       width: 100%;
       height: auto;
       user-select: none;
       pointer-events: none;
+      background: transparent;
+    }
+
+    /* Breathing layers — copias de la plataforma enmascaradas por zona.
+       mix-blend screen suma solo el glow naranja ya horneado en el PNG,
+       así las líneas REALES respiran sin ghosting ni desalineación. */
+    .circuit-breath {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+      mix-blend-mode: screen;
+      opacity: 0.10;                 /* estado de reposo — evita el flash en carga */
+      will-change: opacity, filter;
+      animation: circuitBreath 3s ease-in-out infinite;
+      animation-fill-mode: both;     /* mantiene el primer keyframe durante el delay */
+    }
+
+    /* Zona central — núcleo bajo la antorcha (respira más rápido) */
+    .circuit-breath--core {
+      -webkit-mask-image: radial-gradient(circle at 51% 47%,
+        #000 0%, #000 16%, transparent 32%);
+              mask-image: radial-gradient(circle at 51% 47%,
+        #000 0%, #000 16%, transparent 32%);
+      animation-duration: 2.8s;
+      animation-delay: 1.3s;
+    }
+
+    /* Zona media — anillo de tiers escalonados */
+    .circuit-breath--mid {
+      -webkit-mask-image: radial-gradient(circle at 51% 47%,
+        transparent 16%, #000 30%, #000 48%, transparent 60%);
+              mask-image: radial-gradient(circle at 51% 47%,
+        transparent 16%, #000 30%, #000 48%, transparent 60%);
+      animation-duration: 3.4s;
+      animation-delay: 1.7s;
+    }
+
+    /* Zona exterior — grid del piso y cubos flotantes (respira más lento) */
+    .circuit-breath--outer {
+      -webkit-mask-image: radial-gradient(circle at 51% 47%,
+        transparent 48%, #000 62%, #000 100%);
+              mask-image: radial-gradient(circle at 51% 47%,
+        transparent 48%, #000 62%, #000 100%);
+      animation-duration: 4.2s;
+      animation-delay: 2.1s;
+    }
+
+    /* Zona esquina izquierda — corner del tier base + grid hacia el cubo izquierdo */
+    .circuit-breath--left {
+      -webkit-mask-image: radial-gradient(circle at 17% 57%,
+        #000 0%, #000 15%, transparent 30%);
+              mask-image: radial-gradient(circle at 17% 57%,
+        #000 0%, #000 15%, transparent 30%);
+      animation-duration: 3.6s;
+      animation-delay: 2.4s;
+    }
+
+    @keyframes circuitBreath {
+      0%, 100% { opacity: 0.10; filter: brightness(0.9)  saturate(1.05); }
+      50%      { opacity: 0.85; filter: brightness(1.45) saturate(1.35); }
     }
 
     /* Antorcha flotando sobre el núcleo de la plataforma */
     .torch-img {
       position: absolute;
-      bottom: 49%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 38%;
+      bottom: calc(49% + 20px);
+      left: calc(50% - 10px);
+      transform: translateX(-50%) scale(0.64);
+      width: 42%;
       height: auto;
       pointer-events: none;
       user-select: none;
@@ -392,8 +574,8 @@
     }
 
     @keyframes torchFloat {
-      0%, 100% { transform: translateX(-50%) translateY(0px); }
-      50%       { transform: translateX(-50%) translateY(-14px); }
+      0%, 100% { transform: translateX(-50%) scale(0.64) translateY(0px); }
+      50%       { transform: translateX(-50%) scale(0.64) translateY(-14px); }
     }
 
     @keyframes torchGlow {
@@ -449,94 +631,16 @@
       pointer-events: none;
     }
 
-    /* Overlays de circuitos — posiciones del análisis PASO 0 */
-    .circuit-glow {
-      position: absolute;
-      pointer-events: none;
-      z-index: 1;
-      mix-blend-mode: screen;
-      animation: circuitPulse 2s ease-in-out infinite;
-    }
-
-    .circuit-glow--edge-left  { animation-delay: 0.3s; }
-    .circuit-glow--edge-right { animation-delay: 0.7s; }
-    .circuit-glow--base       { animation-delay: 1.1s; }
-
-    @keyframes circuitPulse {
-      0%, 100% { opacity: 0.45; }
-      50%       { opacity: 1.0; }
-    }
-
-    .circuit-glow--center {
-      bottom: 47%;
-      left: 33%;
-      width: 34%;
-      height: 14px;
-      background: linear-gradient(90deg,
-        transparent,
-        rgba(255,138,0,0.60),
-        transparent
-      );
-      border-radius: 50%;
-      filter: blur(4px);
-    }
-
-    .circuit-glow--edge-left {
-      bottom: 57%;
-      left: 14%;
-      width: 28%;
-      height: 8px;
-      background: linear-gradient(90deg,
-        transparent,
-        rgba(255,138,0,0.40),
-        transparent
-      );
-      filter: blur(3px);
-    }
-
-    .circuit-glow--edge-right {
-      bottom: 38%;
-      right: 14%;
-      width: 28%;
-      height: 8px;
-      background: linear-gradient(90deg,
-        transparent,
-        rgba(255,138,0,0.40),
-        transparent
-      );
-      filter: blur(3px);
-    }
-
-    .circuit-glow--base {
-      bottom: 30%;
-      left: 20%;
-      width: 60%;
-      height: 8px;
-      background: linear-gradient(90deg,
-        transparent,
-        rgba(255,138,0,0.25),
-        rgba(255,138,0,0.45),
-        rgba(255,138,0,0.25),
-        transparent
-      );
-      filter: blur(5px);
-    }
-
-    /* Canvas de chispas */
-    .particles-canvas {
-      position: absolute;
-      bottom: 50%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 220px;
-      z-index: 4;
-      pointer-events: none;
-    }
-
     /* ── TEXT GRADIENT UTILITY ───────────────────────────────────────────── */
     .text-gradient {
-      background: var(--gradient-brand);
+      background: radial-gradient(
+        ellipse at 50% 40%,
+        #F4890A 0%,
+        #D76912 30%,
+        #B55A0F 60%,
+        #7A3508 85%,
+        #4B230B 100%
+      );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -1497,7 +1601,8 @@
       }
 
       .hero-scene {
-        max-width: 300px;
+        width: 468px;
+        height: 468px;
         margin: 0 auto;
       }
 
@@ -1741,8 +1846,8 @@
           necesitaba. Expertos que entienden tanto el negocio como la ingeniería.
         </p>
         <div class="hero-buttons">
-          <a href="#vsl" class="btn-primary">Ver cómo funciona →</a>
-          <a href="#casos" class="btn-secondary">Ver casos de éxito →</a>
+          <a href="#vsl" class="btn-primary">Agendar estrategia →</a>
+          <a href="#casos" class="btn-secondary">Ver cómo funciona →</a>
         </div>
       </div>
 
@@ -1752,11 +1857,11 @@
           <!-- Base: plataforma isométrica -->
           <img src="assets/assets_3D_Hero/plataform.png" alt="" class="platform-img" draggable="false">
 
-          <!-- Overlays de circuitos (posiciones del análisis PASO 0) -->
-          <div class="circuit-glow circuit-glow--center"></div>
-          <div class="circuit-glow circuit-glow--edge-left"></div>
-          <div class="circuit-glow circuit-glow--edge-right"></div>
-          <div class="circuit-glow circuit-glow--base"></div>
+          <!-- Breathing layers: las líneas naranjas reales respiran por zonas -->
+          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--core" aria-hidden="true" draggable="false">
+          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--mid" aria-hidden="true" draggable="false">
+          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--outer" aria-hidden="true" draggable="false">
+          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--left" aria-hidden="true" draggable="false">
 
           <!-- Luz proyectada por la antorcha sobre la plataforma -->
           <div class="torch-light"></div>
@@ -1766,9 +1871,6 @@
 
           <!-- Glow debajo de la antorcha -->
           <div class="torch-glow"></div>
-
-          <!-- Canvas de chispas -->
-          <canvas class="particles-canvas" id="heroParticles"></canvas>
 
         </div>
       </div>
@@ -2353,7 +2455,7 @@
     gsap.from('.torch-img', {
       opacity: 0, y: -50, duration: 1.0, delay: 0.6, ease: 'power2.out'
     });
-    gsap.from(['.torch-glow', '.torch-light', '.circuit-glow'], {
+    gsap.from(['.torch-glow', '.torch-light'], {
       opacity: 0, duration: 0.8, delay: 0.9, stagger: 0.1, ease: 'power2.out'
     });
 
@@ -2471,59 +2573,6 @@
       player.classList.add('playing');
     });
 
-    // Hero particles — chispas subiendo desde la base de la llama
-    var canvas = document.getElementById('heroParticles');
-    if (canvas) {
-      var ctx = canvas.getContext('2d');
-      canvas.width = 120;
-      canvas.height = 220;
-
-      var particles = [];
-
-      function createParticle() {
-        return {
-          x: canvas.width / 2 + (Math.random() - 0.5) * 20,
-          y: canvas.height - 10,
-          vx: (Math.random() - 0.5) * 0.8,
-          vy: -(Math.random() * 1.8 + 0.8),
-          size: Math.random() * 2.5 + 0.5,
-          opacity: Math.random() * 0.7 + 0.3,
-          life: 1.0,
-          decay: Math.random() * 0.015 + 0.008
-        };
-      }
-
-      function updateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (Math.random() < 0.6) particles.push(createParticle());
-        if (particles.length > 35) particles.splice(0, 1);
-
-        for (var i = particles.length - 1; i >= 0; i--) {
-          var p = particles[i];
-          p.x  += p.vx;
-          p.y  += p.vy;
-          p.vy *= 0.99;
-          p.life -= p.decay;
-
-          if (p.life <= 0) { particles.splice(i, 1); continue; }
-
-          var progress = 1 - p.life;
-          var r = 255;
-          var g = Math.floor(138 + (255 - 138) * progress);
-          var b = Math.floor(progress * 180);
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + (p.life * p.opacity) + ')';
-          ctx.fill();
-        }
-
-        requestAnimationFrame(updateParticles);
-      }
-
-      setTimeout(function () { updateParticles(); }, 1200);
-    }
   </script>
 
 </body>
