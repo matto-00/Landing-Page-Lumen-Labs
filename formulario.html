@@ -1234,7 +1234,15 @@
         const data = await res.json();
 
         if (data.success) {
-          window.location.href = 'https://calendly.com/elgranh/reuniones-1-a-1';
+          const leadId = data.id;
+          const nombre = state.nombre ? encodeURIComponent(state.nombre) : '';
+          const email  = state.email  ? encodeURIComponent(state.email)  : '';
+          window.location.href =
+            'https://calendly.com/elgranh/reuniones-1-a-1' +
+            '?utm_source=lumen' +
+            '&utm_campaign=lead_' + leadId +
+            (nombre ? '&name='  + nombre : '') +
+            (email  ? '&email=' + email  : '');
         } else {
           throw new Error(data.error || 'El servidor rechazó el envío');
         }

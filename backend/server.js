@@ -4,6 +4,7 @@ const cors = require('cors');
 const pool = require('./db/pool');
 const leadsRouter = require('./routes/leads');
 const authRouter = require('./routes/auth');
+const statsRouter = require('./routes/stats');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(express.json());
 
 app.use('/api/leads', leadsRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/stats', statsRouter);
 
 app.get('/', (req, res) => {
   res.send('OK');

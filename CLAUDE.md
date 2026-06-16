@@ -330,17 +330,18 @@ curl http://localhost:3000/api/health
 - [x] Panel admin: login.html + admin.html + endpoints protegidos ✅
 - [x] Restringir CORS al dominio Netlify en producción ✅
 - [x] Deploy Netlify + dominio ✅
+- [x] Pestaña Estadísticas: GET /api/stats + 7 gráficos Chart.js ✅
 
 ---
 
 ## Bugs conocidos / advertencias activas
 
-- ⚠️ CORS abierto en backend (`app.use(cors())`) — restringir al dominio Netlify en producción antes del launch
+- ⚠️ Connection string de Railway estuvo expuesta en el chat — considerar rotar la contraseña
 - ⚠️ Connection string de Railway estuvo expuesta en el chat — considerar rotar la contraseña
 
 ---
 
 ## Sesión actual — próxima tarea
 
-**Completado:** Auth JWT ✅ · Panel admin (login.html + admin.html) ✅ · CRUD leads protegido ✅
-**Pendiente:** Restringir CORS al dominio Netlify en producción
+**Completado:** Auth JWT ✅ · Panel admin ✅ · CORS restringido a Netlify ✅ · Pestaña Estadísticas (Chart.js, 7 gráficos, GET /api/stats) ✅
+**Pendiente:** —
