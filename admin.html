@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Lumen Labs</title>
+  <link rel="icon" type="image/png" href="assets/Lumen_isotipo.png">
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #050505;
+      --surface:      #0A0A0A;
+      --elevation:    #121212;
+      --orange:       #D76912;
+      --amber:        #E88420;
+      --text:         #FFFFFF;
+      --secondary:    #B0B0B0;
+      --muted:        #555555;
+      --sidebar-w:    240px;
+      --card-border:  rgba(215,105,18,0.12);
+      --font:         'Neue Montreal', 'Inter', sans-serif;
+      --radius:       14px;
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      display: flex;
+      background: var(--bg);
+      font-family: var(--font);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── SIDEBAR ───────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: rgba(8,8,8,0.97);
+      border-right: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: fixed;
+      left: 0; top: 0;
+      z-index: 100;
+      transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 20px 0;
+    }
+
+    .sidebar-brand img { width: 28px; height: 28px; object-fit: contain; }
+
+    .brand-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--secondary);
+      letter-spacing: 0.01em;
+    }
+
+    .sidebar-sep {
+      height: 1px;
+      background: var(--card-border);
+      margin: 18px 16px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 10px;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--secondary);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      position: relative;
+      user-select: none;
+    }
+
+    .nav-item:hover:not(.disabled) {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      background: rgba(215,105,18,0.08);
+      color: var(--text);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 18px;
+      background: var(--orange);
+      border-radius: 0 3px 3px 0;
+    }
+
+    .nav-item.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .nav-soon {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      background: rgba(255,255,255,0.05);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-footer {
+      padding: 16px 14px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .sidebar-user {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 0 4px 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-logout {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.2);
+      background: rgba(248,113,113,0.04);
+      color: #F87171;
+      font-family: var(--font);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(248,113,113,0.09);
+      border-color: rgba(248,113,113,0.35);
+    }
+
+    /* ─── CONTENT ────────────────────────────────────── */
+    .content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 32px 36px;
+    }
+
+    /* ─── MOBILE HEADER ─────────────────────────────── */
+    .mobile-header {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .hamburger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      padding: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 99;
+    }
+
+    /* ─── LEADS HEADER ───────────────────────────────── */
+    .leads-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .leads-title-group h1 {
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .leads-title-group p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .total-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      background: rgba(215,105,18,0.12);
+      border: 1px solid rgba(215,105,18,0.3);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--amber);
+    }
+
+    .btn-refresh {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: var(--secondary);
+      font-family: var(--font);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-refresh:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+    .btn-refresh:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-refresh svg { transition: transform 0.5s ease; }
+    .btn-refresh.spinning svg { animation: rotateSpin 0.6s linear infinite; }
+
+    @keyframes rotateSpin { to { transform: rotate(360deg); } }
+
+    /* ─── FILTER PILLS ───────────────────────────────── */
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .filter-pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--secondary);
+      font-family: var(--font);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-pill:hover { border-color: rgba(215,105,18,0.3); color: var(--text); }
+
+    .filter-pill.active {
+      background: rgba(215,105,18,0.12);
+      border-color: rgba(215,105,18,0.5);
+      color: var(--amber);
+    }
+
+    /* ─── TABLE CONTAINER ────────────────────────────── */
+    .table-container {
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(10,10,10,0.9);
+    }
+
+    .leads-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .leads-table thead tr {
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .leads-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .leads-table td {
+      padding: 14px 16px;
+      color: var(--secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      vertical-align: middle;
+    }
+
+    .leads-table tbody tr {
+      transition: background 0.12s;
+    }
+
+    .leads-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+    .leads-table tbody tr:last-child td { border-bottom: none; }
+
+    .cell-id { color: var(--muted); font-size: 12px; }
+
+    .cell-name {
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cell-biz {
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cell-wa { white-space: nowrap; font-family: monospace; font-size: 13px; }
+
+    .cell-date { white-space: nowrap; font-size: 13px; color: var(--muted); }
+
+    /* ─── STATUS BADGE ───────────────────────────────── */
+    .status-wrap { position: relative; display: inline-block; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .status-badge:hover { opacity: 0.8; }
+
+    .status-badge.loading-badge { opacity: 0.5; cursor: not-allowed; }
+
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    .badge-nuevo     { background: rgba(215,105,18,0.13); border-color: rgba(215,105,18,0.4); color: #E88420; }
+    .badge-nuevo     .badge-dot { background: #E88420; }
+    .badge-contactado{ background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.35); color: #60A5FA; }
+    .badge-contactado .badge-dot { background: #60A5FA; }
+    .badge-agendado  { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.35); color: #34D399; }
+    .badge-agendado  .badge-dot { background: #34D399; }
+    .badge-cerrado   { background: rgba(107,114,128,0.12); border-color: rgba(107,114,128,0.3); color: #9CA3AF; }
+    .badge-cerrado   .badge-dot { background: #9CA3AF; }
+
+    .status-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #1A1A1A;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 50;
+      min-width: 140px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      display: none;
+    }
+
+    .status-dropdown.open { display: block; }
+
+    .dropdown-opt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.12s;
+      color: var(--secondary);
+    }
+
+    .dropdown-opt:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+
+    .dropdown-opt .badge-dot { width: 7px; height: 7px; }
+
+    /* ─── ACTIONS ────────────────────────────────────── */
+    .actions-cell { display: flex; align-items: center; gap: 8px; }
+
+    .btn-ver {
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: none;
+      color: var(--secondary);
+      font-family: var(--font);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      white-space: nowrap;
+    }
+
+    .btn-ver:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+    .btn-del {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(248,113,113,0.2);
+      background: none;
+      color: rgba(248,113,113,0.7);
+      font-family: var(--font);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+    }
+
+    .btn-del:hover { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.4); color: #F87171; }
+
+    /* ─── SKELETON ───────────────────────────────────── */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+
+    .skeleton-cell {
+      height: 14px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    .skeleton-cell.w-sm { width: 40px; }
+    .skeleton-cell.w-md { width: 100px; }
+    .skeleton-cell.w-lg { width: 140px; }
+    .skeleton-cell.w-xl { width: 90px; }
+    .skeleton-cell.w-xs { width: 28px; }
+
+    /* ─── EMPTY / ERROR STATES ───────────────────────── */
+    .state-box {
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--muted);
+    }
+
+    .state-box svg { margin-bottom: 14px; opacity: 0.4; }
+    .state-box p { font-size: 15px; margin-bottom: 6px; color: var(--secondary); }
+    .state-box small { font-size: 13px; }
+
+    .btn-retry {
+      margin-top: 16px;
+      padding: 8px 18px;
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: none;
+      color: var(--secondary);
+      font-family: var(--font);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .btn-retry:hover { background: rgba(255,255,255,0.06); }
+
+    /* ─── ROW FADE-OUT ───────────────────────────────── */
+    @keyframes fadeOut {
+      to { opacity: 0; transform: scaleY(0); max-height: 0; }
+    }
+
+    tr.removing {
+      animation: fadeOut 0.28s ease forwards;
+      transform-origin: top;
+      overflow: hidden;
+    }
+
+    /* ─── MODAL OVERLAY ──────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      animation: overlayIn 0.2s ease;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal-card {
+      background: rgba(14,14,14,0.98);
+      border: 1px solid rgba(215,105,18,0.14);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 86vh;
+      overflow-y: auto;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+      animation: cardIn 0.25s cubic-bezier(0.22,1,0.36,1);
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.08) transparent;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 24px 0;
+      position: sticky;
+      top: 0;
+      background: rgba(14,14,14,0.98);
+      z-index: 1;
+    }
+
+    .modal-header h2 { font-size: 18px; font-weight: 500; }
+
+    .modal-close {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--secondary);
+      transition: background 0.12s, color 0.12s;
+    }
+
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+    .modal-body { padding: 20px 24px 28px; }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-field {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 10px 13px;
+    }
+
+    .modal-field-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .modal-field-value { font-size: 14px; color: var(--text); word-break: break-word; }
+    .modal-field-value.null-val { color: var(--muted); font-style: italic; }
+
+    .caos-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .caos-pill {
+      padding: 4px 10px;
+      background: rgba(215,105,18,0.1);
+      border: 1px solid rgba(215,105,18,0.25);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--amber);
+    }
+
+    .modal-sep { height: 1px; background: rgba(255,255,255,0.05); margin: 16px 0; }
+
+    /* ─── CONFIRM MODAL ──────────────────────────────── */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.82);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .confirm-overlay.open { display: flex; }
+
+    .confirm-card {
+      background: #111111;
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      animation: cardIn 0.22s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .confirm-icon {
+      width: 44px; height: 44px;
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+      color: #F87171;
+    }
+
+    .confirm-card h3 { font-size: 17px; font-weight: 500; margin-bottom: 8px; }
+    .confirm-card p { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+
+    .confirm-actions { display: flex; gap: 10px; }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: none;
+      color: var(--secondary);
+      font-family: var(--font);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .btn-cancel:hover { background: rgba(255,255,255,0.05); }
+
+    .btn-confirm-del {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(248,113,113,0.15);
+      color: #F87171;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .btn-confirm-del:hover { background: rgba(248,113,113,0.25); }
+
+    /* ─── MOBILE ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .mobile-overlay.open { display: block; }
+
+      .content {
+        margin-left: 0;
+        padding: 20px 16px;
+      }
+
+      .mobile-header { display: flex; }
+
+      .leads-header { flex-direction: column; align-items: flex-start; }
+
+      .leads-table { display: none; }
+
+      .table-container { border: none; background: none; }
+
+      .lead-cards { display: flex; flex-direction: column; gap: 10px; }
+
+      .lead-card {
+        background: rgba(10,10,10,0.9);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+
+      .lead-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .lead-card-name { font-size: 15px; font-weight: 500; color: var(--text); }
+      .lead-card-biz  { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+      .lead-card-wa   { font-size: 13px; color: var(--secondary); margin-bottom: 12px; font-family: monospace; }
+
+      .lead-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .lead-card-date { font-size: 12px; color: var(--muted); }
+
+      .lead-card-actions { display: flex; gap: 6px; }
+    }
+
+    @media (min-width: 769px) {
+      .lead-cards { display: none; }
+    }
+
+    /* Scrollbar styling */
+    .content::-webkit-scrollbar { width: 4px; }
+    .content::-webkit-scrollbar-track { background: transparent; }
+    .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ─── SIDEBAR ─────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/Lumen_isotipo.png" alt="Lumen">
+      <span class="brand-text">Lumen Labs</span>
+    </div>
+    <div class="sidebar-sep"></div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showView('leads')">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <rect x="3" y="3" width="18" height="5" rx="1.5"/>
+            <rect x="3" y="10" width="18" height="5" rx="1.5"/>
+            <rect x="3" y="17" width="18" height="4" rx="1.5"/>
+          </svg>
+        </span>
+        Leads
+      </button>
+
+      <div class="nav-item disabled">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </span>
+        Estadísticas
+        <span class="nav-soon">pronto</span>
+      </div>
+
+      <div class="nav-item disabled">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+        </span>
+        Calendario
+        <span class="nav-soon">pronto</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebarUser">—</div>
+      <button class="btn-logout" onclick="logout()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+        </svg>
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+
+  <!-- ─── CONTENT ──────────────────────────────────── -->
+  <main class="content">
+
+    <!-- Mobile header -->
+    <div class="mobile-header">
+      <button class="hamburger" onclick="openSidebar()" aria-label="Abrir menú">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+      </button>
+      <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" style="height:22px;">
+    </div>
+
+    <!-- Leads view -->
+    <div id="view-leads">
+
+      <div class="leads-header">
+        <div class="leads-title-group">
+          <h1>
+            Leads
+            <span class="total-badge" id="totalBadge">0</span>
+          </h1>
+          <p>Solicitudes recibidas del formulario</p>
+        </div>
+        <button class="btn-refresh" id="refreshBtn" onclick="fetchLeads()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          Actualizar
+        </button>
+      </div>
+
+      <div class="filter-row" id="filterRow">
+        <button class="filter-pill active" data-filter="todos">Todos</button>
+        <button class="filter-pill" data-filter="nuevo">Nuevo</button>
+        <button class="filter-pill" data-filter="contactado">Contactado</button>
+        <button class="filter-pill" data-filter="agendado">Agendado</button>
+        <button class="filter-pill" data-filter="cerrado">Cerrado</button>
+      </div>
+
+      <div class="table-container" id="tableContainer">
+        <!-- Desktop table -->
+        <table class="leads-table" id="leadsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Negocio</th>
+              <th>WhatsApp</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+
+        <!-- Mobile cards -->
+        <div class="lead-cards" id="leadCards"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ─── MODAL DETALLE ────────────────────────────── -->
+  <div class="modal-overlay" id="detailOverlay" onclick="closeModal(event)">
+    <div class="modal-card" id="detailCard">
+      <div class="modal-header">
+        <h2>Detalle del lead</h2>
+        <button class="modal-close" onclick="closeDetailModal()" aria-label="Cerrar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" id="detailBody"></div>
+    </div>
+  </div>
+
+  <!-- ─── CONFIRM DELETE ───────────────────────────── -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-card">
+      <div class="confirm-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/>
+        </svg>
+      </div>
+      <h3>¿Eliminar lead?</h3>
+      <p id="confirmMsg">Esta acción no se puede deshacer.</p>
+      <div class="confirm-actions">
+        <button class="btn-cancel" onclick="closeConfirm()">Cancelar</button>
+        <button class="btn-confirm-del" id="confirmDelBtn">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = 'https://landing-page-lumen-labs-production-09f5.up.railway.app';
+
+    let allLeads      = [];
+    let currentFilter = 'todos';
+    let pendingDeleteId = null;
+
+    // ─── INIT ──────────────────────────────────────────
+    function init() {
+      const token = localStorage.getItem('lumen_token');
+      if (!token) { window.location.replace('login.html'); return; }
+
+      const user = localStorage.getItem('lumen_user') || 'Admin';
+      document.getElementById('sidebarUser').textContent = user;
+
+      setupFilters();
+      fetchLeads();
+    }
+
+    function authHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('lumen_token'),
+      };
+    }
+
+    function logout() {
+      localStorage.removeItem('lumen_token');
+      localStorage.removeItem('lumen_user');
+      window.location.replace('login.html');
+    }
+
+    function handle401() { logout(); }
+
+    // ─── FETCH LEADS ───────────────────────────────────
+    async function fetchLeads() {
+      const btn = document.getElementById('refreshBtn');
+      btn.disabled = true;
+      btn.classList.add('spinning');
+      showSkeleton();
+
+      try {
+        const res = await fetch(API + '/api/leads', { headers: authHeaders() });
+        if (res.status === 401) { handle401(); return; }
+        const data = await res.json();
+        allLeads = data.leads || [];
+        renderAll();
+      } catch (e) {
+        showError();
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('spinning');
+      }
+    }
+
+    // ─── RENDER ────────────────────────────────────────
+    function renderAll() {
+      const list = currentFilter === 'todos'
+        ? allLeads
+        : allLeads.filter(l => l.estado === currentFilter);
+
+      renderTable(list);
+      renderCards(list);
+      document.getElementById('totalBadge').textContent = allLeads.length;
+    }
+
+    function val(v) { return v || '—'; }
+
+    function fmtDate(ts) {
+      if (!ts) return '—';
+      return new Date(ts).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function badgeHtml(estado) {
+      const cls = 'badge-' + (estado || 'nuevo');
+      return `<div class="status-badge ${cls}"><span class="badge-dot"></span>${estado || 'nuevo'}</div>`;
+    }
+
+    function renderTable(list) {
+      const tbody = document.getElementById('tableBody');
+
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="7"><div class="state-box">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20 13V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6"/><path d="M14 18h8M18 14v8"/></svg>
+          <p>${currentFilter === 'todos' ? 'No hay leads todavía' : 'No hay leads con estado "' + currentFilter + '"'}</p>
+          <small>${currentFilter === 'todos' ? 'Las solicitudes del formulario aparecerán aquí' : 'Cambiá el filtro para ver otros leads'}</small>
+        </div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(lead => `
+        <tr data-id="${lead.id}">
+          <td class="cell-id">${lead.id}</td>
+          <td class="cell-name">${val(lead.nombre)}</td>
+          <td class="cell-biz">${val(lead.negocio)}</td>
+          <td class="cell-wa">${val(lead.whatsapp)}</td>
+          <td>
+            <div class="status-wrap">
+              ${badgeWrap(lead)}
+              ${dropdownHtml(lead.id, lead.estado)}
+            </div>
+          </td>
+          <td class="cell-date">${fmtDate(lead.created_at)}</td>
+          <td class="actions-cell">
+            <button class="btn-ver" onclick="openDetail(${lead.id})">Ver</button>
+            <button class="btn-del" onclick="askDelete(${lead.id}, '${escHtml(lead.nombre || lead.whatsapp || '#' + lead.id)}')">✕</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderCards(list) {
+      const container = document.getElementById('leadCards');
+      if (!list.length) {
+        container.innerHTML = `<div class="state-box">
+          <p>${currentFilter === 'todos' ? 'No hay leads todavía' : 'No hay leads con estado "' + currentFilter + '"'}</p>
+        </div>`;
+        return;
+      }
+
+      container.innerHTML = list.map(lead => `
+        <div class="lead-card" data-id="${lead.id}">
+          <div class="lead-card-top">
+            <span class="lead-card-name">${val(lead.nombre)}</span>
+            <div class="status-wrap">
+              ${badgeWrap(lead)}
+              ${dropdownHtml(lead.id, lead.estado)}
+            </div>
+          </div>
+          <div class="lead-card-biz">${val(lead.negocio)}</div>
+          <div class="lead-card-wa">${val(lead.whatsapp)}</div>
+          <div class="lead-card-footer">
+            <span class="lead-card-date">${fmtDate(lead.created_at)}</span>
+            <div class="lead-card-actions">
+              <button class="btn-ver" onclick="openDetail(${lead.id})">Ver</button>
+              <button class="btn-del" onclick="askDelete(${lead.id}, '${escHtml(lead.nombre || lead.whatsapp || '#' + lead.id)}')">✕</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function badgeWrap(lead) {
+      const cls = 'badge-' + (lead.estado || 'nuevo');
+      return `<div class="status-badge ${cls}" onclick="toggleDropdown(event, ${lead.id})">
+        <span class="badge-dot"></span>${lead.estado || 'nuevo'}
+      </div>`;
+    }
+
+    function dropdownHtml(id, current) {
+      const opts = ['nuevo','contactado','agendado','cerrado'];
+      return `<div class="status-dropdown" id="dd-${id}">
+        ${opts.map(o => `<div class="dropdown-opt" onclick="changeEstado(event,${id},'${o}')">
+          <span class="badge-dot badge-${o}" style="background:${dotColor(o)}"></span>${o}
+        </div>`).join('')}
+      </div>`;
+    }
+
+    function dotColor(e) {
+      return { nuevo:'#E88420', contactado:'#60A5FA', agendado:'#34D399', cerrado:'#9CA3AF' }[e] || '#E88420';
+    }
+
+    function escHtml(s) { return String(s).replace(/'/g,"&#39;").replace(/"/g,"&quot;"); }
+
+    // ─── SKELETON ──────────────────────────────────────
+    function showSkeleton() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = [1,2,3,4].map(() => `<tr>
+        <td><div class="skeleton-cell w-xs"></div></td>
+        <td><div class="skeleton-cell w-lg"></div></td>
+        <td><div class="skeleton-cell w-md"></div></td>
+        <td><div class="skeleton-cell w-xl"></div></td>
+        <td><div class="skeleton-cell w-sm"></div></td>
+        <td><div class="skeleton-cell w-md"></div></td>
+        <td><div class="skeleton-cell w-sm"></div></td>
+      </tr>`).join('');
+
+      document.getElementById('leadCards').innerHTML = [1,2,3].map(() => `
+        <div class="lead-card">
+          <div class="skeleton-cell w-lg" style="margin-bottom:8px"></div>
+          <div class="skeleton-cell w-md" style="margin-bottom:8px"></div>
+          <div class="skeleton-cell w-xl"></div>
+        </div>`).join('');
+    }
+
+    function showError() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = `<tr><td colspan="7"><div class="state-box">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <p>No se pudo cargar</p>
+        <small>Verificá tu conexión</small>
+        <button class="btn-retry" onclick="fetchLeads()">Reintentar</button>
+      </div></td></tr>`;
+    }
+
+    // ─── FILTERS ───────────────────────────────────────
+    function setupFilters() {
+      document.getElementById('filterRow').addEventListener('click', (e) => {
+        const pill = e.target.closest('.filter-pill');
+        if (!pill) return;
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentFilter = pill.dataset.filter;
+        renderAll();
+      });
+    }
+
+    // ─── DROPDOWN ──────────────────────────────────────
+    let openDropdownId = null;
+
+    function toggleDropdown(e, id) {
+      e.stopPropagation();
+      const dd = document.getElementById('dd-' + id);
+      const isOpen = dd.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) {
+        dd.classList.add('open');
+        openDropdownId = id;
+      }
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.status-dropdown.open').forEach(d => d.classList.remove('open'));
+      openDropdownId = null;
+    }
+
+    document.addEventListener('click', closeAllDropdowns);
+
+    async function changeEstado(e, id, estado) {
+      e.stopPropagation();
+      closeAllDropdowns();
+
+      const lead = allLeads.find(l => l.id === id);
+      if (!lead || lead.estado === estado) return;
+
+      // Optimistic update
+      lead.estado = estado;
+      renderAll();
+
+      try {
+        const res = await fetch(`${API}/api/leads/${id}`, {
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify({ estado }),
+        });
+        if (res.status === 401) { handle401(); return; }
+        if (!res.ok) {
+          // Revert isn't ideal here; reload instead
+          fetchLeads();
+        }
+      } catch (err) {
+        fetchLeads();
+      }
+    }
+
+    // ─── DETAIL MODAL ──────────────────────────────────
+    function field(label, value) {
+      const isEmpty = value === null || value === undefined || value === '';
+      return `<div class="modal-field">
+        <div class="modal-field-label">${label}</div>
+        <div class="modal-field-value${isEmpty ? ' null-val' : ''}">${isEmpty ? '—' : escHtml(String(value))}</div>
+      </div>`;
+    }
+
+    function openDetail(id) {
+      const lead = allLeads.find(l => l.id === id);
+      if (!lead) return;
+
+      const caos = Array.isArray(lead.caos_operativo)
+        ? lead.caos_operativo.map(c => `<span class="caos-pill">${escHtml(c)}</span>`).join('')
+        : '—';
+
+      document.getElementById('detailBody').innerHTML = `
+        <div class="modal-section">
+          <div class="modal-section-label">Contacto</div>
+          <div class="modal-grid">
+            ${field('Nombre', lead.nombre)}
+            ${field('Negocio', lead.negocio)}
+            ${field('Email', lead.email)}
+            ${field('WhatsApp', lead.whatsapp)}
+          </div>
+        </div>
+
+        <div class="modal-sep"></div>
+
+        <div class="modal-section">
+          <div class="modal-section-label">Empresa</div>
+          <div class="modal-grid">
+            ${field('Tipo de negocio', lead.tipo_negocio)}
+            ${field('Rubro', lead.rubro)}
+            ${field('Rubro (otro)', lead.rubro_otro)}
+            ${field('Tamaño de equipo', lead.tamano_equipo)}
+          </div>
+        </div>
+
+        <div class="modal-sep"></div>
+
+        <div class="modal-section">
+          <div class="modal-section-label">Situación</div>
+          <div class="modal-grid">
+            ${field('Etapa de crecimiento', lead.etapa_crecimiento)}
+            ${field('Ingresos mensuales', lead.ingresos_mensuales)}
+          </div>
+          <div style="margin-top:10px">
+            <div class="modal-field">
+              <div class="modal-field-label">Caos operativo</div>
+              <div style="margin-top:6px"><div class="caos-pills">${caos}</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-sep"></div>
+
+        <div class="modal-section">
+          <div class="modal-section-label">Intención</div>
+          <div class="modal-grid">
+            ${field('Intento previo', lead.intento_previo)}
+            ${field('Puede decidir', lead.puede_decidir)}
+          </div>
+        </div>
+
+        <div class="modal-sep"></div>
+
+        <div class="modal-section">
+          <div class="modal-section-label">Meta</div>
+          <div class="modal-grid">
+            <div class="modal-field">
+              <div class="modal-field-label">Estado</div>
+              <div style="margin-top:4px">${badgeHtml(lead.estado)}</div>
+            </div>
+            ${field('Registrado', fmtDate(lead.created_at))}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('detailOverlay').classList.add('open');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailOverlay').classList.remove('open');
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('detailOverlay')) closeDetailModal();
+    }
+
+    // ─── DELETE ────────────────────────────────────────
+    function askDelete(id, name) {
+      pendingDeleteId = id;
+      document.getElementById('confirmMsg').textContent = `Vas a eliminar el lead de "${name}". Esta acción no se puede deshacer.`;
+      document.getElementById('confirmOverlay').classList.add('open');
+      document.getElementById('confirmDelBtn').onclick = confirmDelete;
+    }
+
+    function closeConfirm() {
+      pendingDeleteId = null;
+      document.getElementById('confirmOverlay').classList.remove('open');
+    }
+
+    async function confirmDelete() {
+      const id = pendingDeleteId;
+      closeConfirm();
+      if (!id) return;
+
+      // Fade out row/card
+      const row = document.querySelector(`tr[data-id="${id}"]`);
+      const card = document.querySelector(`.lead-card[data-id="${id}"]`);
+      if (row) row.classList.add('removing');
+      if (card) card.classList.add('removing');
+
+      setTimeout(async () => {
+        try {
+          const res = await fetch(`${API}/api/leads/${id}`, {
+            method: 'DELETE',
+            headers: authHeaders(),
+          });
+          if (res.status === 401) { handle401(); return; }
+        } catch (e) { /* silently log */ }
+
+        allLeads = allLeads.filter(l => l.id !== id);
+        renderAll();
+      }, 260);
+    }
+
+    // ─── SIDEBAR MOBILE ────────────────────────────────
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('mobileOverlay').classList.add('open');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('open');
+    }
+
+    // ─── VIEW SWITCHER (para el futuro) ───────────────
+    function showView(view) {
+      closeSidebar();
+      // Solo leads por ahora
+    }
+
+    // ─── ESC KEY ───────────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDetailModal();
+        closeConfirm();
+        closeAllDropdowns();
+        closeSidebar();
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

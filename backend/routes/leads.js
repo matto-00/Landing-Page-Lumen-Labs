@@ -1,5 +1,6 @@
 const express = require('express');
 const pool = require('../db/pool');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -61,6 +62,66 @@ router.post('/', async (req, res) => {
   } catch (err) {
     console.error('[POST /api/leads]', err.message);
     return res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+});
+
+router.get('/', authMiddleware, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM leads_prereunion ORDER BY created_at DESC'
+    );
+    res.json({ success: true, leads: rows });
+  } catch (err) {
+    console.error('[GET /api/leads]', err.message);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+});
+
+router.get('/:id', authMiddleware, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM leads_prereunion WHERE id = $1',
+      [req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ success: false, error: 'Lead no encontrado' });
+    res.json({ success: true, lead: rows[0] });
+  } catch (err) {
+    console.error('[GET /api/leads/:id]', err.message);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+});
+
+const VALID_ESTADOS = ['nuevo', 'contactado', 'agendado', 'cerrado'];
+
+router.put('/:id', authMiddleware, async (req, res) => {
+  const { estado } = req.body;
+  if (!estado || !VALID_ESTADOS.includes(estado)) {
+    return res.status(400).json({ success: false, error: 'Estado inválido' });
+  }
+  try {
+    const { rowCount } = await pool.query(
+      'UPDATE leads_prereunion SET estado = $1 WHERE id = $2',
+      [estado, req.params.id]
+    );
+    if (!rowCount) return res.status(404).json({ success: false, error: 'Lead no encontrado' });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('[PUT /api/leads/:id]', err.message);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+});
+
+router.delete('/:id', authMiddleware, async (req, res) => {
+  try {
+    const { rowCount } = await pool.query(
+      'DELETE FROM leads_prereunion WHERE id = $1',
+      [req.params.id]
+    );
+    if (!rowCount) return res.status(404).json({ success: false, error: 'Lead no encontrado' });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('[DELETE /api/leads/:id]', err.message);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 });
 

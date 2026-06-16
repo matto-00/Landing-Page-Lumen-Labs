@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Lumen Labs</title>
+  <link rel="icon" type="image/png" href="assets/Lumen_isotipo.png">
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #050505;
+      --surface:     #0A0A0A;
+      --orange:      #D76912;
+      --amber:       #E88420;
+      --text:        #FFFFFF;
+      --secondary:   #B0B0B0;
+      --muted:       #555555;
+      --error:       #F87171;
+      --card-bg:     rgba(12,12,12,0.92);
+      --card-border: rgba(215,105,18,0.15);
+      --glow-10:     rgba(215,105,18,0.10);
+      --font:        'Neue Montreal', 'Inter', sans-serif;
+      --radius:      20px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      font-family: var(--font);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(215,105,18,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .login-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      width: 100%;
+      max-width: 440px;
+      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      width: 160px;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    .login-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 40px 36px 36px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--muted);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .login-input {
+      width: 100%;
+      height: 48px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      padding: 0 44px 0 42px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .login-input::placeholder { color: var(--muted); }
+
+    .login-input:focus {
+      border-color: rgba(215,105,18,0.5);
+      background: rgba(215,105,18,0.04);
+    }
+
+    .login-input.input-error {
+      border-color: rgba(248,113,113,0.5);
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+    .eye-btn:hover { color: var(--secondary); }
+
+    .error-msg {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      color: var(--error);
+      padding: 10px 12px;
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      animation: shakeIn 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    .error-msg.visible { display: flex; }
+
+    @keyframes shakeIn {
+      0%   { transform: translateX(-6px); opacity: 0; }
+      30%  { transform: translateX(5px); }
+      60%  { transform: translateX(-3px); }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Primary button — identical to landing */
+    .btn-primary {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.92);
+      background: radial-gradient(ellipse at 50% 50%,
+        #E8780A 0%, #C45E08 30%, #6B2A03 45%,
+        #1A0800 65%, #000000 100%);
+      background-size: 200% 200%;
+      animation: btnShimmer 6s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover:not(:disabled) { opacity: 0.9; transform: scale(1.01); }
+    .btn-primary:active:not(:disabled) { transform: scale(0.99); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; animation: none; }
+
+    @keyframes btnShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50%       { background-position: 100% 50%; }
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .loading .spinner { display: block; }
+    .loading .btn-label { display: none; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 32px 24px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" class="logo">
+
+    <div class="login-card">
+      <h1 class="card-title">Panel de administración</h1>
+      <p class="card-sub">Acceso restringido — Solo equipo Lumen Labs</p>
+
+      <form id="loginForm" autocomplete="on" novalidate>
+        <div class="form-group">
+          <!-- Usuario -->
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="username"
+              class="login-input"
+              placeholder="tu usuario"
+              autocomplete="username"
+              spellcheck="false"
+              required
+            >
+          </div>
+
+          <!-- Contraseña -->
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input
+              type="password"
+              id="password"
+              class="login-input"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            >
+            <button type="button" class="eye-btn" id="eyeBtn" aria-label="Mostrar contraseña" onclick="togglePassword()">
+              <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="error-msg" id="errorMsg" role="alert">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+          </svg>
+          <span id="errorText">Usuario o contraseña incorrectos</span>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn">
+          <div class="spinner"></div>
+          <span class="btn-label">Ingresar →</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_AUTH_URL = 'https://landing-page-lumen-labs-production-09f5.up.railway.app/api/auth/login';
+
+    // Si ya hay token → ir directo al admin
+    if (localStorage.getItem('lumen_token')) {
+      window.location.replace('admin.html');
+    }
+
+    const form      = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorMsg  = document.getElementById('errorMsg');
+    const errorText = document.getElementById('errorText');
+    const usernameEl = document.getElementById('username');
+    const passwordEl = document.getElementById('password');
+
+    function setLoading(on) {
+      submitBtn.classList.toggle('loading', on);
+      submitBtn.disabled = on;
+    }
+
+    function showError(msg) {
+      errorText.textContent = msg || 'Usuario o contraseña incorrectos';
+      errorMsg.classList.add('visible');
+      usernameEl.classList.add('input-error');
+      passwordEl.classList.add('input-error');
+      usernameEl.focus();
+    }
+
+    function clearError() {
+      errorMsg.classList.remove('visible');
+      usernameEl.classList.remove('input-error');
+      passwordEl.classList.remove('input-error');
+    }
+
+    usernameEl.addEventListener('input', clearError);
+    passwordEl.addEventListener('input', clearError);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError();
+
+      const username = usernameEl.value.trim();
+      const password = passwordEl.value;
+
+      if (!username || !password) {
+        showError('Completá usuario y contraseña');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const res = await fetch(API_AUTH_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          localStorage.setItem('lumen_token', data.token);
+          localStorage.setItem('lumen_user', data.username);
+          window.location.replace('admin.html');
+        } else {
+          showError(data.error || 'Usuario o contraseña incorrectos');
+          setLoading(false);
+        }
+      } catch (err) {
+        showError('No se pudo conectar. Verificá tu conexión.');
+        setLoading(false);
+      }
+    });
+
+    function togglePassword() {
+      const isPass = passwordEl.type === 'password';
+      passwordEl.type = isPass ? 'text' : 'password';
+      document.getElementById('eyeIcon').innerHTML = isPass
+        ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/><circle cx="12" cy="12" r="3" style="display:none"/>'
+        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  </script>
+</body>
+</html>
