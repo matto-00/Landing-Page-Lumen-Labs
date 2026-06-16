@@ -161,29 +161,45 @@ border-radius: 999px;
 /backend
 ├── server.js           ← Entry point Express
 ├── package.json
-├── .env                ← DATABASE_URL + PORT (NO commitear)
+├── users.js            ← Usuarios hardcodeados con bcrypt hashes
+├── .env                ← DATABASE_URL + PORT + JWT_SECRET (NO commitear)
 ├── .env.example
 ├── .gitignore
 ├── db/
 │   ├── pool.js         ← Pool pg con SSL Railway (rejectUnauthorized: false)
 │   └── schema.sql      ← CREATE TABLE leads_prereunion
+├── middleware/
+│   └── authMiddleware.js ← Verifica Bearer JWT en rutas protegidas
 └── routes/
-    └── leads.js        ← POST /api/leads (validación + INSERT)
+    ├── auth.js         ← POST /api/auth/login → JWT
+    └── leads.js        ← CRUD leads (POST público, GET/PUT/DELETE protegidos)
 ```
 
 ### Endpoints
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/` | Health check → "OK" |
-| GET | `/api/health` | `SELECT NOW()` → `{ ok, db_time }` |
-| POST | `/api/leads` | Inserta lead → `{ success, id }` |
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | `/` | — | Health check → "OK" |
+| GET | `/api/health` | — | `SELECT NOW()` → `{ ok, db_time }` |
+| POST | `/api/auth/login` | — | `{ username, password }` → `{ success, token, username }` |
+| POST | `/api/leads` | — | Inserta lead → `{ success, id }` |
+| GET | `/api/leads` | JWT | Lista todos los leads → `{ success, leads[] }` |
+| GET | `/api/leads/:id` | JWT | Detalle de un lead |
+| PUT | `/api/leads/:id` | JWT | Actualiza `estado` → `{ success }` |
+| DELETE | `/api/leads/:id` | JWT | Elimina lead → `{ success }` |
 
 ### Tabla `leads_prereunion`
 ```sql
-id, whatsapp, tipo_negocio, rubro, rubro_otro (nullable),
+id, nombre (nullable), negocio (nullable), email (nullable),
+whatsapp, tipo_negocio, rubro, rubro_otro (nullable),
 tamano_equipo, etapa_crecimiento, ingresos_mensuales (nullable),
-caos_operativo (jsonb), intento_previo, puede_decidir, created_at
+caos_operativo (jsonb), intento_previo, puede_decidir,
+estado (default 'nuevo'), created_at
 ```
+
+### Auth
+- **Usuarios:** hardcodeados en `users.js` (bcrypt hash, salt 10) — matto, nico, leo
+- **JWT:** `process.env.JWT_SECRET`, `expiresIn: '8h'`
+- **Guard:** `middleware/authMiddleware.js` → lee `Authorization: Bearer <token>`
 
 ---
 
@@ -194,6 +210,8 @@ Landing-Page-Lumen-Labs/
 ├── index.html                      ← Landing page principal
 ├── formulario.html                 ← Formulario pre-reunión (9 preguntas)
 ├── gracias.html                    ← Confirmación post-agendamiento
+├── login.html                      ← Admin login (glass card, JWT auth)
+├── admin.html                      ← Admin panel (sidebar, tabla leads, modal)
 ├── CLAUDE.md                       ← Este archivo
 ├── GLASS_KIT.md                    ← Referencia glass (solo CSS/tokens)
 ├── imagen_hero_de_referencia.PNG
@@ -213,14 +231,18 @@ Landing-Page-Lumen-Labs/
 backend/
 ├── server.js
 ├── package.json
+├── users.js                        ← Usuarios hardcodeados (bcrypt hashes)
 ├── .env                            ← NO en git
 ├── .env.example
 ├── .gitignore
 ├── db/
 │   ├── pool.js
 │   └── schema.sql
+├── middleware/
+│   └── authMiddleware.js           ← Guard JWT para rutas protegidas
 └── routes/
-    └── leads.js
+    ├── auth.js                     ← POST /api/auth/login
+    └── leads.js                    ← CRUD /api/leads
 ```
 
 ---
@@ -305,6 +327,7 @@ curl http://localhost:3000/api/health
 - [x] Deploy backend en Railway ✅
 - [x] Actualizar `API_URL` en `formulario.html` al endpoint Railway ✅
 - [x] Formulario → Railway conectado: leads llegan a la DB ✅
+- [x] Panel admin: login.html + admin.html + endpoints protegidos ✅
 - [ ] Restringir CORS al dominio Netlify en producción
 - [x] Deploy Netlify + dominio ✅
 
@@ -319,5 +342,5 @@ curl http://localhost:3000/api/health
 
 ## Sesión actual — próxima tarea
 
-**Completado:** GSAP ScrollTrigger ✅ · Revisión mobile ✅ · Deploy Netlify ✅ · Backend Railway conectado end-to-end ✅
+**Completado:** Auth JWT ✅ · Panel admin (login.html + admin.html) ✅ · CRUD leads protegido ✅
 **Pendiente:** Restringir CORS al dominio Netlify en producción
