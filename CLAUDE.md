@@ -22,7 +22,7 @@
 - **Punto de conversión:** POST `API_URL` → si `success: true` → redirect directo a Calendly
 - **Calendly:** `https://calendly.com/elgranh/reuniones-1-a-1`
 - **`gracias.html`:** Confirmación post-agendamiento — 3 cards de recomendaciones con glassmorphism. SIN Calendly embed. SIN botón "volver al inicio"
-- **`API_URL`** (constante al inicio del `<script>`): `http://localhost:3000/api/leads` en dev → actualizar a Railway en producción
+- **`API_URL`** (constante al inicio del `<script>`): `https://landing-page-lumen-labs-production-09f5.up.railway.app/api/leads` (producción Railway ✅)
 - **Animaciones:** CSS puro — transición pantalla Y-axis, stagger de contenido, shake de error
 
 ### Backend (`/backend`)
@@ -30,7 +30,7 @@
 - **DB:** PostgreSQL en Railway vía `pg` Pool
 - **Variables de entorno:** `DATABASE_URL` + `PORT=3000` en `/backend/.env` — **nunca hardcodear**
 - **Scripts:** `npm start` (producción) · `npm run dev` (nodemon)
-- **Deploy:** Railway (pendiente)
+- **Deploy:** Railway ✅ — `https://landing-page-lumen-labs-production-09f5.up.railway.app`
 
 ---
 
@@ -290,8 +290,8 @@ curl http://localhost:3000/api/health
 - [x] `#cta-4` (botón final)
 - [x] `#footer` (links, redes, legal)
 - [x] Hero 3D CSS+Canvas (plataforma, antorcha flotante, glow)
-- [ ] Animaciones GSAP ScrollTrigger — revisión global
-- [ ] Revisión mobile completa (768px)
+- [x] Animaciones GSAP ScrollTrigger — revisión global ✅
+- [x] Revisión mobile completa (768px) ✅
 
 ### FASE 5 — Formulario + Backend ✅
 - [x] `formulario.html` (9 preguntas, Typeform-style, transiciones Y-axis)
@@ -302,22 +302,22 @@ curl http://localhost:3000/api/health
 - [x] `GET /api/health` · `POST /api/leads` · queries parametrizados
 - [x] Tabla `leads_prereunion` creada en Railway
 - [x] **Linkear todos los CTAs del landing a `formulario.html`**
-- [ ] Deploy backend en Railway
-- [ ] Actualizar `API_URL` en `formulario.html` al endpoint Railway
+- [x] Deploy backend en Railway ✅
+- [x] Actualizar `API_URL` en `formulario.html` al endpoint Railway ✅
+- [x] Formulario → Railway conectado: leads llegan a la DB ✅
 - [ ] Restringir CORS al dominio Netlify en producción
-- [ ] Deploy Netlify + dominio
+- [x] Deploy Netlify + dominio ✅
 
 ---
 
 ## Bugs conocidos / advertencias activas
 
-- ⚠️ `API_URL` en `formulario.html` apunta a `localhost:3000` — cambiar a Railway antes del deploy
-- ⚠️ CORS abierto en backend — restringir al dominio Netlify en producción
+- ⚠️ CORS abierto en backend (`app.use(cors())`) — restringir al dominio Netlify en producción antes del launch
 - ⚠️ Connection string de Railway estuvo expuesta en el chat — considerar rotar la contraseña
 
 ---
 
 ## Sesión actual — próxima tarea
 
-**Completado:** Linkear todos los CTAs del landing a `formulario.html` (9 botones actualizados, 0 ocurrencias de TYPEFORM_URL_AQUI)
-**Próxima:** Animaciones GSAP ScrollTrigger — revisión global · Revisión mobile completa (768px)
+**Completado:** GSAP ScrollTrigger ✅ · Revisión mobile ✅ · Deploy Netlify ✅ · Backend Railway conectado end-to-end ✅
+**Pendiente:** Restringir CORS al dominio Netlify en producción
