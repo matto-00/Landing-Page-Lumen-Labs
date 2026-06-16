@@ -328,7 +328,7 @@ curl http://localhost:3000/api/health
 - [x] Actualizar `API_URL` en `formulario.html` al endpoint Railway ✅
 - [x] Formulario → Railway conectado: leads llegan a la DB ✅
 - [x] Panel admin: login.html + admin.html + endpoints protegidos ✅
-- [ ] Restringir CORS al dominio Netlify en producción
+- [x] Restringir CORS al dominio Netlify en producción ✅
 - [x] Deploy Netlify + dominio ✅
 
 ---

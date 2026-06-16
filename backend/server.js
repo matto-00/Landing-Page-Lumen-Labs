@@ -8,7 +8,15 @@ const authRouter = require('./routes/auth');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://lumen-labsv1.netlify.app',
+    'http://localhost:5500',
+    'http://localhost:3000'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 app.use('/api/leads', leadsRouter);
