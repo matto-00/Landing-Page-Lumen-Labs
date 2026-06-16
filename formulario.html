@@ -461,11 +461,29 @@
   <div class="glow-bg"></div>
 
   <div id="prog-track"><div id="prog-fill"></div></div>
-  <p id="prog-label">Pregunta <em id="q-num">1</em> de 9</p>
+  <p id="prog-label">Pregunta <em id="q-num">1</em> de 10</p>
+
+  <!-- ══ P0 · Identificación ══ -->
+  <div class="screen is-active"
+       data-index="0" data-field="p0" data-type="p0" data-required="true">
+    <div class="card">
+      <p class="eyebrow">Cuéntanos sobre ti</p>
+      <h2 class="headline">Para personalizar tu diagnóstico gratuito</h2>
+      <div class="p0-fields" style="display:flex;flex-direction:column;gap:12px;">
+        <input class="field-input" id="nombre-input" type="text"
+               placeholder="Tu nombre completo" autocomplete="name">
+        <input class="field-input" id="negocio-input" type="text"
+               placeholder="Nombre de tu empresa" autocomplete="organization">
+        <input class="field-input" id="email-input" type="email"
+               placeholder="tu@empresa.com" autocomplete="email">
+      </div>
+      <p class="field-error" hidden></p>
+    </div>
+  </div>
 
   <!-- ══ P1 · WhatsApp ══ -->
-  <div class="screen is-active"
-       data-index="0" data-field="whatsapp" data-type="input" data-required="true">
+  <div class="screen"
+       data-index="1" data-field="whatsapp" data-type="input" data-required="true">
     <div class="card">
       <p class="eyebrow">Tu contacto</p>
       <h2 class="headline">¿Cuál es tu número de WhatsApp?</h2>
@@ -770,6 +788,9 @@
 
     // ── Estado del formulario ──
     const state = {
+      nombre:             '',
+      negocio:            '',
+      email:              '',
       whatsapp:           '',
       tipo_negocio:       '',
       rubro:              '',
@@ -784,6 +805,7 @@
 
     // Mapa índice → config de validación
     const CONF = [
+      { field: 'p0',                 required: true,  type: 'p0'     },
       { field: 'whatsapp',           required: true,  type: 'input'  },
       { field: 'tipo_negocio',       required: true,  type: 'single' },
       { field: 'rubro',              required: true,  type: 'single' },
@@ -806,13 +828,13 @@
 
     // ── Progreso y nav ──
     function setProgress(i) {
-      progFill.style.width = ((i + 1) / 9 * 100) + '%';
+      progFill.style.width = ((i + 1) / 10 * 100) + '%';
       qNum.textContent = i + 1;
     }
 
     function syncNav(i) {
       btnBack.disabled    = i === 0;
-      btnNext.textContent = i === 8 ? 'Enviar y agendar mi reunión →' : 'Siguiente →';
+      btnNext.textContent = i === 9 ? 'Enviar y agendar mi reunión →' : 'Siguiente →';
       btnNext.disabled    = false;
     }
 
@@ -822,7 +844,7 @@
         { sel: '.eyebrow',    delay: '0ms'   },
         { sel: '.headline',   delay: '70ms'  },
         { sel: '.field-hint', delay: '130ms' },
-        { sel: '.options, .phone-wrap', delay: '140ms' },
+        { sel: '.options, .phone-wrap, .p0-fields', delay: '140ms' },
       ];
       const KF = 'slideInContent 0.44s cubic-bezier(0.4,0,0.2,1)';
 
@@ -841,6 +863,13 @@
     // ── Restaura el estado visual al volver a una pantalla ──
     function restoreScreen(screenEl, i) {
       const { field, type } = CONF[i];
+
+      if (type === 'p0') {
+        document.getElementById('nombre-input').value  = state.nombre  || '';
+        document.getElementById('negocio-input').value = state.negocio || '';
+        document.getElementById('email-input').value   = state.email   || '';
+        return;
+      }
 
       if (type === 'input') {
         const full   = state.whatsapp || '';
@@ -914,6 +943,13 @@
       const { field, required, type } = CONF[i];
       if (!required) return true;
 
+      if (type === 'p0') {
+        const nombre  = (state.nombre  || '').trim();
+        const negocio = (state.negocio || '').trim();
+        const email   = (state.email   || '').trim();
+        return !!(nombre && negocio && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+      }
+
       if (type === 'input') {
         return (state[field] || '').replace(/\D/g, '').length >= 7;
       }
@@ -932,6 +968,11 @@
 
     function errorMsg(i) {
       const { field, type } = CONF[i];
+      if (type === 'p0') {
+        if (!(state.nombre  || '').trim()) return 'Ingresá tu nombre completo';
+        if (!(state.negocio || '').trim()) return 'Ingresá el nombre de tu empresa';
+        return 'Ingresá un correo electrónico válido';
+      }
       if (field === 'whatsapp')                        return 'Ingresá un número válido (mínimo 7 dígitos)';
       if (field === 'rubro' && state.rubro === 'Otro') return 'Especificá tu rubro en el campo de texto';
       if (type  === 'multi')                           return 'Elegí al menos una opción para continuar';
@@ -963,6 +1004,13 @@
     function saveAnswer() {
       const screenEl = screens[current];
       const { field, type } = CONF[current];
+
+      if (type === 'p0') {
+        state.nombre  = document.getElementById('nombre-input').value.trim();
+        state.negocio = document.getElementById('negocio-input').value.trim();
+        state.email   = document.getElementById('email-input').value.trim();
+        return;
+      }
 
       if (type === 'input') {
         const num = document.getElementById('whatsapp-input').value.trim();
@@ -1003,13 +1051,19 @@
         if (CONF[current].type === 'input') {
           screens[current].querySelector('.field-input').classList.add('has-error');
         }
-        if (current === 2 && state.rubro === 'Otro') {
+        if (CONF[current].type === 'p0') {
+          if (!(state.nombre  || '').trim()) document.getElementById('nombre-input').classList.add('has-error');
+          if (!(state.negocio || '').trim()) document.getElementById('negocio-input').classList.add('has-error');
+          const em = (state.email || '').trim();
+          if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) document.getElementById('email-input').classList.add('has-error');
+        }
+        if (current === 3 && state.rubro === 'Otro') {
           document.getElementById('rubro-otro-input').classList.add('has-error');
         }
         return;
       }
 
-      if (current === 8) {
+      if (current === 9) {
         submitForm();
       } else {
         goTo(current + 1, 'fwd');
@@ -1045,7 +1099,7 @@
     telInput.addEventListener('input', () => {
       state.whatsapp = buildWA();
       telInput.classList.remove('has-error');
-      clearErr(screens[0]);
+      clearErr(screens[1]);
     });
     codeSelect.addEventListener('change', () => { state.whatsapp = buildWA(); });
     telInput.addEventListener('keydown', e => {
@@ -1102,11 +1156,11 @@
     });
 
     // ── P7: multi-select (máx. 2) ──
-    screens[6].querySelector('.options').addEventListener('click', e => {
+    screens[7].querySelector('.options').addEventListener('click', e => {
       const btn = e.target.closest('.opt');
       if (!btn) return;
 
-      const selected = screens[6].querySelectorAll('.opt.is-selected');
+      const selected = screens[7].querySelectorAll('.opt.is-selected');
 
       if (btn.classList.contains('is-selected')) {
         btn.classList.remove('is-selected');
@@ -1119,9 +1173,21 @@
         return;
       }
 
-      state.caos_operativo = Array.from(screens[6].querySelectorAll('.opt.is-selected'))
+      state.caos_operativo = Array.from(screens[7].querySelectorAll('.opt.is-selected'))
         .map(o => o.dataset.value);
-      clearErr(screens[6]);
+      clearErr(screens[7]);
+    });
+
+    // ── P0: nombre, negocio, email ──
+    ['nombre-input', 'negocio-input', 'email-input'].forEach(id => {
+      const el  = document.getElementById(id);
+      const key = id.replace('-input', '');
+      el.addEventListener('input', () => {
+        state[key] = el.value.trim();
+        el.classList.remove('has-error');
+        clearErr(screens[0]);
+      });
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') attemptNext(); });
     });
 
     // ── P3: input "Otro" ──
@@ -1129,7 +1195,7 @@
     otroInput.addEventListener('input', () => {
       state.rubro_otro = otroInput.value.trim();
       otroInput.classList.remove('has-error');
-      clearErr(screens[2]);
+      clearErr(screens[3]);
     });
     otroInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') attemptNext();
@@ -1143,6 +1209,9 @@
       submitErr.hidden  = true;
 
       const payload = {
+        nombre:             state.nombre,
+        negocio:            state.negocio,
+        email:              state.email,
         whatsapp:           state.whatsapp,
         tipo_negocio:       state.tipo_negocio,
         rubro:              state.rubro,
