@@ -380,65 +380,44 @@
 
   <script>
   (function() {
-    console.log('href completo:', window.location.href);
-    console.log('search:', window.location.search);
-
     const params = new URLSearchParams(window.location.search);
     const nombre = params.get('invitee_full_name');
     const startRaw = params.get('event_start_time');
 
-    // Si hay datos de Calendly, personalizar el encabezado
-    if (nombre || startRaw) {
+    if (!nombre && !startRaw) return;
 
-      // Formatear fecha y hora en español (Bolivia)
-      let fechaDisplay = '';
-      if (startRaw) {
-        const fecha = new Date(startRaw);
-        fechaDisplay = fecha.toLocaleString('es-BO', {
-          timeZone: 'America/La_Paz',
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false
-        });
-        // Capitalizar primera letra
-        fechaDisplay = fechaDisplay.charAt(0).toUpperCase() + fechaDisplay.slice(1);
-      }
-
-      // Actualizar badge
-      const badge = document.querySelector('.badge');
-      if (badge) badge.textContent = '✓ Reunión confirmada';
-
-      // Actualizar h1
-      const h1 = document.querySelector('.header h1');
-      if (h1 && nombre) {
-        h1.innerHTML = '¡Todo listo, <span>' +
-          nombre.split(' ')[0] + '!</span>';
-      }
-
-      // Actualizar párrafo del header
-      const headerP = document.querySelector('.header p');
-      if (headerP && fechaDisplay) {
-        headerP.innerHTML =
-          'Tu reunión está confirmada para el <strong style="color:var(--color-amber)">' +
-          fechaDisplay + '</strong>.<br>' +
-          'Te llegará un email de confirmación con el link de Google Meet.';
-      }
-
-      // Actualizar closing si hay fecha
-      if (fechaDisplay) {
-        const closing = document.querySelector('.closing p');
-        if (closing) {
-          closing.innerHTML =
-            '<strong>Nos vemos el ' + fechaDisplay + '.</strong><br>' +
-            'Revisá tu correo — ahí encontrás el link de Google Meet y todos los detalles.<br>' +
-            '<span class="highlight">Recordá llegar puntual y con quien toma las decisiones.</span>';
-        }
-      }
+    // Formatear fecha en español Bolivia
+    let fechaDisplay = '';
+    if (startRaw) {
+      const fecha = new Date(startRaw);
+      fechaDisplay = fecha.toLocaleString('es-BO', {
+        timeZone: 'America/La_Paz',
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      fechaDisplay = fechaDisplay.charAt(0).toUpperCase() + fechaDisplay.slice(1);
     }
+
+    // Cambiar SOLO el h1
+    const h1 = document.querySelector('.header h1');
+    if (h1) {
+      const primerNombre = nombre ? nombre.split(' ')[0] : '';
+      const fechaLine = fechaDisplay
+        ? '<br><span style="font-size:1.1rem;font-weight:500">' +
+          'Se te ha programado la reunión para: ' +
+          fechaDisplay + '</span>'
+        : '';
+      h1.innerHTML = '¡Todo listo' +
+        (primerNombre ? ', ' + primerNombre : '') +
+        '!' + fechaLine;
+    }
+
+    // NO tocar: .header p, .recs-title, .cards, .closing
   })();
   </script>
 
