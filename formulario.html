@@ -783,8 +783,9 @@
   <p id="submit-error" hidden></p>
 
   <script>
-    // Cambiá esta URL al endpoint de Railway en producción
-    const API_URL = 'https://landing-page-lumen-labs-production-09f5.up.railway.app/api/leads';
+    // Cambiá esta URL al endpoint de Render en producción
+    const API_BASE = 'https://lumen-labs-backend.onrender.com';
+    const API_URL = API_BASE + '/api/leads';
 
     // ── Estado del formulario ──
     const state = {
@@ -1235,14 +1236,15 @@
 
         if (data.success) {
           const leadId = data.id;
-          const nombre = state.nombre ? encodeURIComponent(state.nombre) : '';
-          const email  = state.email  ? encodeURIComponent(state.email)  : '';
+          const nombre = encodeURIComponent(state.nombre || '');
+          const email  = encodeURIComponent(state.email  || '');
+          const tel    = encodeURIComponent(state.whatsapp || '');
+
           window.location.href =
             'https://calendly.com/elgranh/reuniones-1-a-1' +
-            '?utm_source=lumen' +
-            '&utm_campaign=lead_' + leadId +
-            (nombre ? '&name='  + nombre : '') +
-            (email  ? '&email=' + email  : '');
+            '?name='  + nombre +
+            '&email=' + email +
+            '&a2='    + tel;
         } else {
           throw new Error(data.error || 'El servidor rechazó el envío');
         }

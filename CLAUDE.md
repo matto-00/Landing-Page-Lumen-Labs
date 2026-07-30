@@ -18,19 +18,19 @@
 
 ### Formulario de pre-reunión (`formulario.html`)
 - **Arquitectura:** Single-file HTML/CSS/JS — sin frameworks, sin build tools
-- **Flujo:** 9 pantallas tipo Typeform (100vh, transición vertical con fade)
-- **Punto de conversión:** POST `API_URL` → si `success: true` → redirect directo a Calendly
-- **Calendly:** `https://calendly.com/elgranh/reuniones-1-a-1`
+- **Flujo:** 10 pantallas tipo Typeform (P0–P9, 100vh, transición vertical con fade) + pantalla 11 de agenda
+- **Punto de conversión:** POST `API_URL` → si `success: true` → muestra pantalla 11 (picker de horarios propio, sin iframe) → al confirmar, redirige a Calendly con nombre/email prellenados
+- **Calendly:** `https://calendly.com/elgranh/reuniones-1-a-1` · Event Type UUID `33b2d1a8-1da9-4bb9-bbbf-8f1616113a26` · picker vía `GET/POST /api/calendly/*` (backend, `CALENDLY_TOKEN`)
 - **`gracias.html`:** Confirmación post-agendamiento — 3 cards de recomendaciones con glassmorphism. SIN Calendly embed. SIN botón "volver al inicio"
-- **`API_URL`** (constante al inicio del `<script>`): `https://landing-page-lumen-labs-production-09f5.up.railway.app/api/leads` (producción Railway ✅)
+- **`API_URL`** (constante al inicio del `<script>`): `https://lumen-labs-backend.onrender.com/api/leads` (producción Render ✅)
 - **Animaciones:** CSS puro — transición pantalla Y-axis, stagger de contenido, shake de error
 
 ### Backend (`/backend`)
 - **Runtime:** Node.js + Express — **siempre CommonJS** (`require`/`module.exports`, nunca `import`/`export`)
 - **DB:** PostgreSQL en Railway vía `pg` Pool
-- **Variables de entorno:** `DATABASE_URL` + `PORT=3000` en `/backend/.env` — **nunca hardcodear**
+- **Variables de entorno:** `DATABASE_URL` + `PORT=3000` + `JWT_SECRET` + `CALENDLY_TOKEN` en `/backend/.env` — **nunca hardcodear**
 - **Scripts:** `npm start` (producción) · `npm run dev` (nodemon)
-- **Deploy:** Railway ✅ — `https://landing-page-lumen-labs-production-09f5.up.railway.app`
+- **Deploy:** Render ✅ — `https://lumen-labs-backend.onrender.com` (DB PostgreSQL sigue en Railway)
 
 ---
 
@@ -172,7 +172,9 @@ border-radius: 999px;
 │   └── authMiddleware.js ← Verifica Bearer JWT en rutas protegidas
 └── routes/
     ├── auth.js         ← POST /api/auth/login → JWT
-    └── leads.js        ← CRUD leads (POST público, GET/PUT/DELETE protegidos)
+    ├── leads.js        ← CRUD leads (POST público, GET/PUT/DELETE protegidos)
+    ├── stats.js        ← GET /api/stats (Chart.js panel admin)
+    └── calendly.js     ← GET /slots + POST /schedule (públicos, sin auth)
 ```
 
 ### Endpoints
@@ -186,6 +188,8 @@ border-radius: 999px;
 | GET | `/api/leads/:id` | JWT | Detalle de un lead |
 | PUT | `/api/leads/:id` | JWT | Actualiza `estado` → `{ success }` |
 | DELETE | `/api/leads/:id` | JWT | Elimina lead → `{ success }` |
+| GET | `/api/calendly/slots` | — | `?date=YYYY-MM-DD` → `{ success, slots: [{time, display}] }` |
+| POST | `/api/calendly/schedule` | — | `{ slot_time, nombre, email, lead_id }` → `{ success, booking_url }` |
 
 ### Tabla `leads_prereunion`
 ```sql
@@ -242,7 +246,9 @@ backend/
 │   └── authMiddleware.js           ← Guard JWT para rutas protegidas
 └── routes/
     ├── auth.js                     ← POST /api/auth/login
-    └── leads.js                    ← CRUD /api/leads
+    ├── leads.js                    ← CRUD /api/leads
+    ├── stats.js                    ← GET /api/stats
+    └── calendly.js                 ← GET /slots + POST /schedule
 ```
 
 ---
@@ -250,7 +256,7 @@ backend/
 ## Constraints absolutas
 
 1. **`formulario.html` es el único punto de conversión.** Todos los CTAs del landing abren `formulario.html`. CTAs secundarios hacen scroll a `#cta-1`.
-2. **Post-submit → redirect a Calendly** (`https://calendly.com/elgranh/reuniones-1-a-1`).
+2. **Post-submit → pantalla 11 con picker propio de horarios** (`/api/calendly/slots` + `/api/calendly/schedule`) → al confirmar, redirect a Calendly (`https://calendly.com/elgranh/reuniones-1-a-1`) con nombre/email prellenados.
 3. **Backend siempre CommonJS.** Nunca `import`/`export`. Nunca hardcodear credenciales.
 4. **Glass effect siempre con `backdrop-filter` real.** Nunca simular con opacidad.
 5. **GSAP ScrollTrigger** solo para elementos DOM. Nunca tocar el Canvas 3D del hero.
@@ -324,13 +330,15 @@ curl http://localhost:3000/api/health
 - [x] `GET /api/health` · `POST /api/leads` · queries parametrizados
 - [x] Tabla `leads_prereunion` creada en Railway
 - [x] **Linkear todos los CTAs del landing a `formulario.html`**
-- [x] Deploy backend en Railway ✅
-- [x] Actualizar `API_URL` en `formulario.html` al endpoint Railway ✅
-- [x] Formulario → Railway conectado: leads llegan a la DB ✅
+- [x] Deploy backend en Render ✅
+- [x] Actualizar `API_URL` en `formulario.html` al endpoint Render ✅
+- [x] Formulario → Render conectado: leads llegan a la DB ✅
 - [x] Panel admin: login.html + admin.html + endpoints protegidos ✅
 - [x] Restringir CORS al dominio Netlify en producción ✅
 - [x] Deploy Netlify + dominio ✅
 - [x] Pestaña Estadísticas: GET /api/stats + 7 gráficos Chart.js ✅
+- [x] Migración de deploy backend: Railway → Render (`https://lumen-labs-backend.onrender.com`) ✅
+- [x] Pantalla 11: picker propio de horarios (Calendly) en `formulario.html` — `GET/POST /api/calendly/*` ✅
 
 ---
 
@@ -343,5 +351,5 @@ curl http://localhost:3000/api/health
 
 ## Sesión actual — próxima tarea
 
-**Completado:** Auth JWT ✅ · Panel admin ✅ · CORS restringido a Netlify ✅ · Pestaña Estadísticas (Chart.js, 7 gráficos, GET /api/stats) ✅
-**Pendiente:** —
+**Completado:** Auth JWT ✅ · Panel admin ✅ · CORS restringido a Netlify ✅ · Pestaña Estadísticas (Chart.js, 7 gráficos, GET /api/stats) ✅ · Deploy backend migrado a Render ✅ · Pantalla 11 con picker de Calendly (sin iframe) ✅
+**Pendiente:** Verificar en producción que `CALENDLY_TOKEN` (Render) tiene permisos para `event_type_available_times` y `scheduling_links`; confirmar que el "Confirmation Page" redirect de Calendly a `gracias.html` apunta al dominio de Netlify en producción.

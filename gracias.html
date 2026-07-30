@@ -76,12 +76,19 @@
     }
 
     .nav-logo { display: flex; align-items: center; }
-    .nav-logo-full { display: block; height: 32px; width: auto; }
-    .nav-logo-icon { display: none; height: 32px; width: auto; }
+    .nav-logo-full { display: block; height: 112px; width: auto; }
+    .nav-logo-icon { display: none; height: 40px; width: auto; }
 
     @media (max-width: 767px) {
       .nav-logo-full { display: none; }
-      .nav-logo-icon { display: block; }
+      .nav-logo-icon { display: block; height: 40px; width: auto; }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .content { max-width: 600px; }
+      .header h1 { font-size: 2.2rem; }
+      .card { padding: 24px 28px; }
+      .nav-logo-full { height: 48px; }
     }
 
 
@@ -304,8 +311,8 @@
   <!-- ── NAVBAR ── -->
   <nav id="navbar">
     <a href="index.html" class="nav-logo">
-      <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" class="nav-logo-full" height="32">
-      <img src="assets/Lumen_isotipo.png" alt="Lumen Labs" class="nav-logo-icon" height="32">
+      <img src="assets/Lumen_Horizontal_logo2.png" alt="Lumen Labs" class="nav-logo-full" height="56">
+      <img src="assets/Lumen_isotipo.png" alt="Lumen Labs" class="nav-logo-icon" height="40">
     </a>
   </nav>
 
@@ -319,7 +326,7 @@
           ✓ Formulario recibido
         </div>
         <h1 class="anim" style="animation-delay: 80ms">
-          ¡Gracias por el formulario.<br><span>El primer paso ya está dado.</span>
+          ¡Gracias por el formulario!<br><span>El primer paso ya está dado.</span>
         </h1>
         <p class="anim" style="animation-delay: 160ms">
           Vamos a revisar tus respuestas con cuidado. Si encajás con el perfil que buscamos, vas a recibir noticias nuestras muy pronto.
@@ -370,6 +377,70 @@
 
     </div>
   </main>
+
+  <script>
+  (function() {
+    console.log('href completo:', window.location.href);
+    console.log('search:', window.location.search);
+
+    const params = new URLSearchParams(window.location.search);
+    const nombre = params.get('invitee_full_name');
+    const startRaw = params.get('event_start_time');
+
+    // Si hay datos de Calendly, personalizar el encabezado
+    if (nombre || startRaw) {
+
+      // Formatear fecha y hora en español (Bolivia)
+      let fechaDisplay = '';
+      if (startRaw) {
+        const fecha = new Date(startRaw);
+        fechaDisplay = fecha.toLocaleString('es-BO', {
+          timeZone: 'America/La_Paz',
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        });
+        // Capitalizar primera letra
+        fechaDisplay = fechaDisplay.charAt(0).toUpperCase() + fechaDisplay.slice(1);
+      }
+
+      // Actualizar badge
+      const badge = document.querySelector('.badge');
+      if (badge) badge.textContent = '✓ Reunión confirmada';
+
+      // Actualizar h1
+      const h1 = document.querySelector('.header h1');
+      if (h1 && nombre) {
+        h1.innerHTML = '¡Todo listo, <span>' +
+          nombre.split(' ')[0] + '!</span>';
+      }
+
+      // Actualizar párrafo del header
+      const headerP = document.querySelector('.header p');
+      if (headerP && fechaDisplay) {
+        headerP.innerHTML =
+          'Tu reunión está confirmada para el <strong style="color:var(--color-amber)">' +
+          fechaDisplay + '</strong>.<br>' +
+          'Te llegará un email de confirmación con el link de Google Meet.';
+      }
+
+      // Actualizar closing si hay fecha
+      if (fechaDisplay) {
+        const closing = document.querySelector('.closing p');
+        if (closing) {
+          closing.innerHTML =
+            '<strong>Nos vemos el ' + fechaDisplay + '.</strong><br>' +
+            'Revisá tu correo — ahí encontrás el link de Google Meet y todos los detalles.<br>' +
+            '<span class="highlight">Recordá llegar puntual y con quien toma las decisiones.</span>';
+        }
+      }
+    }
+  })();
+  </script>
 
 </body>
 </html>
