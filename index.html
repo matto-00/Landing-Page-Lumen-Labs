@@ -156,6 +156,41 @@
       padding: 16px 5%;
     }
 
+    /* Navbar sobre secciones crema (#para-quien, #cta-4) */
+    #navbar.scrolled-cream {
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border-bottom: none !important;
+    }
+
+    #navbar.scrolled-cream .nav-logo-full {
+      filter: brightness(0);
+      opacity: 0.85;
+    }
+    #navbar.scrolled-cream .nav-logo-icon {
+      filter: brightness(0);
+      opacity: 0.85;
+    }
+
+    #navbar.scrolled-cream .nav-pill {
+      background: rgba(255,255,255,0.70);
+      border-color: rgba(215,105,18,0.20);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.08),
+        0 1px 0 rgba(255,255,255,0.80) inset;
+    }
+
+    #navbar.scrolled-cream .nav-links a {
+      color: #333333;
+    }
+
+    #navbar.scrolled-cream .nav-links a:hover {
+      color: #000000;
+    }
+
     /* La pill: solo los links, centrada */
     .nav-pill {
       position: absolute;
@@ -977,9 +1012,125 @@
       letter-spacing: 0.04em;
     }
 
+    /* ── PARTICLES CANVAS ────────────────────────────────────────────────── */
+    #particlesCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── SECTION TRANSITIONS ─────────────────────────────────────────────── */
+    .section-transition {
+      height: 280px;
+      pointer-events: none;
+    }
+
+    .section-transition--tall {
+      height: 320px;
+    }
+
+    .section-transition--to-cream {
+      background: linear-gradient(
+        to bottom,
+        #050505 0%,
+        #1a1410 25%,
+        #4a3820 50%,
+        #b89070 75%,
+        #e8d8c4 90%,
+        #FAF6F0 100%
+      );
+    }
+
+    .section-transition--to-black {
+      background: linear-gradient(
+        to bottom,
+        #FAF6F0 0%,
+        #e8d8c4 10%,
+        #b89070 25%,
+        #4a3820 50%,
+        #1a1410 75%,
+        #050505 100%
+      );
+    }
+
+    /* ── STACK TECNOLÓGICO — SCROLL INFINITO ─────────────────────────────── */
+    #stack-scroll {
+      padding: 0 0 32px 0;
+      background: var(--color-bg);
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .stack-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--color-muted);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .stack-track {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .stack-track + .stack-track {
+      margin-top: 12px;
+    }
+
+    .stack-row {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+    }
+
+    .stack-row--left {
+      animation: scrollLeft 35s linear infinite;
+    }
+
+    .stack-row--right {
+      animation: scrollRight 40s linear infinite;
+    }
+
+    .stack-row:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scrollLeft {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    @keyframes scrollRight {
+      from { transform: translateX(-50%); }
+      to   { transform: translateX(0); }
+    }
+
+    .pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(215,105,18,0.20);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-secondary);
+      white-space: nowrap;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .pill:hover {
+      border-color: rgba(215,105,18,0.50);
+      color: var(--color-text);
+    }
+
     /* ── CTA-1 SECTION ───────────────────────────────────────────────────── */
     #cta-1 {
       padding: 96px 5%;
+      position: relative;
+      z-index: 1;
     }
 
     .section-container {
@@ -1041,6 +1192,8 @@
     /* ── PROBLEMA SECTION ────────────────────────────────────────────────── */
     #problema {
       padding: 128px 5%;
+      position: relative;
+      z-index: 1;
     }
 
     .problema-header {
@@ -1108,6 +1261,7 @@
     /* ── PARA-QUIEN SECTION ──────────────────────────────────────────────── */
     #para-quien {
       padding: 128px 5%;
+      background: #FAF6F0;
     }
 
     .paraquien-header {
@@ -1123,6 +1277,13 @@
       line-height: 1.1;
       letter-spacing: -2px;
       margin: 16px 0 0;
+      color: #0A0A0A;
+    }
+
+    .paraquien-sub {
+      font-size: 17px;
+      color: #444444;
+      line-height: 1.75;
     }
 
     .paraquien-grid {
@@ -1138,19 +1299,32 @@
       display: flex;
       flex-direction: column;
       gap: 28px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(215,105,18,0.20);
+      border-radius: var(--card-radius);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .paraquien-col:hover {
+      border-color: rgba(215,105,18,0.45);
+      box-shadow: 0 8px 32px rgba(215,105,18,0.12),
+                  0 0 0 1px rgba(215,105,18,0.20);
     }
 
     .paraquien-si {
-      border-color: rgba(255,138,0,0.20);
+      border-color: rgba(215,105,18,0.20);
     }
 
     .paraquien-no {
-      border-color: rgba(255,255,255,0.06);
+      border-color: rgba(0,0,0,0.10);
     }
 
     .paraquien-col-header {
       padding-bottom: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
     }
 
     .col-badge {
@@ -1162,15 +1336,15 @@
     }
 
     .col-badge--si {
-      background: rgba(255,138,0,0.12);
-      color: var(--color-amber);
-      border: 1px solid rgba(255,138,0,0.25);
+      background: rgba(215,105,18,0.12);
+      color: var(--color-orange);
+      border: 1px solid rgba(215,105,18,0.25);
     }
 
     .col-badge--no {
-      background: rgba(255,255,255,0.04);
-      color: var(--color-muted);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.06);
+      color: #666666;
+      border: 1px solid rgba(0,0,0,0.08);
     }
 
     .paraquien-list {
@@ -1186,7 +1360,7 @@
       gap: 14px;
       font-size: 15px;
       line-height: 1.6;
-      color: var(--color-secondary);
+      color: #222222;
     }
 
     .list-icon {
@@ -1197,7 +1371,7 @@
     }
 
     .list-icon--si { color: var(--color-orange); }
-    .list-icon--no { color: var(--color-muted); }
+    .list-icon--no { color: #999999; }
 
     /* ── CTA-2 SECTION ───────────────────────────────────────────────────── */
     #cta-2 {
@@ -1530,24 +1704,25 @@
       padding: 128px 5%;
       position: relative;
       overflow: hidden;
+      background: #FAF6F0;
     }
 
     .cta-final {
       position: relative;
-      max-width: 720px;
+      max-width: 1200px;
       margin: 0 auto;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
       align-items: center;
-      gap: 28px;
-      padding: 80px 64px;
-      background: rgba(12,12,12,0.85);
-      border: 1px solid rgba(255,138,0,0.20);
+      text-align: left;
+      padding: 72px 80px;
+      background: rgba(255,255,255,0.90);
+      border: 1px solid rgba(215,105,18,0.20);
       border-radius: var(--card-radius);
-      box-shadow: var(--card-shadow);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.10), 0 0 0 1px rgba(215,105,18,0.08);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
 
     .cta-final-glow {
@@ -1572,18 +1747,24 @@
       z-index: 1;
     }
 
+    .cta-final-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
     .cta-final-headline {
       font-family: var(--font-display);
       font-size: 52px;
       font-weight: 500;
       line-height: 1.1;
       letter-spacing: -2.5px;
-      color: var(--color-text);
+      color: #0A0A0A;
     }
 
     .cta-final-sub {
       font-size: 17px;
-      color: var(--color-secondary);
+      color: #444444;
       line-height: 1.75;
       max-width: 460px;
     }
@@ -1597,16 +1778,36 @@
 
     .cta-final-trust {
       font-size: 13px;
-      color: var(--color-muted);
+      color: #666666;
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .cta-final-trust span {
       color: var(--color-orange);
       font-weight: 600;
+    }
+
+    .cta-chart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .growth-svg {
+      width: 100%;
+      max-width: 620px;
+      height: auto;
+    }
+
+    .chart-caption {
+      font-size: 11px;
+      color: #999999;
+      letter-spacing: 0.5px;
+      text-align: center;
     }
 
     /* ── FOOTER ──────────────────────────────────────────────────────────── */
@@ -1967,8 +2168,14 @@
       }
 
       .cta-final {
+        grid-template-columns: 1fr;
+        text-align: center;
         padding: 48px 24px;
         gap: 20px;
+      }
+
+      .cta-chart {
+        display: none;
       }
 
       .cta-final-headline {
@@ -2025,6 +2232,8 @@
   </style>
 </head>
 <body>
+
+  <canvas id="particlesCanvas"></canvas>
 
   <!-- ── NAVBAR ──────────────────────────────────────────────────────────── -->
   <nav id="navbar">
@@ -2111,6 +2320,81 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- STACK TECNOLÓGICO ─────────────────────────────────────────────────── -->
+  <section id="stack-scroll" aria-label="Stack tecnológico">
+    <p class="stack-label">TRABAJAMOS CON LAS TECNOLOGÍAS DE IA MÁS AVANZADAS</p>
+
+    <div class="stack-track">
+      <div class="stack-row stack-row--left">
+        <span class="pill">Claude</span>
+        <span class="pill">GPT-4o</span>
+        <span class="pill">LangChain</span>
+        <span class="pill">n8n</span>
+        <span class="pill">Make</span>
+        <span class="pill">Zapier</span>
+        <span class="pill">RAG</span>
+        <span class="pill">ElevenLabs</span>
+        <span class="pill">LangChain</span>
+        <span class="pill">Power BI</span>
+        <span class="pill">Pinecone</span>
+        <span class="pill">Vector DB</span>
+        <span class="pill">Notion API</span>
+        <span class="pill">Hostinger</span>
+        <span class="pill">Hermes Agent</span>
+        <span class="pill" aria-hidden="true">Claude</span>
+        <span class="pill" aria-hidden="true">GPT-4o</span>
+        <span class="pill" aria-hidden="true">LangChain</span>
+        <span class="pill" aria-hidden="true">n8n</span>
+        <span class="pill" aria-hidden="true">Make</span>
+        <span class="pill" aria-hidden="true">Zapier</span>
+        <span class="pill" aria-hidden="true">RAG</span>
+        <span class="pill" aria-hidden="true">ElevenLabs</span>
+        <span class="pill" aria-hidden="true">LangChain</span>
+        <span class="pill" aria-hidden="true">Power BI</span>
+        <span class="pill" aria-hidden="true">Pinecone</span>
+        <span class="pill" aria-hidden="true">Vector DB</span>
+        <span class="pill" aria-hidden="true">Notion API</span>
+        <span class="pill" aria-hidden="true">Hostinger</span>
+        <span class="pill" aria-hidden="true">Hermes Agent</span>
+      </div>
+    </div>
+
+    <div class="stack-track">
+      <div class="stack-row stack-row--right">
+        <span class="pill">OpenAI</span>
+        <span class="pill">Python</span>
+        <span class="pill">API REST</span>
+        <span class="pill">LangGraph</span>
+        <span class="pill">CrewAI</span>
+        <span class="pill">Whisper</span>
+        <span class="pill">Computer Vision</span>
+        <span class="pill">Microsoft Copilot</span>
+        <span class="pill">Azure OpenAI</span>
+        <span class="pill">Supabase</span>
+        <span class="pill">PostgreSQL</span>
+        <span class="pill">Node.js</span>
+        <span class="pill">Anthropic</span>
+        <span class="pill">Vertex AI</span>
+        <span class="pill">n8n Cloud</span>
+        <span class="pill" aria-hidden="true">OpenAI</span>
+        <span class="pill" aria-hidden="true">Python</span>
+        <span class="pill" aria-hidden="true">API REST</span>
+        <span class="pill" aria-hidden="true">LangGraph</span>
+        <span class="pill" aria-hidden="true">CrewAI</span>
+        <span class="pill" aria-hidden="true">Whisper</span>
+        <span class="pill" aria-hidden="true">Computer Vision</span>
+        <span class="pill" aria-hidden="true">Microsoft Copilot</span>
+        <span class="pill" aria-hidden="true">Azure OpenAI</span>
+        <span class="pill" aria-hidden="true">Supabase</span>
+        <span class="pill" aria-hidden="true">PostgreSQL</span>
+        <span class="pill" aria-hidden="true">Node.js</span>
+        <span class="pill" aria-hidden="true">Anthropic</span>
+        <span class="pill" aria-hidden="true">Vertex AI</span>
+        <span class="pill" aria-hidden="true">n8n Cloud</span>
+      </div>
     </div>
   </section>
 
@@ -2219,6 +2503,8 @@
     </div>
   </section>
 
+  <div class="section-transition section-transition--to-cream" aria-hidden="true"></div>
+
   <!-- 05 · PARA QUIÉN ────────────────────────────────────────────────────── -->
   <section id="para-quien">
     <div class="section-container">
@@ -2294,6 +2580,8 @@
       </div>
     </div>
   </section>
+
+  <div class="section-transition section-transition--to-black" aria-hidden="true"></div>
 
   <!-- 06 · CTA-2 ─────────────────────────────────────────────────────────── -->
   <section id="cta-2">
@@ -2575,6 +2863,8 @@
     </div>
   </section>
 
+  <div class="section-transition section-transition--to-cream section-transition--tall" aria-hidden="true"></div>
+
   <!-- 11 · CTA-4 ─────────────────────────────────────────────────────────── -->
   <section id="cta-4">
     <div class="section-container">
@@ -2582,28 +2872,91 @@
 
         <div class="cta-final-glow" aria-hidden="true"></div>
 
-        <span class="label-eyebrow">Última parada</span>
-        <h2 class="cta-final-headline">
-          ¿Listo para desbloquear<br>
-          el potencial de tu negocio?
-        </h2>
-        <p class="cta-final-sub">
-          Hablemos. Sin presión, sin promesas vacías.<br>
-          Solo claridad sobre si podemos ayudarte y cómo.
-        </p>
-        <a href="formulario.html"
-           class="btn-primary cta-final-btn">
-          Agendar diagnóstico gratuito →
-        </a>
-        <p class="cta-final-trust">
-          <span>✓</span> Sin costo ·
-          <span>✓</span> 30 minutos ·
-          <span>✓</span> Respuesta en 24h
-        </p>
+        <div class="cta-final-content">
+          <span class="label-eyebrow">Última parada</span>
+          <h2 class="cta-final-headline">
+            ¿Listo para desbloquear<br>
+            el potencial de tu negocio?
+          </h2>
+          <p class="cta-final-sub">
+            Hablemos. Sin presión, sin promesas vacías.<br>
+            Solo claridad sobre si podemos ayudarte y cómo.
+          </p>
+          <a href="formulario.html"
+             class="btn-primary cta-final-btn">
+            Agendar diagnóstico gratuito →
+          </a>
+          <p class="cta-final-trust">
+            <span>✓</span> Sin costo ·
+            <span>✓</span> 30 minutos ·
+            <span>✓</span> Respuesta en 24h
+          </p>
+        </div>
+
+        <div class="cta-chart" aria-hidden="true">
+          <svg id="growthChart" viewBox="0 0 400 260"
+               xmlns="http://www.w3.org/2000/svg" class="growth-svg">
+
+            <!-- Ejes -->
+            <line x1="48" y1="220" x2="370" y2="220"
+                  stroke="rgba(215,105,18,0.25)" stroke-width="1.5"/>
+            <line x1="48" y1="24"  x2="48"   y2="220"
+                  stroke="rgba(215,105,18,0.25)" stroke-width="1.5"/>
+
+            <!-- Labels eje Y -->
+            <text x="6"  y="224" font-size="9" fill="#999">0</text>
+            <text x="2"  y="163" font-size="9" fill="#999">25%</text>
+            <text x="2"  y="106" font-size="9" fill="#999">50%</text>
+            <text x="2"  y="52"  font-size="9" fill="#999">75%</text>
+
+            <!-- Labels eje X -->
+            <text x="60"  y="236" font-size="8" fill="#999">Mes 1</text>
+            <text x="150" y="236" font-size="8" fill="#999">Mes 3</text>
+            <text x="240" y="236" font-size="8" fill="#999">Mes 6</text>
+            <text x="330" y="236" font-size="8" fill="#999">Mes 12</text>
+
+            <!-- Área bajo la curva (fill) -->
+            <path id="growthArea"
+              d="M48,220 C100,220 130,205 170,180 C210,155 240,115 275,75 C305,45 335,32 370,26 L370,220 Z"
+              fill="rgba(215,105,18,0.08)"
+              stroke="none"/>
+
+            <!-- Curva principal -->
+            <path id="growthPath"
+              d="M48,220 C100,220 130,205 170,180 C210,155 240,115 275,75 C305,45 335,32 370,26"
+              fill="none"
+              stroke="url(#orangeGrad)"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-dasharray="520"
+              stroke-dashoffset="520"/>
+
+            <!-- Punto final animado -->
+            <circle id="growthDot" cx="370" cy="26" r="4"
+                    fill="#D76912" opacity="0"/>
+
+            <!-- Label de resultado -->
+            <text id="growthLabel" x="290" y="20"
+                  font-size="10" font-weight="600"
+                  fill="#D76912" opacity="0">+300% ROI</text>
+
+            <!-- Gradiente de la línea -->
+            <defs>
+              <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="#B55A0F"/>
+                <stop offset="100%" stop-color="#E88420"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <p class="chart-caption">Crecimiento promedio de clientes Lumen Labs</p>
+        </div>
 
       </div>
     </div>
   </section>
+
+  <div class="section-transition section-transition--to-black" aria-hidden="true"></div>
 
   <!-- 12 · FOOTER ────────────────────────────────────────────────────────── -->
   <footer id="footer">
@@ -2676,11 +3029,27 @@
     </div>
   </footer>
 
+  <script defer src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+
   <script>
     // Navbar scroll behavior
     window.addEventListener('scroll', function () {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
     });
+
+    // Navbar sobre secciones crema (#para-quien, #cta-4)
+    const creamSections = ['para-quien', 'cta-4'];
+    function updateNavbarStyle() {
+      const overCream = creamSections.some(id => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top <= 80 && rect.bottom > 0;
+      });
+      document.getElementById('navbar')
+        .classList.toggle('scrolled-cream', overCream);
+    }
+    window.addEventListener('scroll', updateNavbarStyle, { passive: true });
 
     // Hero entrance — staggered fade-up (above the fold, fires on load)
     gsap.registerPlugin(ScrollTrigger);
@@ -2904,6 +3273,406 @@
     window.addEventListener('resize', () => {
       const activeLink = document.querySelector('.nav-links a.nav-active');
       if (activeLink) moveIndicator(activeLink);
+    });
+
+    // ── PARTÍCULAS — Three.js medusae halo, estilo Google Antigravity (#cta-1 y #problema) ──
+    // Envuelto en función + DOMContentLoaded: el <script defer> de Three.js
+    // se ejecuta antes de DOMContentLoaded, pero después de este <script>
+    // inline si se referenciara THREE a nivel superior.
+    function initParticleSystem() {
+    const particlesCanvas = document.getElementById('particlesCanvas');
+    const isMobileParticles = window.matchMedia('(max-width: 768px)').matches;
+
+    const pRenderer = new THREE.WebGLRenderer({ canvas: particlesCanvas, alpha: true, antialias: true });
+    pRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    pRenderer.setClearColor(0x000000, 0);
+
+    const pScene  = new THREE.Scene();
+
+    // Cámara ortográfica 1:1 a píxeles — origen arriba-izquierda, Y crece hacia
+    // abajo, igual que clientX/clientY del DOM (sin necesidad de invertir ejes)
+    const pCamera = new THREE.OrthographicCamera(0, window.innerWidth, 0, window.innerHeight, -1000, 1000);
+    pCamera.position.z = 10;
+
+    function resizeParticleRenderer() {
+      pRenderer.setSize(window.innerWidth, window.innerHeight, false);
+      pCamera.right  = window.innerWidth;
+      pCamera.bottom = window.innerHeight;
+      pCamera.updateProjectionMatrix();
+    }
+    resizeParticleRenderer();
+
+    // Zona válida en coordenadas de documento — estable ante el scroll
+    let zoneDocTop = 0, zoneDocHeight = 0;
+    function calcZoneDocument() {
+      const ids = ['cta-1', 'problema'];
+      let top = Infinity, bottom = -Infinity;
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        top    = Math.min(top, rect.top + window.scrollY);
+        bottom = Math.max(bottom, rect.bottom + window.scrollY);
+      });
+      if (top === Infinity) return;
+      zoneDocTop    = top;
+      zoneDocHeight = bottom - top;
+    }
+    calcZoneDocument();
+
+    function isZoneVisible() {
+      const zoneScreenTop    = zoneDocTop - window.scrollY;
+      const zoneScreenBottom = zoneScreenTop + zoneDocHeight;
+      return zoneDocHeight > 0 && zoneScreenBottom > 0 && zoneScreenTop < window.innerHeight;
+    }
+
+    // Mouse — solo desktop; mobile usa oscilación Lissajous (ver animateParticles)
+    const pMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
+    if (!isMobileParticles) {
+      window.addEventListener('mousemove', e => {
+        pMouse.x = e.clientX;
+        pMouse.y = e.clientY;
+        pMouse.active = true;
+      });
+      window.addEventListener('mouseleave', () => { pMouse.active = false; });
+    }
+
+    // Grid de quads instanciados
+    const GRID_COLS      = isMobileParticles ? 20 : 42;
+    const GRID_ROWS       = isMobileParticles ? 13 : 28;
+    const INSTANCE_COUNT  = GRID_COLS * GRID_ROWS;
+    const DRAG_FACTOR     = 0.015; // dragFactor — BreathDearMedusae
+
+    // Cursor — valores exactos BreathDearMedusae (fracción de viewport / unitless)
+    const CURSOR_RADIUS          = 0.065; // hoverRadius
+    const CURSOR_STRENGTH        = 3.0;   // hoverStrength
+    const CURSOR_FOLLOW_STRENGTH = 1.0;   // cursorFollowStrength
+
+    // Conversión world-unit → píxeles para los parámetros espaciales del halo
+    // (BreathDearMedusae usa unidades de viewport de r3f; acá 1:1 a píxeles)
+    const WORLD_UNIT_PX = 90;
+
+    let gridWidthPx = 900, gridHeightPx = 300;
+    const particleGeometry = new THREE.PlaneGeometry(1, 1);
+
+    function buildParticleGrid() {
+      gridWidthPx  = Math.min(window.innerWidth * 0.92, 1320);
+      gridHeightPx = Math.max(zoneDocHeight, 260);
+
+      const offsets = new Float32Array(INSTANCE_COUNT * 3);
+      const randoms = new Float32Array(INSTANCE_COUNT);
+      const cellW = gridWidthPx  / GRID_COLS;
+      const cellH = gridHeightPx / GRID_ROWS;
+      let i = 0;
+      for (let row = 0; row < GRID_ROWS; row++) {
+        for (let col = 0; col < GRID_COLS; col++) {
+          const u = GRID_COLS > 1 ? col / (GRID_COLS - 1) : 0.5;
+          const v = GRID_ROWS > 1 ? row / (GRID_ROWS - 1) : 0.5;
+          let px = (u - 0.5) * gridWidthPx;
+          let py = (v - 0.5) * gridHeightPx;
+          px += (Math.random() - 0.5) * cellW * 0.6;
+          py += (Math.random() - 0.5) * cellH * 0.6;
+          offsets[i * 3]     = px;
+          offsets[i * 3 + 1] = py;
+          offsets[i * 3 + 2] = 0;
+          randoms[i] = Math.random();
+          i++;
+        }
+      }
+      particleGeometry.setAttribute('aOffset', new THREE.InstancedBufferAttribute(offsets, 3));
+      particleGeometry.setAttribute('aRandom', new THREE.InstancedBufferAttribute(randoms, 1));
+    }
+    buildParticleGrid();
+
+    // Uniforms — porteados del halo "medusa" (Google Antigravity / BreathDearMedusae)
+    // a espacio de píxeles, con la paleta Lumen Labs
+    const particleUniforms = {
+      uTime:                      { value: 0 },
+      uMouse:                     { value: new THREE.Vector2(0, 0) },
+      uOuterOscFrequency:         { value: 2.6 },
+      uOuterOscAmplitude:         { value: 0.76 * WORLD_UNIT_PX },
+      uHaloRadiusBase:            { value: 2.4  * WORLD_UNIT_PX },
+      uHaloRadiusAmplitude:       { value: 0.5  * WORLD_UNIT_PX },
+      uHaloShapeAmplitude:        { value: 0.75 * WORLD_UNIT_PX },
+      uHaloRimWidth:              { value: 1.8  * WORLD_UNIT_PX },
+      uHaloOuterStartOffset:      { value: 0.4  * WORLD_UNIT_PX },
+      uHaloOuterEndOffset:        { value: 2.2  * WORLD_UNIT_PX },
+      uHaloScaleX:                { value: 1.3 },
+      uHaloScaleY:                { value: 1.0 },
+      uParticleBaseSize:          { value: 0.0224 * WORLD_UNIT_PX },
+      uParticleActiveSize:        { value: 0.0616 * WORLD_UNIT_PX },
+      uBlobScaleX:                { value: 1.0 },
+      uBlobScaleY:                { value: 0.6 },
+      uParticleRotationSpeed:     { value: 0.1 },
+      uParticleRotationJitter:    { value: 0.2 },
+      uParticleOscillationFactor: { value: 1.0 },
+      uParticleColorBase:  { value: new THREE.Color('#0D0400') },
+      uParticleColorOne:   { value: new THREE.Color('#8B3A05') },
+      uParticleColorTwo:   { value: new THREE.Color('#D76912') },
+      uParticleColorThree: { value: new THREE.Color('#E8780A') }
+    };
+
+    const particleMaterial = new THREE.ShaderMaterial({
+      uniforms: particleUniforms,
+      vertexShader: `
+        uniform float uTime;
+        uniform vec2 uMouse;
+        uniform float uOuterOscFrequency;
+        uniform float uOuterOscAmplitude;
+        uniform float uHaloRadiusBase;
+        uniform float uHaloRadiusAmplitude;
+        uniform float uHaloShapeAmplitude;
+        uniform float uHaloRimWidth;
+        uniform float uHaloOuterStartOffset;
+        uniform float uHaloOuterEndOffset;
+        uniform float uHaloScaleX;
+        uniform float uHaloScaleY;
+        uniform float uParticleBaseSize;
+        uniform float uParticleActiveSize;
+        uniform float uBlobScaleX;
+        uniform float uBlobScaleY;
+        uniform float uParticleRotationSpeed;
+        uniform float uParticleRotationJitter;
+        uniform float uParticleOscillationFactor;
+        varying vec2 vUv;
+        varying float vSize;
+        varying vec2 vPos;
+
+        attribute vec3 aOffset;
+        attribute float aRandom;
+
+        float hash(vec2 p) {
+          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+        float noise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          float a = hash(i);
+          float b = hash(i + vec2(1.0, 0.0));
+          float c = hash(i + vec2(0.0, 1.0));
+          float d = hash(i + vec2(1.0, 1.0));
+          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+        }
+
+        void main() {
+          vUv = uv;
+
+          vec3 pos = aOffset;
+
+          // Deriva ambiental lenta — crea la sensación de vida en todo el grid
+          float driftSpeed = uTime * 0.15;
+          float dx = sin(driftSpeed + pos.y * 0.02) + sin(driftSpeed * 0.5 + pos.y * 0.08);
+          float dy = cos(driftSpeed + pos.x * 0.02) + cos(driftSpeed * 0.5 + pos.x * 0.08);
+          pos.x += dx * 6.0;
+          pos.y += dy * 6.0;
+
+          // Halo tipo medusa — anillo que respira alrededor del cursor/target
+          vec2 relToMouse = pos.xy - uMouse;
+          vec2 haloScale = max(vec2(uHaloScaleX, uHaloScaleY), vec2(0.0001));
+          float distFromMouse = length(relToMouse / haloScale);
+          vec2 dirToMouse = normalize(relToMouse + vec2(0.0001, 0.0));
+
+          float shapeFactor = noise(dirToMouse * 2.0 + vec2(0.0, uTime * 0.1));
+
+          float breathCycle = sin(uTime * 0.8);
+          float baseRadius = uHaloRadiusBase + breathCycle * uHaloRadiusAmplitude;
+          float currentRadius = baseRadius + (shapeFactor * uHaloShapeAmplitude);
+
+          float rimInfluence = smoothstep(uHaloRimWidth, 0.0, abs(distFromMouse - currentRadius));
+
+          vec2 pushDir = normalize(relToMouse + vec2(0.0001, 0.0));
+          float pushAmt = (breathCycle * 0.5 + 0.5) * 14.0;
+          pos.xy += pushDir * pushAmt * rimInfluence;
+
+          // Oscilación exterior — más rápida, fuera del anillo principal
+          float outerInfluence = smoothstep(baseRadius + uHaloOuterStartOffset, baseRadius + uHaloOuterEndOffset, distFromMouse);
+          float outerOsc = sin(uTime * uOuterOscFrequency + pos.x * 0.01 + pos.y * 0.01);
+          pos.xy += normalize(relToMouse + vec2(0.0001, 0.0)) * outerOsc * uOuterOscAmplitude * outerInfluence;
+
+          // Tamaño — crece cerca del anillo activo
+          float baseSize = uParticleBaseSize + sin(uTime + pos.x * 0.01) * 1.5;
+          float currentScale = baseSize + rimInfluence * uParticleActiveSize;
+
+          vec3 transformed = position;
+          transformed.x *= currentScale * uBlobScaleX;
+          transformed.y *= currentScale * uBlobScaleY;
+
+          vSize = rimInfluence;
+          vPos = pos.xy;
+
+          // Rotación con jitter orbital alrededor del target
+          float dirLen = max(length(relToMouse), 0.0001);
+          vec2 dir = relToMouse / dirLen;
+          float oscPhase = aRandom * 6.28318530718;
+          float osc = 0.5 + 0.5 * sin(uTime * (0.25 + uParticleOscillationFactor * 0.35) + oscPhase);
+          float speedScale = mix(0.55, 1.35, osc) * (0.8 + uParticleOscillationFactor * 0.2);
+          float jitterScale = mix(0.7, 1.45, osc) * (0.85 + uParticleOscillationFactor * 0.15);
+          float jitter = sin(uTime * uParticleRotationSpeed * speedScale + pos.x * 0.01 + pos.y * 0.01) * (uParticleRotationJitter * jitterScale);
+          vec2 perp = vec2(-dir.y, dir.x);
+          vec2 jitteredDir = normalize(dir + perp * jitter);
+          mat2 rot = mat2(jitteredDir.x, jitteredDir.y, -jitteredDir.y, jitteredDir.x);
+          transformed.xy = rot * transformed.xy;
+
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(pos + transformed, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec3 uParticleColorBase;
+        uniform vec3 uParticleColorOne;
+        uniform vec3 uParticleColorTwo;
+        uniform vec3 uParticleColorThree;
+        varying vec2 vUv;
+        varying float vSize;
+        varying vec2 vPos;
+
+        void main() {
+          vec2 center = vec2(0.5);
+          vec2 p = abs(vUv - center) * 2.0;
+          float d = pow(pow(p.x, 2.6) + pow(p.y, 2.6), 1.0 / 2.6);
+          float alpha = 1.0 - smoothstep(0.8, 1.0, d);
+          if (alpha < 0.01) discard;
+
+          float t = uTime * 1.2;
+          float p1 = sin(vPos.x * 0.01 + t);
+          float p2 = sin(vPos.y * 0.01 + t * 0.8 + p1);
+
+          vec3 activeColor = mix(uParticleColorOne, uParticleColorTwo, p1 * 0.5 + 0.5);
+          activeColor = mix(activeColor, uParticleColorThree, p2 * 0.5 + 0.5);
+
+          vec3 finalColor = mix(uParticleColorBase, activeColor, smoothstep(0.1, 0.8, vSize));
+          float finalAlpha = alpha * mix(0.08, 1.0, vSize);
+
+          gl_FragColor = vec4(finalColor, finalAlpha);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+      side: THREE.DoubleSide
+    });
+
+    const particleMesh  = new THREE.InstancedMesh(particleGeometry, particleMaterial, INSTANCE_COUNT);
+    const particleGroup = new THREE.Group();
+    particleGroup.add(particleMesh);
+    pScene.add(particleGroup);
+
+    window.addEventListener('resize', () => {
+      resizeParticleRenderer();
+      calcZoneDocument();
+      buildParticleGrid();
+    });
+
+    window.addEventListener('load', () => {
+      calcZoneDocument();
+      buildParticleGrid();
+    });
+
+    // Loop — el halo sigue al cursor (desktop) u oscila en Lissajous (mobile)
+    const pClock = new THREE.Clock();
+    const localMouse = { x: 0, y: 0 };
+
+    function animateParticles() {
+      requestAnimationFrame(animateParticles);
+
+      if (!isZoneVisible() || zoneDocHeight === 0) {
+        pRenderer.clear();
+        return;
+      }
+
+      const zoneScreenTop = zoneDocTop - window.scrollY;
+      const groupCenterX  = window.innerWidth / 2;
+      const groupCenterY  = zoneScreenTop + zoneDocHeight / 2;
+      particleGroup.position.set(groupCenterX, groupCenterY, 0);
+
+      const t = pClock.getElapsedTime();
+      particleUniforms.uTime.value = t;
+
+      let targetX = null, targetY = null;
+      if (isMobileParticles) {
+        targetX = Math.sin(t * 0.31) * gridWidthPx * 0.28;
+        targetY = Math.sin(t * 0.47 + 1.3) * gridHeightPx * 0.28;
+      } else if (pMouse.active && pMouse.y >= zoneScreenTop && pMouse.y <= zoneScreenTop + zoneDocHeight) {
+        // Jitter orgánico del cursor — fórmula exacta BreathDearMedusae
+        const jitterRadiusPx = Math.min(window.innerWidth, window.innerHeight) * CURSOR_RADIUS;
+        const jitterX = (Math.sin(t * 0.35) + Math.sin(t * 0.77 + 1.2)) * 0.5;
+        const jitterY = (Math.cos(t * 0.31) + Math.sin(t * 0.63 + 2.4)) * 0.5;
+        const baseX = pMouse.x - groupCenterX;
+        const baseY = pMouse.y - groupCenterY;
+        targetX = (baseX + jitterX * jitterRadiusPx * CURSOR_STRENGTH) * CURSOR_FOLLOW_STRENGTH;
+        targetY = (baseY + jitterY * jitterRadiusPx * CURSOR_STRENGTH) * CURSOR_FOLLOW_STRENGTH;
+      }
+
+      if (targetX !== null) {
+        localMouse.x += (targetX - localMouse.x) * DRAG_FACTOR;
+        localMouse.y += (targetY - localMouse.y) * DRAG_FACTOR;
+      }
+      particleUniforms.uMouse.value.set(localMouse.x, localMouse.y);
+
+      pRenderer.render(pScene, pCamera);
+    }
+
+    requestAnimationFrame(animateParticles);
+    } // fin initParticleSystem
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initParticleSystem);
+    } else {
+      initParticleSystem();
+    }
+
+    // ── GRÁFICO DE CRECIMIENTO (#cta-4) ─────────────────────────────────────
+    let growthAnimating = false;
+    let growthReversing = false;
+    let growthProgress  = 0; // 0 = oculta, 1 = completa
+    const GROWTH_SPEED  = 0.022;
+    const GROWTH_REVERSE_SPEED = 0.015;
+    const TOTAL_DASH = 520;
+
+    function updateGrowthChart() {
+      const path  = document.getElementById('growthPath');
+      const area  = document.getElementById('growthArea');
+      const dot   = document.getElementById('growthDot');
+      const label = document.getElementById('growthLabel');
+      if (!path) return;
+
+      const offset = TOTAL_DASH * (1 - growthProgress);
+      path.style.strokeDashoffset = offset;
+      area.style.opacity  = growthProgress * 0.8;
+      dot.style.opacity   = growthProgress > 0.85 ? (growthProgress - 0.85) / 0.15 : 0;
+      label.style.opacity = growthProgress > 0.90 ? (growthProgress - 0.90) / 0.10 : 0;
+    }
+
+    function growthLoop() {
+      if (growthAnimating && growthProgress < 1) {
+        growthProgress = Math.min(1, growthProgress + GROWTH_SPEED);
+        updateGrowthChart();
+        requestAnimationFrame(growthLoop);
+      } else if (growthReversing && growthProgress > 0) {
+        growthProgress = Math.max(0, growthProgress - GROWTH_REVERSE_SPEED);
+        updateGrowthChart();
+        requestAnimationFrame(growthLoop);
+      }
+    }
+
+    // Desktop: hover sobre .cta-final
+    const ctaFinal = document.querySelector('.cta-final');
+    if (ctaFinal) {
+      ctaFinal.addEventListener('mouseenter', () => {
+        growthAnimating = true;
+        growthReversing = false;
+        growthLoop();
+      });
+      ctaFinal.addEventListener('mouseleave', () => {
+        growthAnimating = false;
+        growthReversing = true;
+        growthLoop();
+      });
+    }
+
+    window.addEventListener('load', () => {
+      updateGrowthChart(); // estado inicial (curva oculta)
     });
 
   </script>
