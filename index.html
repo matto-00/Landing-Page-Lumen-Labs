@@ -2229,6 +2229,344 @@
         margin-left: 3px;
       }
     }
+
+    /* ── CASOS DE USO ─────────────────────────────────────────────────── */
+    #casos-uso {
+      padding: 128px 5%;
+      background: var(--color-bg);
+    }
+
+    .casos-uso-header {
+      max-width: 680px;
+      margin: 0 auto 72px;
+      text-align: center;
+    }
+
+    .casos-uso-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin: 16px 0 24px;
+      color: var(--color-text);
+    }
+
+    .casos-uso-sub {
+      font-size: 17px;
+      color: var(--color-secondary);
+      line-height: 1.75;
+    }
+
+    /* Grid 2×2 */
+    .casos-uso-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+
+    /* Card */
+    .cu-card {
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cu-card.is-highlighted {
+      border-color: rgba(215,105,18,0.35);
+      box-shadow: var(--card-shadow), 0 0 40px var(--glow-10);
+    }
+
+    /* Header de la card */
+    .cu-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cu-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(215,105,18,0.10);
+      border: 1px solid rgba(215,105,18,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-orange);
+      flex-shrink: 0;
+    }
+
+    .cu-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .cu-desc {
+      font-size: 15px;
+      color: var(--color-secondary);
+      line-height: 1.75;
+    }
+
+    /* Pills */
+    .cu-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .cu-pill {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.10);
+      color: var(--color-muted);
+      background: rgba(255,255,255,0.03);
+      cursor: default;
+      transition: border-color 0.2s ease,
+                  color 0.2s ease,
+                  background 0.2s ease;
+      white-space: nowrap;
+    }
+
+    /* Pill iluminada — por hover propio o por conexión */
+    .cu-pill.is-active {
+      border-color: rgba(215,105,18,0.60);
+      color: var(--color-orange);
+      background: rgba(215,105,18,0.08);
+    }
+
+    @media (max-width: 768px) {
+      #casos-uso { padding: 64px 5%; }
+      .casos-uso-headline { font-size: 32px; letter-spacing: -1px; }
+      .casos-uso-grid { grid-template-columns: 1fr; }
+      .cu-card { padding: 28px 24px; }
+    }
+
+    /* ── METODOLOGÍA ──────────────────────────────────────────────────── */
+    #metodologia {
+      background: #FAF6F0;
+      padding: 96px 5% 112px;
+    }
+
+    .met-header {
+      max-width: 640px;
+      margin: 0 auto 64px;
+      text-align: center;
+    }
+
+    .met-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: #0A0A0A;
+      margin: 16px 0 0;
+    }
+
+    /* Diagrama SVG */
+    .met-diagram {
+      max-width: 860px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+
+    #metSvg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    /* Grid de 4 cards */
+    .met-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+
+    .met-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(215,105,18,0.15);
+      border-radius: var(--card-radius);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .met-card:hover {
+      border-color: rgba(215,105,18,0.40);
+      box-shadow: 0 8px 32px rgba(215,105,18,0.12);
+    }
+
+    .met-number {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 500;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .met-step-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: #111111;
+      line-height: 1.4;
+    }
+
+    .met-step-desc {
+      font-size: 14px;
+      color: #555555;
+      line-height: 1.75;
+    }
+
+    @media (max-width: 768px) {
+      #metodologia { padding: 64px 5% 80px; }
+      .met-headline { font-size: 32px; letter-spacing: -1px; }
+      .met-grid { grid-template-columns: 1fr; }
+      .met-diagram { display: none; }
+    }
+
+    #ventajas {
+      background: #FAF6F0;
+      padding: 80px 5% 112px;
+    }
+
+    .vent-header {
+      max-width: 640px;
+      margin: 0 auto 64px;
+      text-align: center;
+    }
+
+    .vent-headline {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: #0A0A0A;
+      margin: 16px 0 0;
+    }
+
+    /* Grid 3×2 */
+    .vent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+
+    /* Card con overflow hidden para el toggle */
+    .vent-card {
+      background: rgba(255,255,255,0.90);
+      border: 1px solid rgba(215,105,18,0.15);
+      border-radius: var(--card-radius);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      cursor: default;
+      transition: border-color 0.3s ease,
+                  box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .vent-card:hover {
+      border-color: rgba(215,105,18,0.45);
+      box-shadow: 0 12px 40px rgba(215,105,18,0.14);
+    }
+
+    /* Front: número + subtítulo + título */
+    .vent-card-front {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .vent-number {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 500;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .vent-number-sub {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(215,105,18,0.70);
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+    }
+
+    .vent-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: #0A0A0A;
+      line-height: 1.3;
+    }
+
+    /* Descripción — oculta por defecto, aparece en hover */
+    .vent-desc {
+      font-size: 14px;
+      color: #555555;
+      line-height: 1.75;
+      /* Estado inicial: altura 0, sin opacidad */
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      margin-top: 0;
+      transition: max-height 0.4s ease,
+                  opacity 0.35s ease,
+                  margin-top 0.4s ease;
+    }
+
+    /* Estado hover: descripción visible */
+    .vent-card:hover .vent-desc {
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 16px;
+    }
+
+    /* Mobile — descripción siempre visible (no hay hover en touch) */
+    @media (max-width: 768px) {
+      #ventajas { padding: 64px 5% 80px; }
+      .vent-headline { font-size: 32px; letter-spacing: -1px; }
+      .vent-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .vent-card { transform: none !important; }
+      .vent-desc {
+        max-height: 200px !important;
+        opacity: 1 !important;
+        margin-top: 16px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2249,8 +2587,8 @@
       <div class="nav-links">
         <a href="#hero">Inicio</a>
         <a href="#cta-1">Contacto</a>
-        <a href="#problema">Servicios</a>
         <a href="#casos">Casos</a>
+        <a href="#casos-uso">Servicios</a>
         <a href="#equipo">Nosotros</a>
         <a href="#faq">FAQ</a>
       </div>
@@ -2669,6 +3007,428 @@
     </div>
   </section>
 
+  <!-- 07.5 · CASOS DE USO ───────────────────────────────────────────────── -->
+  <section id="casos-uso">
+    <div class="section-container">
+
+      <div class="casos-uso-header">
+        <span class="label-eyebrow">Soluciones por área</span>
+        <h2 class="casos-uso-headline">
+          Tecnología que habla<br>
+          <span class="text-gradient">el idioma de tu empresa</span>
+        </h2>
+        <p class="casos-uso-sub">
+          Cada área de tu negocio tiene procesos que se pueden
+          optimizar. Estos son los que más impacto generan.
+        </p>
+      </div>
+
+      <div class="casos-uso-grid">
+
+        <!-- CARD 1: Finanzas -->
+        <div class="cu-card glass-card">
+          <div class="cu-card-header">
+            <div class="cu-icon">
+              <svg width="28" height="28" viewBox="0 0 28 28"
+                   fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="8" width="24" height="18"
+                      rx="3" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M8 8V6a6 6 0 0 1 12 0v2"
+                      stroke="currentColor" stroke-width="1.8"
+                      stroke-linecap="round"/>
+                <path d="M14 14v4M12 16h4"
+                      stroke="currentColor" stroke-width="1.8"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="cu-title">Finanzas y Administración</h3>
+          </div>
+          <p class="cu-desc">
+            Centraliza tu información financiera, elimina la carga
+            de reportes manuales y accede a un sistema que analiza
+            tus datos, detecta anomalías y te dice exactamente dónde
+            está el problema — antes de que se convierta en uno.
+          </p>
+          <div class="cu-pills">
+            <span class="cu-pill" data-service="dashboards">Dashboards a medida</span>
+            <span class="cu-pill" data-service="reportes">Reportes automáticos</span>
+            <span class="cu-pill" data-service="agente-financiero">Agente financiero autónomo</span>
+            <span class="cu-pill" data-service="analisis">Análisis de datos</span>
+            <span class="cu-pill" data-service="alertas">Alertas de presupuesto</span>
+            <span class="cu-pill" data-service="predictivos">Modelos predictivos</span>
+            <span class="cu-pill" data-service="asistente">Asistente autónomo y proactivo</span>
+            <span class="cu-pill" data-service="automatizacion">Automatización de procesos</span>
+          </div>
+        </div>
+
+        <!-- CARD 2: Marketing -->
+        <div class="cu-card glass-card">
+          <div class="cu-card-header">
+            <div class="cu-icon">
+              <svg width="28" height="28" viewBox="0 0 28 28"
+                   fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14h4l3-9 4 18 3-9h6"
+                      stroke="currentColor" stroke-width="1.8"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="cu-title">Marketing y Ventas</h3>
+          </div>
+          <p class="cu-desc">
+            Automatiza la producción de contenido, califica cada lead
+            antes de que llegue a tu equipo comercial y conecta tus
+            campañas de Meta y Google a un sistema que aprende
+            continuamente qué convierte y por qué. Menos intuición,
+            más datos.
+          </p>
+          <div class="cu-pills">
+            <span class="cu-pill" data-service="crm">CRM automatizado</span>
+            <span class="cu-pill" data-service="lead-scoring">Lead scoring</span>
+            <span class="cu-pill" data-service="contenido">Creación de contenido</span>
+            <span class="cu-pill" data-service="campanas">Análisis de campañas</span>
+            <span class="cu-pill" data-service="seguimiento">Seguimiento automático</span>
+            <span class="cu-pill" data-service="integracion">Integración con tus sistemas</span>
+            <span class="cu-pill" data-service="analisis">Análisis de datos</span>
+            <span class="cu-pill" data-service="predictivos">Modelos predictivos</span>
+            <span class="cu-pill" data-service="automatizacion">Automatización de procesos</span>
+            <span class="cu-pill" data-service="dashboards">Dashboards a medida</span>
+          </div>
+        </div>
+
+        <!-- CARD 3: Operaciones -->
+        <div class="cu-card glass-card">
+          <div class="cu-card-header">
+            <div class="cu-icon">
+              <svg width="28" height="28" viewBox="0 0 28 28"
+                   fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="14" cy="14" r="3"
+                        stroke="currentColor" stroke-width="1.8"/>
+                <path d="M14 2v3M14 23v3M2 14h3M23 14h3
+                         M5.6 5.6l2.1 2.1M20.3 20.3l2.1 2.1
+                         M5.6 22.4l2.1-2.1M20.3 7.7l2.1-2.1"
+                      stroke="currentColor" stroke-width="1.8"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="cu-title">Operaciones</h3>
+          </div>
+          <p class="cu-desc">
+            Elimina el copy-paste entre sistemas, automatiza
+            aprobaciones internas y conecta todas tus herramientas
+            en un único flujo de trabajo. Tu operación corre —
+            aunque no estés mirando.
+          </p>
+          <div class="cu-pills">
+            <span class="cu-pill" data-service="flujos">Automatización de flujos inteligentes</span>
+            <span class="cu-pill" data-service="inventario">Gestión de inventario</span>
+            <span class="cu-pill" data-service="reportes">Reportes automáticos</span>
+            <span class="cu-pill" data-service="integracion">Integración con tus sistemas</span>
+            <span class="cu-pill" data-service="documental">Gestión documental</span>
+            <span class="cu-pill" data-service="asistente">Asistente autónomo y proactivo</span>
+            <span class="cu-pill" data-service="analisis">Análisis de datos</span>
+            <span class="cu-pill" data-service="predictivos">Modelos predictivos</span>
+            <span class="cu-pill" data-service="automatizacion">Automatización de procesos</span>
+            <span class="cu-pill" data-service="dashboards">Dashboards a medida</span>
+          </div>
+        </div>
+
+        <!-- CARD 4: Atención al Cliente -->
+        <div class="cu-card glass-card">
+          <div class="cu-card-header">
+            <div class="cu-icon">
+              <svg width="28" height="28" viewBox="0 0 28 28"
+                   fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6h20v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"
+                      stroke="currentColor" stroke-width="1.8"/>
+                <path d="M4 6l10 9 10-9"
+                      stroke="currentColor" stroke-width="1.8"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="cu-title">Atención al Cliente</h3>
+          </div>
+          <p class="cu-desc">
+            Agentes conversacionales con voz real, disponibles en
+            WhatsApp, Instagram, Facebook y cualquier canal donde
+            esté tu cliente. Responden, califican y escalan al equipo
+            correcto en el momento justo. Tu equipo interviene solo
+            donde realmente agrega valor.
+          </p>
+          <div class="cu-pills">
+            <span class="cu-pill" data-service="chatbots">Agentes conversacionales</span>
+            <span class="cu-pill" data-service="voz">Agentes de voz</span>
+            <span class="cu-pill" data-service="whatsapp">WhatsApp Business</span>
+            <span class="cu-pill" data-service="sentimiento">Análisis de sentimiento</span>
+            <span class="cu-pill" data-service="seguimiento">Seguimiento de leads</span>
+            <span class="cu-pill" data-service="conocimiento">Base de conocimiento autónoma</span>
+            <span class="cu-pill" data-service="analisis">Análisis de datos</span>
+            <span class="cu-pill" data-service="automatizacion">Automatización de procesos</span>
+            <span class="cu-pill" data-service="integracion">Integración con tus sistemas</span>
+            <span class="cu-pill" data-service="asistente">Asistente autónomo y proactivo</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 07.6 · METODOLOGÍA ────────────────────────────────────────────────── -->
+  <div class="section-transition section-transition--to-cream" aria-hidden="true"></div>
+
+  <section id="metodologia">
+    <div class="section-container">
+
+      <div class="met-header">
+        <span class="label-eyebrow" style="color:var(--color-orange)">Cómo trabajamos</span>
+        <h2 class="met-headline">
+          De la idea al resultado.<br>
+          <span style="background:var(--gradient-brand);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;">
+            Sin ambigüedad.
+          </span>
+        </h2>
+      </div>
+
+      <!-- SVG del diagrama animado -->
+      <div class="met-diagram" aria-hidden="true">
+        <svg id="metSvg" viewBox="0 0 900 80"
+             xmlns="http://www.w3.org/2000/svg"
+             preserveAspectRatio="xMidYMid meet">
+
+          <!-- Línea base (gris tenue) -->
+          <line x1="100" y1="40" x2="800" y2="40"
+                stroke="rgba(215,105,18,0.15)"
+                stroke-width="2"/>
+
+          <!-- Línea animada (naranja — se traza al entrar) -->
+          <line id="metLine" x1="100" y1="40" x2="800" y2="40"
+                stroke="url(#metGrad)"
+                stroke-width="2"
+                stroke-dasharray="700"
+                stroke-dashoffset="700"/>
+
+          <!-- Nodos -->
+          <!-- Nodo 01 -->
+          <circle id="metNode1" cx="100" cy="40" r="10"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFill1" cx="100" cy="40" r="6"
+                  fill="transparent"/>
+
+          <!-- Nodo 02 -->
+          <circle id="metNode2" cx="367" cy="40" r="10"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFill2" cx="367" cy="40" r="6"
+                  fill="transparent"/>
+
+          <!-- Nodo 03 -->
+          <circle id="metNode3" cx="633" cy="40" r="10"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFill3" cx="633" cy="40" r="6"
+                  fill="transparent"/>
+
+          <!-- Nodo 04 -->
+          <circle id="metNode4" cx="800" cy="40" r="10"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFill4" cx="800" cy="40" r="6"
+                  fill="transparent"/>
+
+          <!-- Circulitos viajeros (ocultos hasta que la línea termine; posición controlada por JS) -->
+          <circle id="traveler1" cx="100" cy="40" r="4" fill="#D76912" opacity="0"></circle>
+          <circle id="traveler2" cx="100" cy="40" r="3" fill="#E88420" opacity="0"></circle>
+          <circle id="traveler3" cx="100" cy="40" r="2.5" fill="#B55A0F" opacity="0"></circle>
+
+          <!-- Gradiente de la línea -->
+          <defs>
+            <linearGradient id="metGrad" x1="0%" y1="0%"
+                            x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#B55A0F"/>
+              <stop offset="50%"  stop-color="#D76912"/>
+              <stop offset="100%" stop-color="#E88420"/>
+            </linearGradient>
+          </defs>
+
+        </svg>
+      </div>
+
+      <!-- Cards de los 4 pasos -->
+      <div class="met-grid">
+
+        <div class="met-card">
+          <div class="met-number">01</div>
+          <h3 class="met-step-title">
+            Diagnóstico
+          </h3>
+          <p class="met-step-desc">
+            Mapeamos tu operación desde adentro: procesos, datos,
+            sistemas y objetivos reales. Identificamos dónde el tiempo
+            se pierde, dónde el error humano es más costoso y dónde
+            la automatización genera el mayor retorno.
+          </p>
+        </div>
+
+        <div class="met-card">
+          <div class="met-number">02</div>
+          <h3 class="met-step-title">
+            Arquitectura del Proyecto
+          </h3>
+          <p class="met-step-desc">
+            Diseñamos la hoja de ruta completa: casos de uso
+            priorizados, stack tecnológico, métricas de éxito y costos
+            operativos. Todo documentado y acordado antes de escribir
+            una línea de código.
+          </p>
+        </div>
+
+        <div class="met-card">
+          <div class="met-number">03</div>
+          <h3 class="met-step-title">
+            Desarrollo y Despliegue
+          </h3>
+          <p class="met-step-desc">
+            Desarrollamos, integramos y probamos con los sistemas
+            que ya usás. Liberamos por fases para minimizar riesgo,
+            con pruebas A/B, control de costos y monitoreo en tiempo
+            real desde el día uno.
+          </p>
+        </div>
+
+        <div class="met-card">
+          <div class="met-number">04</div>
+          <h3 class="met-step-title">
+            Monitoreo, Optimización y Soporte
+          </h3>
+          <p class="met-step-desc">
+            El trabajo no termina en el lanzamiento. Medimos con KPIs
+            reales, incorporamos feedback del equipo y ajustamos
+            continuamente. Planificamos iteraciones periódicas y te
+            acompañamos para que el valor crezca — no se estanque.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 07b · VENTAJAS ─────────────────────────────────────────────────────── -->
+  <section id="ventajas">
+    <div class="section-container">
+
+      <div class="vent-header">
+        <span class="label-eyebrow"
+              style="color:var(--color-orange)">
+          Por qué automatizar ahora
+        </span>
+        <h2 class="vent-headline">
+          El costo de no automatizar<br>
+          <span style="background:var(--gradient-brand);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;">
+            ya lo estás pagando.
+          </span>
+        </h2>
+      </div>
+
+      <div class="vent-grid">
+
+        <!-- Card 1 -->
+        <div class="vent-card">
+          <div class="vent-card-front">
+            <div class="vent-number">−10 a 15h</div>
+            <div class="vent-number-sub">por empleado, por semana</div>
+            <h3 class="vent-title">Eficiencia Operativa</h3>
+          </div>
+          <p class="vent-desc">
+            Las empresas que automatizan flujos de trabajo recuperan
+            entre 10 y 15 horas semanales por persona. Tu equipo
+            deja de hacer copy-paste y empieza a hacer
+            lo que importa.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="vent-card">
+          <div class="vent-card-front">
+            <div class="vent-number">−80%</div>
+            <div class="vent-number-sub">en errores operativos</div>
+            <h3 class="vent-title">Reducción de Errores</h3>
+          </div>
+          <p class="vent-desc">
+            La automatización elimina el error humano en tareas
+            repetitivas. Menos reprocesos, menos costos de
+            corrección, menos fricciones con clientes.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="vent-card">
+          <div class="vent-card-front">
+            <div class="vent-number">−25%</div>
+            <div class="vent-number-sub">en costos de operación</div>
+            <h3 class="vent-title">Costos Operativos</h3>
+          </div>
+          <p class="vent-desc">
+            El 75% de las empresas que automatizan reportan
+            reducciones de entre 20 y 30% en costos operativos
+            antes de los 12 meses.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="vent-card">
+          <div class="vent-card-front">
+            <div class="vent-number">−70%</div>
+            <div class="vent-number-sub">en tiempo de respuesta</div>
+            <h3 class="vent-title">Atención al Cliente</h3>
+          </div>
+          <p class="vent-desc">
+            Agentes conversacionales resuelven el 65% de consultas
+            sin intervención humana. Tu equipo interviene solo
+            donde realmente agrega valor.
+          </p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="vent-card">
+          <div class="vent-card-front">
+            <div class="vent-number">+$3.5</div>
+            <div class="vent-number-sub">por cada $1 invertido</div>
+            <h3 class="vent-title">Retorno de Inversión</h3>
+          </div>
+          <p class="vent-desc">
+            El ROI promedio de automatización es de $3.50 por dólar
+            invertido. El 60% de las empresas ven retorno positivo
+            antes de los 12 meses.
+          </p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="vent-card">
+          <div class="vent-card-front">
+            <div class="vent-number">×10</div>
+            <div class="vent-number-sub">volumen sin aumentar equipo</div>
+            <h3 class="vent-title">Escalabilidad</h3>
+          </div>
+          <p class="vent-desc">
+            Multiplicá tu capacidad operativa sin contratar.
+            Los flujos automatizados escalan con tu negocio —
+            no necesitan vacaciones ni turnos nocturnos.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Transición crema → negro -->
+  <div class="section-transition section-transition--to-black" aria-hidden="true"></div>
+
   <!-- 08 · EQUIPO ────────────────────────────────────────────────────────── -->
   <section id="equipo">
     <div class="section-container">
@@ -3038,7 +3798,7 @@
     });
 
     // Navbar sobre secciones crema (#para-quien, #cta-4)
-    const creamSections = ['para-quien', 'cta-4'];
+    const creamSections = ['para-quien', 'metodologia', 'ventajas', 'cta-4'];
     function updateNavbarStyle() {
       const overCream = creamSections.some(id => {
         const el = document.getElementById(id);
@@ -3130,6 +3890,54 @@
       scrollTrigger: { trigger: '.casos-stack', start: 'top 80%', toggleActions: 'play reverse play reverse' }
     });
 
+    // Casos de uso ScrollTrigger
+    gsap.from('.casos-uso-header', {
+      opacity: 0, y: 40, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: '#casos-uso', start: 'top 75%', toggleActions: 'play reverse play reverse' }
+    });
+    gsap.from('.cu-card', {
+      opacity: 0, y: 50, duration: 0.7, stagger: 0.12, ease: 'power2.out',
+      scrollTrigger: { trigger: '.casos-uso-grid', start: 'top 80%', toggleActions: 'play reverse play reverse' }
+    });
+
+    // Ventajas ScrollTrigger
+    gsap.from('.vent-header', {
+      scrollTrigger: {
+        trigger: '#ventajas',
+        start: 'top 75%',
+        toggleActions: 'play reverse play reverse'
+      },
+      opacity: 0,
+      y: 40,
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+
+    gsap.from('.vent-card', {
+      scrollTrigger: {
+        trigger: '.vent-grid',
+        start: 'top 80%',
+        toggleActions: 'play reverse play reverse'
+      },
+      opacity: 0,
+      y: 50,
+      duration: 0.6,
+      stagger: 0.10,
+      ease: 'power2.out',
+      clearProps: 'transform'
+    });
+
+    // Ventajas card hover lift (GSAP en vez de CSS transition — evita conflicto
+    // con el transform inline que escribe el ScrollTrigger de entrada)
+    document.querySelectorAll('.vent-card').forEach(function(card) {
+      card.addEventListener('mouseenter', function() {
+        gsap.to(card, { y: -4, duration: 0.3, ease: 'power2.out' });
+      });
+      card.addEventListener('mouseleave', function() {
+        gsap.to(card, { y: 0, duration: 0.3, ease: 'power2.out' });
+      });
+    });
+
     // CTA-2 / CTA-3 ScrollTrigger
     ['#cta-2', '#cta-3'].forEach(function(id) {
       gsap.from(id + ' .cta-simple', {
@@ -3181,6 +3989,145 @@
         }
       });
     });
+
+    // Casos de uso — pills conectadas entre cards
+    var allPills = document.querySelectorAll('.cu-pill');
+    var allCuCards = document.querySelectorAll('.cu-card');
+
+    allPills.forEach(function(pill) {
+      pill.addEventListener('mouseenter', function() {
+        var service = pill.dataset.service;
+
+        allPills.forEach(function(p) {
+          if (p.dataset.service === service) {
+            p.classList.add('is-active');
+          }
+        });
+
+        allCuCards.forEach(function(card) {
+          var hasPill = card.querySelector('.cu-pill[data-service="' + service + '"]');
+          if (hasPill && !card.contains(pill)) {
+            card.classList.add('is-highlighted');
+          }
+        });
+      });
+
+      pill.addEventListener('mouseleave', function() {
+        allPills.forEach(function(p) { p.classList.remove('is-active'); });
+        allCuCards.forEach(function(c) { c.classList.remove('is-highlighted'); });
+      });
+    });
+
+    // Metodología — animación del diagrama SVG
+    (function() {
+      var section = document.getElementById('metodologia');
+      if (!section) return;
+
+      var animated = false;
+      var travelerRAF = null;
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && !animated) {
+            animated = true;
+            runMetAnimation();
+          }
+          if (!entry.isIntersecting) {
+            animated = false;
+            resetMetAnimation();
+          }
+        });
+      }, { threshold: 0.3 });
+
+      observer.observe(section);
+
+      function runMetAnimation() {
+        var line = document.getElementById('metLine');
+        var fills = [1,2,3,4].map(function(i) {
+          return document.getElementById('metNodeFill' + i);
+        });
+        var travelers = [1,2,3].map(function(i) {
+          return document.getElementById('traveler' + i);
+        });
+
+        // 1. Trazar la línea con CSS transition
+        line.style.transition = 'stroke-dashoffset 1.4s ease-in-out';
+        line.style.strokeDashoffset = '0';
+
+        // 2. Iluminar nodos en secuencia
+        var nodeDelays = [200, 600, 1000, 1350];
+        fills.forEach(function(fill, i) {
+          setTimeout(function() {
+            fill.style.transition = 'fill 0.3s ease';
+            fill.style.fill = '#D76912';
+            // Pulso de escala en el nodo exterior
+            var node = document.getElementById('metNode' + (i+1));
+            node.style.transition = 'stroke 0.3s ease';
+            node.style.stroke = 'rgba(215,105,18,0.70)';
+          }, nodeDelays[i]);
+        });
+
+        // 3. Iniciar circulitos viajeros (loop continuo con rAF) tras completar la línea
+        var tPositions = [0, 0.33, 0.66];
+        var tSpeeds = [0.0018, 0.0018, 0.0018];
+        var LINE_X1 = 100;
+        var LINE_X2 = 800;
+        var LINE_Y = 40;
+        var FADE_ZONE = 0.06;
+
+        function animateTravelers() {
+          tPositions.forEach(function(pos, i) {
+            tPositions[i] = (pos + tSpeeds[i]) % 1;
+            var t = tPositions[i];
+            var x = LINE_X1 + t * (LINE_X2 - LINE_X1);
+            var el = travelers[i];
+            if (!el) return;
+
+            el.setAttribute('cx', x);
+            el.setAttribute('cy', LINE_Y);
+
+            var opacity = 1;
+            if (t < FADE_ZONE) {
+              opacity = t / FADE_ZONE;
+            } else if (t > 1 - FADE_ZONE) {
+              opacity = (1 - t) / FADE_ZONE;
+            }
+            el.style.opacity = opacity;
+          });
+
+          travelerRAF = requestAnimationFrame(animateTravelers);
+        }
+
+        setTimeout(function() {
+          travelers.forEach(function(t) { t.style.opacity = '0'; });
+          travelerRAF = requestAnimationFrame(animateTravelers);
+        }, 1500);
+      }
+
+      function resetMetAnimation() {
+        var line = document.getElementById('metLine');
+        var fills = [1,2,3,4].map(function(i) {
+          return document.getElementById('metNodeFill' + i);
+        });
+        var nodes = [1,2,3,4].map(function(i) {
+          return document.getElementById('metNode' + i);
+        });
+        var travelers = [1,2,3].map(function(i) {
+          return document.getElementById('traveler' + i);
+        });
+
+        line.style.transition = 'none';
+        line.style.strokeDashoffset = '700';
+        fills.forEach(function(f) { f.style.transition = 'none'; f.style.fill = 'transparent'; });
+        nodes.forEach(function(n) { n.style.stroke = 'rgba(215,105,18,0.25)'; });
+
+        if (travelerRAF) {
+          cancelAnimationFrame(travelerRAF);
+          travelerRAF = null;
+        }
+        travelers.forEach(function(t) { t.style.opacity = '0'; });
+      }
+    })();
 
     // VSL play button logic
     var player = document.getElementById('vslPlayer');
@@ -3235,7 +4182,7 @@
     }
 
     const sections = document.querySelectorAll(
-      '#hero, #problema, #para-quien, #casos, #equipo, #faq, #cta-1'
+      '#hero, #problema, #para-quien, #casos, #casos-uso, #equipo, #faq, #cta-1'
     );
 
     const sectionToLink = {
@@ -3243,6 +4190,7 @@
       'problema':   '#problema',
       'para-quien': '#problema',
       'casos':      '#casos',
+      'casos-uso':  '#casos-uso',
       'equipo':     '#equipo',
       'faq':        '#faq',
       'cta-1':      '#cta-1'
