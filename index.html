@@ -4,12 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lumen Labs — Automatización con IA</title>
-  <link rel="icon" type="image/png" href="assets/Lumen_isotipo.png">
+  <link rel="icon" type="image/png" href="assets/Lumen_isotipo_opt.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap" rel="stylesheet">
+  <link rel="preload"
+    href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link href="https://api.fontshare.com/v2/css?f[]=neue-montreal@400,500,700&display=swap"
+          rel="stylesheet">
+  </noscript>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -2578,7 +2586,7 @@
     <a href="#hero" class="nav-logo">
       <img src="assets/Lumen_Horizontal_logo2.png"
            alt="Lumen Labs" class="nav-logo-full" height="28">
-      <img src="assets/Lumen_isotipo.png"
+      <img src="assets/Lumen_isotipo_opt.png"
            alt="Lumen Labs" class="nav-logo-icon" height="28">
     </a>
 
@@ -2638,19 +2646,34 @@
         <div class="hero-scene" aria-hidden="true">
 
           <!-- Base: plataforma isométrica -->
-          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="platform-img" draggable="false">
+          <picture>
+            <source srcset="assets/assets_3D_Hero/plataform.webp" type="image/webp">
+            <img src="assets/assets_3D_Hero/plataform.png" alt="" class="platform-img" draggable="false" fetchpriority="high">
+          </picture>
 
           <!-- Breathing layers: las líneas naranjas reales respiran por zonas -->
-          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--core" aria-hidden="true" draggable="false">
-          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--mid" aria-hidden="true" draggable="false">
-          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--outer" aria-hidden="true" draggable="false">
-          <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--left" aria-hidden="true" draggable="false">
+          <picture>
+            <source srcset="assets/assets_3D_Hero/plataform.webp" type="image/webp">
+            <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--core" aria-hidden="true" draggable="false">
+          </picture>
+          <picture>
+            <source srcset="assets/assets_3D_Hero/plataform.webp" type="image/webp">
+            <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--mid" aria-hidden="true" draggable="false">
+          </picture>
+          <picture>
+            <source srcset="assets/assets_3D_Hero/plataform.webp" type="image/webp">
+            <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--outer" aria-hidden="true" draggable="false">
+          </picture>
+          <picture>
+            <source srcset="assets/assets_3D_Hero/plataform.webp" type="image/webp">
+            <img src="assets/assets_3D_Hero/plataform.png" alt="" class="circuit-breath circuit-breath--left" aria-hidden="true" draggable="false">
+          </picture>
 
           <!-- Luz proyectada por la antorcha sobre la plataforma -->
           <div class="torch-light"></div>
 
           <!-- Antorcha flotante -->
-          <img src="assets/assets_3D_Hero/torch.png" alt="" class="torch-img" draggable="false">
+          <img src="assets/assets_3D_Hero/torch.png" alt="" class="torch-img" draggable="false" fetchpriority="high">
 
           <!-- Glow debajo de la antorcha -->
           <div class="torch-glow"></div>
@@ -3434,7 +3457,10 @@
     <div class="section-container">
 
       <div class="equipo-header">
-        <img src="assets/Lumen_Horizontal_logo.png" alt="" class="equipo-watermark" aria-hidden="true">
+        <picture>
+          <source srcset="assets/Lumen_Horizontal_logo.webp" type="image/webp">
+          <img src="assets/Lumen_Horizontal_logo.png" alt="" class="equipo-watermark" aria-hidden="true">
+        </picture>
         <span class="label-eyebrow">Quiénes somos</span>
         <h2 class="equipo-headline">
           Ingenieros y estrategas.<br>
@@ -3453,7 +3479,8 @@
           <div class="miembro-avatar-img">
             <img src="assets/nico.jpg"
                  alt="Nicolas Carrasco Simons"
-                 draggable="false">
+                 draggable="false"
+                 loading="lazy">
           </div>
           <div class="miembro-info">
             <h3 class="miembro-nombre">Nicolas Carrasco Simons</h3>
@@ -3469,6 +3496,7 @@
             <img src="assets/matias.png"
                  alt="Matias Agramont Quiroga"
                  draggable="false"
+                 loading="lazy"
                  style="object-position: center 5%;">
           </div>
           <div class="miembro-info">
@@ -3484,7 +3512,8 @@
           <div class="miembro-avatar-img">
             <img src="assets/leo.jpeg"
                  alt="Leonardo Rojas Rojas"
-                 draggable="false">
+                 draggable="false"
+                 loading="lazy">
           </div>
           <div class="miembro-info">
             <h3 class="miembro-nombre">Leonardo Rojas Rojas</h3>
@@ -3789,7 +3818,23 @@
     </div>
   </footer>
 
-  <script defer src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+  <script>
+    if (window.matchMedia('(min-width: 769px)').matches) {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js';
+      s.defer = true;
+      s.onload = function () {
+        window.__particlesReady = true;
+        document.dispatchEvent(new Event('three-loaded'));
+      };
+      document.head.appendChild(s);
+    } else {
+      document.addEventListener('DOMContentLoaded', function () {
+        window.__particlesReady = true;
+        document.dispatchEvent(new Event('three-loaded'));
+      });
+    }
+  </script>
 
   <script>
     // Navbar scroll behavior
@@ -4228,6 +4273,7 @@
     // se ejecuta antes de DOMContentLoaded, pero después de este <script>
     // inline si se referenciara THREE a nivel superior.
     function initParticleSystem() {
+    if (typeof THREE === 'undefined') return; // mobile: sin Three.js, sin partículas
     const particlesCanvas = document.getElementById('particlesCanvas');
     const isMobileParticles = window.matchMedia('(max-width: 768px)').matches;
 
@@ -4564,10 +4610,10 @@
     requestAnimationFrame(animateParticles);
     } // fin initParticleSystem
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initParticleSystem);
-    } else {
+    if (window.__particlesReady) {
       initParticleSystem();
+    } else {
+      document.addEventListener('three-loaded', initParticleSystem);
     }
 
     // ── GRÁFICO DE CRECIMIENTO (#cta-4) ─────────────────────────────────────
