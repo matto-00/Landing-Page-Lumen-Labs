@@ -2001,9 +2001,86 @@
       .hero-glow-wrapper { display: none; }
 
       #hero {
-        min-height: 100svh;
-        padding: 80px 6% 60px;
+        min-height: auto;
+        padding-top: 100px;
+        padding-bottom: 48px;
+        padding-left: 6%;
+        padding-right: 6%;
         align-items: flex-start;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Grilla diagonal ploma — estática, se desvanece hacia abajo */
+      #hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(
+            rgba(255,255,255,0.045) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255,255,255,0.045) 1px,
+            transparent 1px
+          );
+        background-size: 28px 28px;
+        pointer-events: none;
+        z-index: 0;
+        animation: none;
+        -webkit-mask-image: radial-gradient(
+          ellipse 70% 65% at 50% 45%,
+          black 20%,
+          transparent 80%
+        );
+        mask-image: radial-gradient(
+          ellipse 70% 65% at 50% 45%,
+          black 20%,
+          transparent 80%
+        );
+      }
+
+      /* opacity:1 explícito: #hero::before base (noise texture, línea ~503)
+         trae opacity:0.03 y esa propiedad no se resetea sola al reusar el selector. */
+      #hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 260px 200px at 50% 30%,
+          rgba(215,105,18,0.28) 0%,
+          transparent 70%
+        );
+        background-size: auto;
+        animation: heroGlowPulse 3s ease-in-out infinite alternate;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 1;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 60%,
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 60%,
+          transparent 100%
+        );
+      }
+
+      @keyframes heroGlowPulse {
+        0%   { opacity: 0.5; transform: scale(0.9); }
+        100% { opacity: 1.0; transform: scale(1.15); }
+      }
+
+      /* El contenido del hero debe estar sobre la grilla */
+      #hero .hero-content {
+        position: relative;
+        z-index: 1;
       }
 
       .hero-content {
@@ -2013,6 +2090,31 @@
 
       .hero-text {
         max-width: 100%;
+        position: relative;
+      }
+
+      /* Glow naranja sutil detrás del headline */
+      .hero-text::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 280px;
+        height: 280px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(215,105,18,0.12) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: -1;
+        animation: heroGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes heroGlow {
+        0%   { opacity: 0.6; transform: translate(-50%, -50%) scale(0.9); }
+        100% { opacity: 1.0; transform: translate(-50%, -50%) scale(1.1); }
       }
 
       h1.hero-headline {
@@ -2038,36 +2140,143 @@
         justify-content: center;
       }
 
+      #stack-scroll {
+        padding-top: 24px;
+        padding-bottom: 24px;
+      }
+
+      .stack-label {
+        display: block;
+        font-size: 10px;
+        letter-spacing: 1px;
+        padding: 0 20px;
+        margin-bottom: 12px;
+        text-align: center;
+        white-space: normal;
+        overflow: visible;
+      }
+
       #vsl {
         padding: 60px 5%;
       }
 
       #cta-1 {
-        padding: 60px 5%;
+        padding: 32px 5%;
       }
 
       .cta-block {
-        padding: 40px 24px;
+        padding: 24px 20px;
+        gap: 14px;
+        max-width: 100%;
       }
 
       .cta-headline {
-        font-size: 28px;
-        letter-spacing: -1px;
+        font-size: 22px;
+        letter-spacing: -0.5px;
+        line-height: 1.25;
+      }
+
+      .cta-sub {
+        font-size: 13px;
+        line-height: 1.6;
       }
 
       a.cta-btn {
         width: 100%;
         text-align: center;
+        font-size: 15px;
+        padding: 13px 20px;
       }
 
       .cta-trust {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
         align-items: center;
-        gap: 8px;
+        gap: 4px 8px;
+        font-size: 10px;
+      }
+
+      .section-transition {
+        height: 120px;
       }
 
       #problema {
         padding: 64px 5%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Solo el haz de luz radial — el shine se movió al ::after */
+      #problema::before {
+        content: '';
+        position: absolute;
+        top: 48px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: 240px;
+        background: radial-gradient(
+          ellipse 340px 180px at 50% 50%,
+          rgba(215,105,18,0.38) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+        z-index: 0;
+        opacity: 1;
+      }
+
+      /* Grilla H/V — cruces cuadrados, sin puntitos */
+      #problema::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(
+            rgba(255,255,255,0.045) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255,255,255,0.045) 1px,
+            transparent 1px
+          );
+        background-size: 28px 28px;
+        pointer-events: none;
+        z-index: 0;
+        animation: none;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent 0%,
+          black 18%,
+          black 70%,
+          transparent 100%
+        ),
+        radial-gradient(
+          ellipse 80% 100% at 50% 50%,
+          black 30%,
+          transparent 85%
+        );
+        -webkit-mask-composite: source-in;
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0%,
+          black 18%,
+          black 70%,
+          transparent 100%
+        ),
+        radial-gradient(
+          ellipse 80% 100% at 50% 50%,
+          black 30%,
+          transparent 85%
+        );
+        mask-composite: intersect;
+      }
+
+      /* Contenido sobre el glow */
+      #problema .section-container {
+        position: relative;
+        z-index: 1;
       }
 
       .problema-headline {
@@ -2077,19 +2286,36 @@
 
       .problema-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
       }
 
       .pain-card {
-        padding: 32px 24px;
+        padding: 20px 16px;
+        gap: 12px;
+      }
+
+      .pain-card h3 {
+        font-size: 15px;
+        line-height: 1.3;
+      }
+
+      .pain-card p {
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .pain-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
       }
 
       #para-quien {
-        padding: 64px 5%;
+        padding: 48px 5%;
       }
 
       .paraquien-headline {
-        font-size: 32px;
+        font-size: 28px;
         letter-spacing: -1px;
       }
 
@@ -2098,7 +2324,34 @@
       }
 
       .paraquien-col {
-        padding: 32px 24px;
+        padding: 20px 16px;
+      }
+
+      .paraquien-si {
+        animation: borderGlow 2.5s ease-in-out infinite;
+      }
+
+      @keyframes borderGlow {
+        0%, 100% {
+          border-color: rgba(215,105,18,0.25);
+          box-shadow: 0 0 8px rgba(215,105,18,0.20),
+                      0 4px 24px rgba(0,0,0,0.08);
+        }
+        50% {
+          border-color: rgba(215,105,18,0.80);
+          box-shadow: 0 0 24px rgba(215,105,18,0.55),
+                      0 0 0 1px rgba(215,105,18,0.40),
+                      0 4px 24px rgba(0,0,0,0.08);
+        }
+      }
+
+      .paraquien-list {
+        gap: 12px;
+      }
+
+      .paraquien-list li {
+        font-size: 13px;
+        line-height: 1.55;
       }
 
       #cta-2 {
@@ -2116,7 +2369,8 @@
       }
 
       #casos {
-        padding: 64px 5%;
+        padding: 48px 5%;
+        padding-bottom: 64px;
       }
 
       .casos-layout {
@@ -2134,15 +2388,29 @@
       }
 
       .caso-card {
-        padding: 28px 24px;
+        padding: 20px 16px;
       }
 
       .caso-resultado {
-        font-size: 36px;
+        font-size: 28px;
+      }
+
+      .caso-titulo {
+        font-size: 16px;
+      }
+
+      .caso-desc {
+        font-size: 13px;
       }
 
       #equipo {
-        padding: 64px 5%;
+        padding: 48px 5%;
+        padding-bottom: 64px;
+      }
+
+      #cta-3 {
+        padding-top: 48px;
+        padding-bottom: 48px;
       }
 
       .equipo-headline {
@@ -2150,17 +2418,46 @@
         letter-spacing: -1px;
       }
 
+      .equipo-header {
+        margin-bottom: 24px;
+      }
+
       .equipo-grid {
         grid-template-columns: 1fr;
         max-width: 400px;
+        gap: 10px;
       }
 
       .miembro-card {
-        padding: 28px 24px;
+        padding: 20px 16px;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+        text-align: left;
+      }
+
+      .miembro-avatar-img {
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+      }
+
+      .miembro-nombre {
+        font-size: 15px;
+      }
+
+      .miembro-rol {
+        font-size: 10px;
+      }
+
+      .miembro-frase {
+        font-size: 12px;
+        line-height: 1.5;
       }
 
       #faq {
-        padding: 64px 5%;
+        padding: 48px 5%;
+        padding-top: 64px;
       }
 
       .faq-headline {
@@ -2174,34 +2471,58 @@
       }
 
       #cta-4 {
-        padding: 64px 5%;
+        padding: 48px 5%;
       }
 
       .cta-final {
         grid-template-columns: 1fr;
         text-align: center;
-        padding: 48px 24px;
+        padding: 28px 20px;
         gap: 20px;
       }
 
-      .cta-chart {
-        display: none;
+      .cta-final-headline {
+        font-size: 24px;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
       }
 
-      .cta-final-headline {
-        font-size: 32px;
-        letter-spacing: -1px;
+      .cta-final-sub {
+        font-size: 13px;
+        line-height: 1.6;
       }
 
       .cta-final-btn {
         width: 100%;
         text-align: center;
+        font-size: 15px;
+        padding: 13px 20px;
       }
 
       .cta-final-trust {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px 16px;
+        font-size: 11px;
+      }
+
+      .cta-chart {
+        display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
+        order: -1;
+      }
+
+      .growth-svg {
+        max-width: 240px;
+        width: 100%;
+      }
+
+      .chart-caption {
+        font-size: 10px;
+        color: #888;
       }
 
       .cta-final-glow {
@@ -2356,10 +2677,82 @@
     }
 
     @media (max-width: 768px) {
-      #casos-uso { padding: 64px 5%; }
-      .casos-uso-headline { font-size: 32px; letter-spacing: -1px; }
-      .casos-uso-grid { grid-template-columns: 1fr; }
-      .cu-card { padding: 28px 24px; }
+      #casos-uso {
+        padding: 48px 5%;
+        padding-top: 80px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #casos-uso::before {
+        content: '';
+        position: absolute;
+        top: 48px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: 200px;
+        background: radial-gradient(
+          ellipse 300px 140px at 50% 50%,
+          rgba(215,105,18,0.22) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+        z-index: 0;
+        opacity: 1;
+      }
+
+      #casos-uso::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.10) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+        z-index: 0;
+        animation: none;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent 0%,
+          black 18%,
+          black 70%,
+          transparent 100%
+        ),
+        radial-gradient(
+          ellipse 65% 60% at 50% 50%,
+          black 15%,
+          transparent 75%
+        );
+        -webkit-mask-composite: source-in;
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0%,
+          black 18%,
+          black 70%,
+          transparent 100%
+        ),
+        radial-gradient(
+          ellipse 65% 60% at 50% 50%,
+          black 15%,
+          transparent 75%
+        );
+        mask-composite: intersect;
+      }
+
+      #casos-uso .section-container {
+        position: relative;
+        z-index: 1;
+      }
+
+      .casos-uso-headline { font-size: 28px; letter-spacing: -1px; }
+      .casos-uso-grid { grid-template-columns: 1fr; gap: 12px; }
+      .cu-card { padding: 20px 16px; }
+      .cu-title { font-size: 16px; }
+      .cu-desc { font-size: 13px; line-height: 1.6; }
+      .cu-pill { font-size: 11px; padding: 4px 10px; }
+      .cu-pills { gap: 6px; }
     }
 
     /* ── METODOLOGÍA ──────────────────────────────────────────────────── */
@@ -2389,6 +2782,10 @@
       max-width: 860px;
       margin: 0 auto 64px;
       padding: 0 24px;
+    }
+
+    .met-diagram-mobile {
+      display: none;
     }
 
     #metSvg {
@@ -2450,9 +2847,49 @@
 
     @media (max-width: 768px) {
       #metodologia { padding: 64px 5% 80px; }
-      .met-headline { font-size: 32px; letter-spacing: -1px; }
+      .met-headline { font-size: 28px; letter-spacing: -1px; }
       .met-grid { grid-template-columns: 1fr; }
       .met-diagram { display: none; }
+      .met-card {
+        padding: 20px 16px;
+        position: relative;
+      }
+      .met-step-title { font-size: 15px; }
+      .met-step-desc { font-size: 13px; line-height: 1.6; }
+      .met-number { font-size: 28px; }
+
+      #metodologia .section-container {
+        position: relative;
+      }
+
+      .met-grid {
+        padding-left: 52px;
+      }
+
+      .met-card::before {
+        content: '';
+        position: absolute;
+        left: -20px;
+        top: 20px;
+        width: 16px;
+        height: 1px;
+        background: rgba(215,105,18,0.40);
+      }
+
+      .met-diagram-mobile {
+        display: flex;
+        width: 40px;
+        flex-shrink: 0;
+        position: absolute;
+        left: 5%;
+        top: 0;
+        bottom: 0;
+      }
+
+      #metSvgMobile {
+        width: 40px;
+        height: 100%;
+      }
     }
 
     #ventajas {
@@ -2564,14 +3001,22 @@
 
     /* Mobile — descripción siempre visible (no hay hover en touch) */
     @media (max-width: 768px) {
-      #ventajas { padding: 64px 5% 80px; }
+      #ventajas { padding: 48px 5%; }
       .vent-headline { font-size: 32px; letter-spacing: -1px; }
       .vent-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
       }
-      .vent-card { transform: none !important; }
+      .vent-card {
+        padding: 20px 16px;
+        transform: none !important;
+      }
+      .vent-number { font-size: 32px; }
+      .vent-number-sub { font-size: 11px; }
+      .vent-title { font-size: 16px; }
       .vent-desc {
+        font-size: 13px;
+        line-height: 1.6;
         max-height: 200px !important;
         opacity: 1 !important;
         margin-top: 16px !important;
@@ -2932,11 +3377,12 @@
   </nav>
 
   <div class="mobile-menu glass-card" id="mobileMenu">
-    <a href="#hero"     class="mobile-link" onclick="closeMobileMenu()">Inicio</a>
-    <a href="#problema" class="mobile-link" onclick="closeMobileMenu()">Servicios</a>
-    <a href="#casos"    class="mobile-link" onclick="closeMobileMenu()">Casos</a>
-    <a href="#equipo"   class="mobile-link" onclick="closeMobileMenu()">Nosotros</a>
-    <a href="#faq"      class="mobile-link" onclick="closeMobileMenu()">FAQ</a>
+    <a href="#hero"      class="mobile-link" onclick="closeMobileMenu()">Inicio</a>
+    <a href="#cta-1"     class="mobile-link" onclick="closeMobileMenu()">Contacto</a>
+    <a href="#casos"     class="mobile-link" onclick="closeMobileMenu()">Casos</a>
+    <a href="#casos-uso" class="mobile-link" onclick="closeMobileMenu()">Servicios</a>
+    <a href="#equipo"    class="mobile-link" onclick="closeMobileMenu()">Nosotros</a>
+    <a href="#faq"       class="mobile-link" onclick="closeMobileMenu()">FAQ</a>
   </div>
 
   <!-- 01 · HERO ──────────────────────────────────────────────────────────── -->
@@ -3154,7 +3600,18 @@
       <div class="problema-grid">
 
         <div class="pain-card glass-card">
-          <div class="pain-icon">⚙️</div>
+          <div class="pain-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22"
+                 fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="3"
+                      stroke="currentColor" stroke-width="1.8"/>
+              <path d="M11 2v2M11 18v2M2 11h2M18 11h2
+                       M4.9 4.9l1.4 1.4M15.7 15.7l1.4 1.4
+                       M4.9 17.1l1.4-1.4M15.7 6.3l1.4-1.4"
+                    stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round"/>
+            </svg>
+          </div>
           <h3>Procesos manuales que no escalan</h3>
           <p>Reportes, seguimientos, actualizaciones de datos. Tareas que consumen
           horas de tu equipo cada semana y se vuelven un cuello de botella
@@ -3162,7 +3619,20 @@
         </div>
 
         <div class="pain-card glass-card">
-          <div class="pain-icon">🔗</div>
+          <div class="pain-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22"
+                 fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5"  cy="11" r="2.5"
+                      stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="17" cy="5"  r="2.5"
+                      stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="17" cy="17" r="2.5"
+                      stroke="currentColor" stroke-width="1.8"/>
+              <path d="M7.2 10.2L14.8 6M7.2 11.8L14.8 16"
+                    stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round"/>
+            </svg>
+          </div>
           <h3>Herramientas que no se hablan entre sí</h3>
           <p>CRM, ERP, hojas de cálculo, plataformas de email. Cada una vive
           en su silo. Tu equipo copia y pega datos entre sistemas
@@ -3170,7 +3640,18 @@
         </div>
 
         <div class="pain-card glass-card">
-          <div class="pain-icon">📉</div>
+          <div class="pain-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22"
+                 fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5h16M3 11h16M3 17h16"
+                    stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" opacity="0.3"/>
+              <path d="M4 7l4 4 4-2 6 6"
+                    stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="18" cy="15" r="1.5" fill="currentColor"/>
+            </svg>
+          </div>
           <h3>Decisiones lentas por falta de datos en tiempo real</h3>
           <p>No sabes qué está pasando en tu operación hasta que alguien
           arma un reporte. Para entonces, la oportunidad
@@ -3596,6 +4077,84 @@
         </svg>
       </div>
 
+      <!-- Diagrama vertical — solo mobile -->
+      <div class="met-diagram-mobile" aria-hidden="true">
+        <svg id="metSvgMobile"
+             viewBox="0 0 40 680"
+             xmlns="http://www.w3.org/2000/svg"
+             preserveAspectRatio="xMidYMid meet">
+
+          <!-- Línea base gris -->
+          <line x1="20" y1="20" x2="20" y2="660"
+                stroke="rgba(215,105,18,0.15)"
+                stroke-width="2"/>
+
+          <!-- Línea animada -->
+          <line id="metLineMobile"
+                x1="20" y1="20" x2="20" y2="660"
+                stroke="url(#metGradMobile)"
+                stroke-width="2"
+                stroke-dasharray="640"
+                stroke-dashoffset="640"/>
+
+          <!-- Nodos -->
+          <circle id="metNodeM1" cx="20" cy="20"  r="8"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFillM1" cx="20" cy="20"  r="5"
+                  fill="transparent"/>
+
+          <circle id="metNodeM2" cx="20" cy="240" r="8"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFillM2" cx="20" cy="240" r="5"
+                  fill="transparent"/>
+
+          <circle id="metNodeM3" cx="20" cy="440" r="8"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFillM3" cx="20" cy="440" r="5"
+                  fill="transparent"/>
+
+          <circle id="metNodeM4" cx="20" cy="640" r="8"
+                  fill="#FAF6F0" stroke="rgba(215,105,18,0.25)"
+                  stroke-width="2"/>
+          <circle id="metNodeFillM4" cx="20" cy="640" r="5"
+                  fill="transparent"/>
+
+          <!-- Travelers verticales -->
+          <circle id="travelerM1" r="3" fill="#D76912" opacity="0">
+            <animateMotion dur="3s" repeatCount="indefinite"
+              begin="indefinite"
+              path="M20,20 L20,660"/>
+          </circle>
+          <circle id="travelerM2" r="2.5" fill="#E88420" opacity="0">
+            <animateMotion dur="3s" repeatCount="indefinite"
+              begin="indefinite"
+              calcMode="linear"
+              keyTimes="0;1" keyPoints="0.33;1"
+              path="M20,20 L20,660"/>
+          </circle>
+          <circle id="travelerM3" r="2" fill="#B55A0F" opacity="0">
+            <animateMotion dur="3s" repeatCount="indefinite"
+              begin="indefinite"
+              calcMode="linear"
+              keyTimes="0;1" keyPoints="0.66;1"
+              path="M20,20 L20,660"/>
+          </circle>
+
+          <defs>
+            <linearGradient id="metGradMobile"
+                            x1="0%" y1="0%"
+                            x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#B55A0F"/>
+              <stop offset="50%"  stop-color="#D76912"/>
+              <stop offset="100%" stop-color="#E88420"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
       <!-- Cards de los 4 pasos -->
       <div class="met-grid">
 
@@ -3680,7 +4239,7 @@
         <!-- Card 1 -->
         <div class="vent-card">
           <div class="vent-card-front">
-            <div class="vent-number">−10 a 15h</div>
+            <div class="vent-number" data-segments='[{"type":"static","text":"−"},{"type":"number","target":10},{"type":"static","text":" a "},{"type":"number","target":15},{"type":"scramble","text":"h"}]'>−10 a 15h</div>
             <div class="vent-number-sub">por empleado, por semana</div>
             <h3 class="vent-title">Eficiencia Operativa</h3>
           </div>
@@ -3695,7 +4254,7 @@
         <!-- Card 2 -->
         <div class="vent-card">
           <div class="vent-card-front">
-            <div class="vent-number">−80%</div>
+            <div class="vent-number" data-segments='[{"type":"static","text":"−"},{"type":"number","target":80},{"type":"scramble","text":"%"}]'>−80%</div>
             <div class="vent-number-sub">en errores operativos</div>
             <h3 class="vent-title">Reducción de Errores</h3>
           </div>
@@ -3709,7 +4268,7 @@
         <!-- Card 3 -->
         <div class="vent-card">
           <div class="vent-card-front">
-            <div class="vent-number">−25%</div>
+            <div class="vent-number" data-segments='[{"type":"static","text":"−"},{"type":"number","target":25},{"type":"scramble","text":"%"}]'>−25%</div>
             <div class="vent-number-sub">en costos de operación</div>
             <h3 class="vent-title">Costos Operativos</h3>
           </div>
@@ -3723,7 +4282,7 @@
         <!-- Card 4 -->
         <div class="vent-card">
           <div class="vent-card-front">
-            <div class="vent-number">−70%</div>
+            <div class="vent-number" data-segments='[{"type":"static","text":"−"},{"type":"number","target":70},{"type":"scramble","text":"%"}]'>−70%</div>
             <div class="vent-number-sub">en tiempo de respuesta</div>
             <h3 class="vent-title">Atención al Cliente</h3>
           </div>
@@ -3737,7 +4296,7 @@
         <!-- Card 5 -->
         <div class="vent-card">
           <div class="vent-card-front">
-            <div class="vent-number">+$3.5</div>
+            <div class="vent-number" data-segments='[{"type":"scramble","text":"+"},{"type":"scramble","text":"$"},{"type":"number","target":3.5,"decimals":1}]'>+$3.5</div>
             <div class="vent-number-sub">por cada $1 invertido</div>
             <h3 class="vent-title">Retorno de Inversión</h3>
           </div>
@@ -3751,7 +4310,7 @@
         <!-- Card 6 -->
         <div class="vent-card">
           <div class="vent-card-front">
-            <div class="vent-number">×10</div>
+            <div class="vent-number" data-segments='[{"type":"scramble","text":"×"},{"type":"number","target":10}]'>×10</div>
             <div class="vent-number-sub">volumen sin aumentar equipo</div>
             <h3 class="vent-title">Escalabilidad</h3>
           </div>
@@ -4488,6 +5047,124 @@
       }
     })();
 
+    // Metodología — diagrama vertical mobile (scroll-driven)
+    (function() {
+      var section = document.getElementById('metodologia');
+      if (!section) return;
+
+      // Solo ejecutar en mobile
+      if (window.innerWidth > 768) return;
+
+      var lineMobile  = document.getElementById('metLineMobile');
+      if (!lineMobile) return;
+
+      var fillsMobile = [1,2,3,4].map(function(i) {
+        return document.getElementById('metNodeFillM' + i);
+      });
+      var nodesMobile = [1,2,3,4].map(function(i) {
+        return document.getElementById('metNodeM' + i);
+      });
+      var travelersMobile = [1,2,3].map(function(i) {
+        return document.getElementById('travelerM' + i);
+      });
+
+      var TOTAL_DASH = 640;
+      var completed = false;
+
+      function updateMobileDiagram() {
+        if (completed) return;
+
+        var rect    = section.getBoundingClientRect();
+        var visible = window.innerHeight - rect.top;
+        var total   = rect.height;
+
+        // Progreso del scroll: 0 al entrar, 1 al salir
+        var progress = Math.min(Math.max(visible / total, 0), 1);
+
+        // Trazar línea
+        lineMobile.style.strokeDashoffset = TOTAL_DASH * (1 - progress);
+
+        // Iluminar nodos según progreso
+        var nodeThresholds = [0.05, 0.35, 0.65, 0.90];
+        fillsMobile.forEach(function(fill, i) {
+          if (progress >= nodeThresholds[i]) {
+            fill.style.transition = 'fill 0.3s ease';
+            fill.style.fill = '#D76912';
+            nodesMobile[i].style.stroke = 'rgba(215,105,18,0.70)';
+          }
+        });
+
+        // Al completar: iniciar travelers y no volver a animar
+        if (progress >= 0.95 && !completed) {
+          completed = true;
+          travelersMobile.forEach(function(t) {
+            t.style.opacity = '1';
+            var motion = t.querySelector('animateMotion');
+            if (motion) motion.beginElement();
+          });
+        }
+      }
+
+      window.addEventListener('scroll', updateMobileDiagram, { passive: true });
+      updateMobileDiagram(); // estado inicial
+    })();
+
+    // Ventajas — counter + scramble en .vent-number
+    (function() {
+      var ventNumbers = document.querySelectorAll('.vent-number[data-segments]');
+      if (!ventNumbers.length) return;
+
+      var SCRAMBLE_CHARS = '01#%$×+-*^?/\\<>=~';
+      var DURATION = 1800;
+      var LOCK_AT = 0.75;
+
+      function randomChar() {
+        return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+      }
+
+      function animateVentNumber(el) {
+        var segments;
+        try { segments = JSON.parse(el.dataset.segments); } catch (e) { return; }
+
+        var start = performance.now();
+
+        function tick(now) {
+          var elapsed  = now - start;
+          var progress = Math.min(elapsed / DURATION, 1);
+          var eased    = 1 - Math.pow(1 - progress, 3);
+
+          var out = '';
+          segments.forEach(function(seg) {
+            if (seg.type === 'number') {
+              var current  = seg.target * eased;
+              var decimals = seg.decimals || 0;
+              out += decimals ? current.toFixed(decimals) : Math.round(current);
+            } else if (seg.type === 'scramble') {
+              out += progress < LOCK_AT ? randomChar() : seg.text;
+            } else {
+              out += seg.text;
+            }
+          });
+
+          el.textContent = out;
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      var ventObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            animateVentNumber(entry.target);
+            ventObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      ventNumbers.forEach(function(el) { ventObserver.observe(el); });
+    })();
+
     // VSL play button logic
     var player = document.getElementById('vslPlayer');
     var iframe = document.getElementById('vslIframe');
@@ -5005,6 +5682,28 @@
         growthLoop();
       });
     }
+
+    // Mobile: activar/desactivar al entrar/salir del viewport
+    (function() {
+      const chartEl = document.querySelector('.cta-chart');
+      if (!chartEl) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            growthAnimating = true;
+            growthReversing = false;
+            growthLoop();
+          } else {
+            growthAnimating = false;
+            growthReversing = true;
+            growthLoop();
+          }
+        });
+      }, { threshold: 0.3 });
+
+      observer.observe(chartEl);
+    })();
 
     window.addEventListener('load', () => {
       updateGrowthChart(); // estado inicial (curva oculta)
