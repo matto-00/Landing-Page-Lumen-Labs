@@ -4600,7 +4600,7 @@
     // Mobile (≤768px): SIN partículas (ya controlado por la carga condicional de Three.js)
     const particleScale =
       window.innerWidth > 1280 ? 1.0 :
-      window.innerWidth >= 1120 ? 0.28 :
+      window.innerWidth >= 1120 ? 0.65 :
       0; // 769-1119px: no inicializar
 
     if (particleScale === 0) return; // el return va ANTES de crear el WebGLRenderer
@@ -4668,7 +4668,9 @@
     const GRID_COLS      = isMobileParticles ? 20 : 42;
     const GRID_ROWS       = isMobileParticles ? 13 : 28;
     const INSTANCE_COUNT  = GRID_COLS * GRID_ROWS;
-    const DRAG_FACTOR     = 0.015; // dragFactor — BreathDearMedusae
+    const DRAG_FACTOR     = window.innerWidth >= 1120 && window.innerWidth <= 1280
+      ? 0.055   // laptop: más responsivo, el blob es más chico y el lag se nota más
+      : 0.015;  // desktop: dragFactor original — BreathDearMedusae
 
     // Cursor — valores exactos BreathDearMedusae (fracción de viewport / unitless)
     const CURSOR_RADIUS          = 0.065; // hoverRadius
