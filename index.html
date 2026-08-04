@@ -1026,6 +1026,8 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
 
     /* ── SECTION TRANSITIONS ─────────────────────────────────────────────── */
@@ -3479,8 +3481,7 @@
           <div class="miembro-avatar-img">
             <img src="assets/nico.jpg"
                  alt="Nicolas Carrasco Simons"
-                 draggable="false"
-                 loading="lazy">
+                 draggable="false">
           </div>
           <div class="miembro-info">
             <h3 class="miembro-nombre">Nicolas Carrasco Simons</h3>
@@ -3496,7 +3497,6 @@
             <img src="assets/matias.png"
                  alt="Matias Agramont Quiroga"
                  draggable="false"
-                 loading="lazy"
                  style="object-position: center 5%;">
           </div>
           <div class="miembro-info">
@@ -3512,8 +3512,7 @@
           <div class="miembro-avatar-img">
             <img src="assets/leo.jpeg"
                  alt="Leonardo Rojas Rojas"
-                 draggable="false"
-                 loading="lazy">
+                 draggable="false">
           </div>
           <div class="miembro-info">
             <h3 class="miembro-nombre">Leonardo Rojas Rojas</h3>
@@ -4566,6 +4565,7 @@
     // Loop — el halo sigue al cursor (desktop) u oscila en Lissajous (mobile)
     const pClock = new THREE.Clock();
     const localMouse = { x: 0, y: 0 };
+    let particlesFirstRenderDone = false;
 
     function animateParticles() {
       requestAnimationFrame(animateParticles);
@@ -4605,6 +4605,11 @@
       particleUniforms.uMouse.value.set(localMouse.x, localMouse.y);
 
       pRenderer.render(pScene, pCamera);
+
+      if (!particlesFirstRenderDone) {
+        particlesFirstRenderDone = true;
+        particlesCanvas.style.opacity = '1';
+      }
     }
 
     requestAnimationFrame(animateParticles);
