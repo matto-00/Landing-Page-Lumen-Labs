@@ -2618,16 +2618,29 @@
       /* ============================================
          PROBLEMA — cards más compactas
          ============================================ */
-      .problema-grid {
-        gap: 16px;
-      }
-
-      .pain-card {
-        padding: 28px 24px;
+      .problema-header {
+        margin-bottom: 40px;
       }
 
       .problema-headline {
         font-size: 38px;
+        margin-bottom: 32px;
+      }
+
+      .problema-grid {
+        gap: 12px;
+      }
+
+      .pain-card {
+        padding: 24px 20px;
+      }
+
+      .pain-card h3 {
+        font-size: 17px;
+      }
+
+      .pain-card p {
+        font-size: 14px;
       }
 
       /* ============================================
@@ -2643,7 +2656,15 @@
       }
 
       .paraquien-col {
-        padding: 28px 24px;
+        padding: 24px 20px;
+      }
+
+      .paraquien-list {
+        gap: 14px;
+      }
+
+      .paraquien-list li {
+        font-size: 14px;
       }
 
       /* ============================================
@@ -2679,8 +2700,20 @@
       /* ============================================
          METODOLOGÍA — diagrama y cards
          ============================================ */
+      #metodologia {
+        padding: 56px 5% 72px;
+      }
+
+      .met-header {
+        margin-bottom: 32px;
+      }
+
+      .met-diagram {
+        margin-bottom: 32px;
+      }
+
       .met-headline {
-        font-size: 38px;
+        font-size: 34px;
       }
 
       .met-grid {
@@ -4615,10 +4648,10 @@
       return zoneDocHeight > 0 && zoneScreenBottom > 0 && zoneScreenTop < window.innerHeight;
     }
 
-    // Touch: muchos navegadores disparan un mousemove sintético en el primer tap
-    // (coordenadas congeladas en ese punto para siempre) — se excluye del
-    // seguimiento de cursor para que el halo quede centrado en la zona.
-    const isTouchDevice = navigator.maxTouchPoints > 0;
+    // hover:hover = dispositivo con cursor real (mouse/trackpad) — true incluso
+    // en laptops híbridas con touchscreen que también tienen mouse.
+    // hover:none  = touch puro (tablet, móvil): el halo queda fijo al centro.
+    const hasCursor = window.matchMedia('(hover: hover)').matches;
 
     // Mouse — solo desktop; mobile usa oscilación Lissajous (ver animateParticles)
     const pMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
@@ -4888,7 +4921,7 @@
       if (isMobileParticles) {
         targetX = Math.sin(t * 0.31) * gridWidthPx * 0.28;
         targetY = Math.sin(t * 0.47 + 1.3) * gridHeightPx * 0.28;
-      } else if (!isTouchDevice && pMouse.active && pMouse.y >= zoneScreenTop && pMouse.y <= zoneScreenTop + zoneDocHeight) {
+      } else if (hasCursor && pMouse.active && pMouse.y >= zoneScreenTop && pMouse.y <= zoneScreenTop + zoneDocHeight) {
         // Jitter orgánico del cursor — fórmula exacta BreathDearMedusae
         const jitterRadiusPx = Math.min(window.innerWidth, window.innerHeight) * CURSOR_RADIUS;
         const jitterX = (Math.sin(t * 0.35) + Math.sin(t * 0.77 + 1.2)) * 0.5;
