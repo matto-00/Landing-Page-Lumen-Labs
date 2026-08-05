@@ -2864,16 +2864,11 @@
 
       .met-grid {
         padding-left: 52px;
+        gap: 16px;
       }
 
       .met-card::before {
-        content: '';
-        position: absolute;
-        left: -20px;
-        top: 20px;
-        width: 16px;
-        height: 1px;
-        background: rgba(215,105,18,0.40);
+        display: none;
       }
 
       .met-diagram-mobile {
@@ -5047,6 +5042,71 @@
       }
     })();
 
+    // Metodología — calibrar altura real del diagrama vertical mobile
+    function calibrateMobileDiagram() {
+      if (window.innerWidth > 768) return;
+
+      var container = document.querySelector('#metodologia .section-container');
+      var cards     = document.querySelectorAll('.met-card');
+      var svgEl     = document.getElementById('metSvgMobile');
+      var lineBase  = svgEl ? svgEl.querySelector('line:first-of-type') : null;
+      var lineAnim  = document.getElementById('metLineMobile');
+      var travelers = [1,2,3].map(function(i) {
+        return document.getElementById('travelerM' + i);
+      });
+
+      if (!container || !cards.length || !svgEl) return;
+
+      var containerTop = container.getBoundingClientRect().top + window.scrollY;
+
+      // Posición Y de cada card relativa al container
+      var nodePositions = Array.prototype.map.call(cards, function(card) {
+        var cardTop = card.getBoundingClientRect().top + window.scrollY;
+        // Centro vertical de cada card
+        var cardCenter = cardTop - containerTop + card.offsetHeight * 0.15;
+        return Math.round(cardCenter);
+      });
+
+      var y1     = nodePositions[0];
+      var y2     = nodePositions[nodePositions.length - 1];
+      var dash   = y2 - y1;
+      var totalH = y2 + 40;
+
+      // Actualizar viewBox
+      svgEl.setAttribute('viewBox', '0 0 40 ' + totalH);
+      svgEl.style.height = totalH + 'px';
+
+      // Actualizar líneas
+      lineBase.setAttribute('y1', y1);
+      lineBase.setAttribute('y2', y2);
+      lineAnim.setAttribute('y1', y1);
+      lineAnim.setAttribute('y2', y2);
+      lineAnim.setAttribute('stroke-dasharray', dash);
+      lineAnim.setAttribute('stroke-dashoffset', dash);
+
+      // Posicionar cada nodo en el centro de su card
+      nodePositions.forEach(function(pos, i) {
+        var node = document.getElementById('metNodeM' + (i+1));
+        var fill = document.getElementById('metNodeFillM' + (i+1));
+        if (node) node.setAttribute('cy', pos);
+        if (fill) fill.setAttribute('cy', pos);
+      });
+
+      // Actualizar travelers
+      var path = 'M20,' + y1 + ' L20,' + y2;
+      travelers.forEach(function(t) {
+        var motion = t.querySelector('animateMotion');
+        if (motion) motion.setAttribute('path', path);
+      });
+
+      window._metMobileDash = dash;
+      window._metMobileY1   = y1;
+    }
+
+    // Llamar después de que el DOM esté listo
+    window.addEventListener('load', calibrateMobileDiagram);
+    window.addEventListener('resize', calibrateMobileDiagram);
+
     // Metodología — diagrama vertical mobile (scroll-driven)
     (function() {
       var section = document.getElementById('metodologia');
@@ -5068,7 +5128,7 @@
         return document.getElementById('travelerM' + i);
       });
 
-      var TOTAL_DASH = 640;
+      var TOTAL_DASH = window._metMobileDash || 640;
       var completed = false;
 
       function updateMobileDiagram() {
@@ -5079,13 +5139,17 @@
         var total   = rect.height;
 
         // Progreso del scroll: 0 al entrar, 1 al salir
-        var progress = Math.min(Math.max(visible / total, 0), 1);
+        var rawProgress = Math.min(Math.max(visible / total, 0), 1);
+        // Ease in-out para suavizar el trazado
+        var progress = rawProgress < 0.5
+          ? 2 * rawProgress * rawProgress
+          : 1 - Math.pow(-2 * rawProgress + 2, 2) / 2;
 
         // Trazar línea
         lineMobile.style.strokeDashoffset = TOTAL_DASH * (1 - progress);
 
         // Iluminar nodos según progreso
-        var nodeThresholds = [0.05, 0.35, 0.65, 0.90];
+        var nodeThresholds = [0.10, 0.38, 0.66, 0.90];
         fillsMobile.forEach(function(fill, i) {
           if (progress >= nodeThresholds[i]) {
             fill.style.transition = 'fill 0.3s ease';
