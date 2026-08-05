@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors({
   origin: [
+    'https://lumenlabs.lat',
+    'https://www.lumenlabs.lat',
     'https://lumen-labsv1.netlify.app',
     'http://localhost:5500',
     'http://localhost:3000'
